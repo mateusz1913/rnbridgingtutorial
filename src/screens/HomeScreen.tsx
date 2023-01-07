@@ -2,8 +2,7 @@ import { NavigationBar, TitleBar } from 'navigation-react-native';
 import type { FC } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
-import { useNavigationContext } from '../navigation/hooks';
-import { ROUTES } from '../navigation/routes';
+import { ROUTES, useNavigationContext } from '../navigation';
 
 export const HomeScreen: FC = () => {
   const { stateNavigator } = useNavigationContext();

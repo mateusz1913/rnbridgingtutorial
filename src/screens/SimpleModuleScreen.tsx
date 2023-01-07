@@ -1,33 +1,29 @@
-import { NavigationBar } from 'navigation-react-native';
 import type { FC } from 'react';
-import { Button, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SampleAppInfoModule } from 'samplenativemodule';
 
-import { arrowBack } from '../assets';
-import { useNavigateBack } from '../navigation/hooks';
+import { NavBar } from '../components';
 
 export const SimpleModuleScreen: FC = () => {
-  const navigateBack = useNavigateBack();
-
   const invokeMethodWithPromise = () => {
     console.log(1234);
   };
 
+  const invokeSyncMethod = () => {
+    console.log(SampleAppInfoModule?.getAppBundleId());
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <NavigationBar
-        title="Simple module"
-        {...(Platform.OS === 'android'
-          ? {
-              navigationImage: arrowBack,
-              onNavigationPress: navigateBack,
-            }
-          : null)}
-      />
+      <NavBar title="Simple module" />
       <View style={styles.container}>
         <Text style={styles.header}>Simple module showcase</Text>
         <View style={styles.body}>
           <View style={styles.buttonWrapper}>
             <Button onPress={invokeMethodWithPromise} title="Method with promise" />
+          </View>
+          <View style={styles.buttonWrapper}>
+            <Button onPress={invokeSyncMethod} title="Sync method" />
           </View>
         </View>
       </View>

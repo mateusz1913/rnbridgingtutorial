@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "name": "samplenativemodule",
+  "version": "0.0.1",
+  "description": "Sample Native Module",
+  "react-native": "src",
+  "source": "src",
+  "main": "src",
+  "module": "src",
+  "files": [
+    "src",
+    "android",
+    "ios",
+    "SampleNativeModule.podspec",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "repository": "REPO_NEEDED_ONLY_FOR_PODSPEC",
+  "author": "AUTHOR_NEEDED_ONLY_FOR_PODSPEC",
+  "license": "MIT",
+  "homepage": "HOMEPAGE_NEEDED_ONLY_FOR_PODSPEC",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "SampleNativeModule",
+    "type": "all",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.rnbridgingtutorial.samplenativemodule"
+    }
+  }
+}
