@@ -42,6 +42,7 @@ android {
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 21)
     targetSdkVersion safeExtGet('targetSdkVersion', 33)
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
   }
 
   // Add (or remove) additional paths to the library's source code
@@ -67,7 +68,14 @@ repositories {
   google()
 }
 
+// Use some helper methods
+apply from: "$projectDir/react-native-helpers.gradle"
+
 // Declare library's dependencies (similar to entries under "dependencies" field in `package.json`)
 dependencies {
-  implementation 'com.facebook.react:react-native:+'
+  if (project.ext.shouldConsumeReactNativeFromMavenCentral()) {
+    implementation "com.facebook.react:react-android" // Set by the React Native Gradle Plugin
+  } else {
+    implementation 'com.facebook.react:react-native:+' // From node_modules
+  }
 }
