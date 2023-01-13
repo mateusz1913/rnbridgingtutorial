@@ -7441,7 +7441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"navigation-react-native@npm:^8.14.0":
+"navigation-react-native@npm:8.14.0":
   version: 8.14.0
   resolution: "navigation-react-native@npm:8.14.0"
   peerDependencies:
@@ -7450,6 +7450,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 07ebd683bf0dd021149d8b98276e277277f049195787cfc58d28095ce6e4150a095b4da1cb119ad6a503b97919327fd412f3a507013e2f347f28d48573114195
+  languageName: node
+  linkType: hard
+
+"navigation-react-native@patch:navigation-react-native@npm%3A8.14.0#./.yarn/patches/navigation-react-native-npm-8.14.0-992b4afa4b.patch::locator=rnbridgingtutorial%40workspace%3A.":
+  version: 8.14.0
+  resolution: "navigation-react-native@patch:navigation-react-native@npm%3A8.14.0#./.yarn/patches/navigation-react-native-npm-8.14.0-992b4afa4b.patch::version=8.14.0&hash=773ca3&locator=rnbridgingtutorial%40workspace%3A."
+  peerDependencies:
+    navigation: "*"
+    navigation-react: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 4cd997ea658fb8e34b052fbb65023874493d1b1110b7762968f6e136a63c53f1064c3f59dfdbe7f189aa0599cf755090592d9268363c8bea3b01dd903124eae8
   languageName: node
   linkType: hard
 
@@ -8215,9 +8227,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.71.0-rc.5":
-  version: 0.71.0-rc.5
-  resolution: "react-native@npm:0.71.0-rc.5"
+"react-native@npm:0.71.0":
+  version: 0.71.0
+  resolution: "react-native@npm:0.71.0"
   dependencies:
     "@jest/create-cache-key-function": ^29.2.1
     "@react-native-community/cli": 10.0.0
@@ -8257,7 +8269,7 @@ __metadata:
     react: 18.2.0
   bin:
     react-native: cli.js
-  checksum: 1e39f71a9f05e4cfb0556d8b0d80dae94ec2fc0316c5682db47365da1c9790e743eea8df552fb84f0a1569705c19ec5b2ea68a2309f805636b04fae35f709978
+  checksum: c3a08dd0640d36be2da2a2ede1bce75161dd543f6f25824c8dcdd9314434f4567154bfbbc9239179a57098c1cf8303cea0c73699d856939b4333c684d5055940
   languageName: node
   linkType: hard
 
@@ -8660,7 +8672,7 @@ __metadata:
     navigation-react: ^4.5.1
     navigation-react-native: ^8.14.0
     react: 18.2.0
-    react-native: 0.71.0-rc.5
+    react-native: 0.71.0
     react-test-renderer: 18.2.0
     ts-jest: 29.0.3
     typescript: 4.9.4
