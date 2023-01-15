@@ -1,22 +1,17 @@
-import { NavigationBar, TitleBar } from 'navigation-react-native';
 import type { FC } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 import { ROUTES, useNavigationContext } from '../navigation';
 
 export const HomeScreen: FC = () => {
-  const { stateNavigator } = useNavigationContext();
+  const { setRoute } = useNavigationContext();
   const navigateToSimpleModule = () => {
-    stateNavigator.navigate(ROUTES.SIMPLE_MODULE);
+    setRoute(ROUTES.SIMPLE_MODULE);
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <NavigationBar>
-        <TitleBar style={styles.titleBar}>
-          <Text style={styles.titleBarText}>Demo</Text>
-        </TitleBar>
-      </NavigationBar>
+      <Text style={styles.titleBarText}>Demo</Text>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Bridging tutorial</Text>
@@ -64,10 +59,6 @@ const styles = StyleSheet.create({
   safeArea: {
     alignSelf: 'stretch',
     flex: 1,
-  },
-  titleBar: {
-    alignItems: 'center',
-    flexDirection: 'row',
   },
   titleBarText: {
     fontSize: 16,

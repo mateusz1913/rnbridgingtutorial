@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { SampleAppInfoModule } from 'samplenativemodule';
+import { FragmentCustomView, SampleAppInfoModule } from 'samplenativemodule';
 
 import { NavBar } from '../components';
 
@@ -19,6 +19,9 @@ export const SimpleModuleScreen: FC = () => {
       <View style={styles.container}>
         <Text style={styles.header}>Simple module showcase</Text>
         <View style={styles.body}>
+          <View style={styles.fragmentWrapper}>
+            <FragmentCustomView style={styles.fragment} />
+          </View>
           <View style={styles.buttonWrapper}>
             <Button onPress={invokeMethodWithPromise} title="Method with promise" />
           </View>
@@ -48,6 +51,20 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  fragment: {
+    backgroundColor: 'orange',
+    alignSelf: 'stretch',
+    // height: 200,
+    flex: 1,
+    padding: 10,
+    // width: 250,
+  },
+  fragmentWrapper: {
+    alignSelf: 'stretch',
+    backgroundColor: 'brown',
+    flex: 1,
+    paddingVertical: 30,
   },
   header: {
     fontSize: 30,

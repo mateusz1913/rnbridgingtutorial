@@ -13,9 +13,6 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "navigation": "^6.1.0",
-    "navigation-react": "^4.5.1",
-    "navigation-react-native": "^8.14.0",
     "react": "18.2.0",
     "react-native": "0.71.0"
   },
@@ -44,8 +41,5 @@
     "ts-jest": "29.0.3",
     "typescript": "4.9.4"
   },
-  "packageManager": "yarn@3.3.1",
-  "resolutions": {
-    "navigation-react-native@^8.14.0": "patch:navigation-react-native@npm%3A8.14.0#./.yarn/patches/navigation-react-native-npm-8.14.0-992b4afa4b.patch"
-  }
+  "packageManager": "yarn@3.3.1"
 }
