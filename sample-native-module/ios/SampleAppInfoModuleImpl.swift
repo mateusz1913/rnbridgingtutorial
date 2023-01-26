@@ -4,7 +4,7 @@ import Foundation
 public class SampleAppInfoModuleImpl : NSObject {
   @objc(getAppBuildNumber)
   public func getAppBuildNumber() -> String {
-    return Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
+    return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
   }
 
   @objc(getAppBundleId)

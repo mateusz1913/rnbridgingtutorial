@@ -7,11 +7,13 @@ import { ROUTES, useRootStackNavigation } from '../navigation';
 export const HomeScreen: FC = () => {
   const navigation = useRootStackNavigation();
 
-  function navigate(route: typeof ROUTES[keyof typeof ROUTES]) {
-    return () => {
-      navigation.navigate(route);
-    };
-  }
+  const navigateToSimpleModule = () => {
+    navigation.navigate(ROUTES.SIMPLE_MODULE);
+  };
+
+  const navigateToSimpleModuleClassic = () => {
+    navigation.navigate(ROUTES.SIMPLE_MODULE, { isClassic: true });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -22,7 +24,10 @@ export const HomeScreen: FC = () => {
         </View>
         <ScrollView contentContainerStyle={styles.bodyContent} style={styles.body}>
           <View style={styles.navigateLink}>
-            <Button onPress={navigate(ROUTES.SIMPLE_MODULE)} title="Simple module" />
+            <Button onPress={navigateToSimpleModule} title="Simple module" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleModuleClassic} title="Simple module (Classic)" />
           </View>
         </ScrollView>
       </View>

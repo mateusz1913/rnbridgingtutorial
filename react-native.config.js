@@ -10,5 +10,13 @@ module.exports = {
         },
       },
     },
+    'sample-native-module-classic': { // <--------- Add entry for "sample-native-module-classic"
+      root: path.resolve(__dirname, './sample-native-module-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-module-classic/android'),
+        },
+      },
+    },
   },
 };
