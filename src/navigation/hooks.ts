@@ -1,13 +1,9 @@
-import { useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
-import { NavigationContext } from './NavigationRootStack';
+import type { RootStackNavigationProp } from './types';
 
-export const useNavigationContext = () => {
-  const navigationContext = useContext(NavigationContext);
+export const useRootStackNavigation = () => {
+  const navigation = useNavigation<RootStackNavigationProp>();
 
-  if (navigationContext === undefined || navigationContext === null) {
-    throw new Error('`useNavigationContext` must be used within `NavigationHandler`');
-  }
-
-  return navigationContext;
+  return navigation;
 };

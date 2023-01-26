@@ -6,8 +6,7 @@ buildscript {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
   }
 
-  // Kotlin setup - declaring Kotlin version
-  def kotlin_version = safeExtGet('kotlinVersion', '1.6.10')
+  def kotlin_version = safeExtGet('kotlinVersion', '1.6.10') // Kotlin setup - declaring Kotlin version
 
   repositories {
     google()
@@ -15,8 +14,7 @@ buildscript {
   }
   dependencies {
     classpath("com.android.tools.build:gradle:7.2.1")
-    // Kotlin setup - adding Kotlin Gradle plugin
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version") // Kotlin setup - adding Kotlin Gradle plugin
   }
 }
 
@@ -36,8 +34,8 @@ if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
 }
 
+// Minimal configuration to make library usable on Android API 21-33
 android {
-  // Minimal configuration to make library usable on Android API 21-33
   compileSdkVersion safeExtGet('compileSdkVersion', 33)
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 21)

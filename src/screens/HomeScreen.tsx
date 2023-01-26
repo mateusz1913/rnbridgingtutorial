@@ -1,13 +1,17 @@
 import type { FC } from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ROUTES, useNavigationContext } from '../navigation';
+import { ROUTES, useRootStackNavigation } from '../navigation';
 
 export const HomeScreen: FC = () => {
-  const { setRoute } = useNavigationContext();
-  const navigateToSimpleModule = () => {
-    setRoute(ROUTES.SIMPLE_MODULE);
-  };
+  const navigation = useRootStackNavigation();
+
+  function navigate(route: typeof ROUTES[keyof typeof ROUTES]) {
+    return () => {
+      navigation.navigate(route);
+    };
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -16,11 +20,11 @@ export const HomeScreen: FC = () => {
         <View style={styles.header}>
           <Text style={styles.headerText}>Bridging tutorial</Text>
         </View>
-        <View style={styles.body}>
+        <ScrollView contentContainerStyle={styles.bodyContent} style={styles.body}>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleModule} title="Simple module" />
+            <Button onPress={navigate(ROUTES.SIMPLE_MODULE)} title="Simple module" />
           </View>
-        </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -28,9 +32,13 @@ export const HomeScreen: FC = () => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
     alignSelf: 'stretch',
     flex: 1,
+  },
+  bodyContent: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    // flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
@@ -63,5 +71,6 @@ const styles = StyleSheet.create({
   titleBarText: {
     fontSize: 16,
     fontWeight: 'bold',
+    margin: 20,
   },
 });

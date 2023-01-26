@@ -1,6 +1,6 @@
 def safeAppExtGet(prop, fallback) {
-    def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
-    appProject?.ext?.has(prop) ? appProject.ext.get(prop) : fallback
+  def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+  appProject?.ext?.has(prop) ? appProject.ext.get(prop) : fallback
 }
 
 // Let's detect react-native's directory, it will be used to determine RN's version

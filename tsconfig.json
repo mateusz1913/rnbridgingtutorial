@@ -7,7 +7,7 @@
     /* Completeness */
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
     "paths": {
-      "samplenativemodule": ["./SampleNativeModule"]
+      "sample-native-module": ["./sample-native-module"]
     }
   }
 }

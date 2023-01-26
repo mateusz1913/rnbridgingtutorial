@@ -1,30 +1,19 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { FC } from 'react';
-import { createContext } from 'react';
-import { useState } from 'react';
 
 import { HomeScreen, SimpleModuleScreen } from '../screens';
 
 import { ROUTES } from './routes';
+import type { RootStackParamList } from './types';
 
-type NavContextT = {
-  route: typeof ROUTES[keyof typeof ROUTES],
-  setRoute: (route: typeof ROUTES[keyof typeof ROUTES]) => void
-}
-
-export const NavigationContext = createContext<NavContextT | null>(null);
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 export const NavigationRootStack: FC = () => {
-  const [ route, setRoute ] = useState<typeof ROUTES[keyof typeof ROUTES]>(ROUTES.HOME);
-
-  function renderScreen() {
-    if (route === ROUTES.SIMPLE_MODULE) {
-      return <SimpleModuleScreen />;
-    }
-  
-    return <HomeScreen />;
-  }
-
-  return <NavigationContext.Provider value={{ route, setRoute }}>
-    {renderScreen()}
-  </NavigationContext.Provider>;
+  return <NavigationContainer>
+    <RootStack.Navigator screenOptions={{ headerTransparent: true, title: '', animation: 'slide_from_right' }}>
+      <RootStack.Screen name={ROUTES.HOME} component={HomeScreen} options={{ headerShown: false }} />
+      <RootStack.Screen name={ROUTES.SIMPLE_MODULE} component={SimpleModuleScreen} />
+    </RootStack.Navigator>
+  </NavigationContainer>;
 };

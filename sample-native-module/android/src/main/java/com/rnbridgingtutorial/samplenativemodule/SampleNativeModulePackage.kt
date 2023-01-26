@@ -53,6 +53,9 @@ class SampleNativeModulePackage : TurboReactPackage() {
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        return listOf(SampleFragmentCustomViewManager())
+        /**
+         * Here declare the list of exported native components
+         */
+        return listOf()
     }
 }

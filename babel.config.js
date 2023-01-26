@@ -18,7 +18,7 @@ module.exports = {
           '.json',
         ],
         alias: {
-          samplenativemodule: './SampleNativeModule',
+          'sample-native-module': './sample-native-module',
         },
       },
     ],

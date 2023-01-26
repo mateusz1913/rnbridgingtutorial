@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "samplenativemodule",
+  "name": "sample-native-module",
   "version": "0.0.1",
   "description": "Sample Native Module",
   "react-native": "src",

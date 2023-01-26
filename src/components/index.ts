@@ -1,1 +1,1 @@
-export * from './NavBar';
+export const FOO = 'BAR';

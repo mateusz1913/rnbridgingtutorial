@@ -1,8 +1,7 @@
 import type { FC } from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { FragmentCustomView, SampleAppInfoModule } from 'samplenativemodule';
-
-import { NavBar } from '../components';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SampleAppInfoModule } from 'sample-native-module';
 
 export const SimpleModuleScreen: FC = () => {
   const invokeMethodWithPromise = () => {
@@ -15,13 +14,9 @@ export const SimpleModuleScreen: FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <NavBar title="Simple module" />
       <View style={styles.container}>
         <Text style={styles.header}>Simple module showcase</Text>
         <View style={styles.body}>
-          <View style={styles.fragmentWrapper}>
-            <FragmentCustomView style={styles.fragment} />
-          </View>
           <View style={styles.buttonWrapper}>
             <Button onPress={invokeMethodWithPromise} title="Method with promise" />
           </View>
@@ -52,22 +47,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  fragment: {
-    backgroundColor: 'orange',
-    alignSelf: 'stretch',
-    // height: 200,
-    flex: 1,
-    padding: 10,
-    // width: 250,
-  },
-  fragmentWrapper: {
-    alignSelf: 'stretch',
-    backgroundColor: 'brown',
-    flex: 1,
-    paddingVertical: 30,
-  },
   header: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 'bold',
     paddingVertical: 20,
     textTransform: 'capitalize',
