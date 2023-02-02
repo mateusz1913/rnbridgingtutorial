@@ -2,6 +2,9 @@ PODS:
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - Fastis (2.2.0):
+    - JTAppleCalendar (~> 8.0.0)
+    - PrettyCards (~> 1.0.0)
   - FBLazyVector (0.71.1)
   - FBReactNativeSpec (0.71.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -76,8 +79,10 @@ PODS:
   - hermes-engine (0.71.0-rc.5):
     - hermes-engine/Pre-built (= 0.71.0-rc.5)
   - hermes-engine/Pre-built (0.71.0-rc.5)
+  - JTAppleCalendar (8.0.4)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
+  - PrettyCards (1.0.5)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -753,6 +758,22 @@ PODS:
     - React-Codegen
     - React-RCTFabric
     - ReactCommon/turbomodule/core
+  - SampleNativeDatepicker (0.0.1):
+    - Fastis (~> 2.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - SampleNativeDatepickerClassic (0.0.1):
+    - Fastis (~> 2.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - SampleNativeModule (0.0.1):
     - RCT-Folly
     - RCTRequired
@@ -838,6 +859,8 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - SampleNativeDatepicker (from `../sample-native-datepicker`)
+  - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeModule (from `../sample-native-module`)
   - SampleNativeModuleClassic (from `../sample-native-module-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -845,6 +868,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
+    - Fastis
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -855,8 +879,10 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - JTAppleCalendar
     - libevent
     - OpenSSL-Universal
+    - PrettyCards
     - SocketRocket
     - YogaKit
 
@@ -939,6 +965,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  SampleNativeDatepicker:
+    :path: "../sample-native-datepicker"
+  SampleNativeDatepickerClassic:
+    :path: "../sample-native-datepicker-classic"
   SampleNativeModule:
     :path: "../sample-native-module"
   SampleNativeModuleClassic:
@@ -950,6 +980,7 @@ SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  Fastis: 54b693d0602243f924f4dfb92d4ed0fb8216bf8e
   FBLazyVector: ad72713385db5289b19f1ead07e8e4aa26dcb01d
   FBReactNativeSpec: 06fc2a521838dc240b499699d43467b071c66908
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
@@ -964,8 +995,10 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: a5d6597b0258a8a6fd737e4b40eeac47278610c4
+  JTAppleCalendar: f95b02c64f56d6f938fbf6582a04dcab9d709ebd
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
+  PrettyCards: 2b078f2396a42f7f0c4d6624b875149dcb49d3ed
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
   RCTTypeSafety: c276d85975bde3d8448907235c70bf0da257adfd
@@ -999,12 +1032,14 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 311feb67600774723fe10eb8801d3138cae9ad67
   ReactCommon: 03be76588338a27a88d103b35c3c44a3fd43d136
   RNScreens: a838934f2f0d915c8a756409d674a862b70b1677
+  SampleNativeDatepicker: 57fd1b0fd5a248ef7dedd26db023846e621428f8
+  SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeModule: a453a10bfb5a72ea76aeb825b2649a911a04b91c
   SampleNativeModuleClassic: 8fa0498c76e09e7c2c734967ca4670d1edf87885
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: a2ac06edd881cdaa698e6e26cc95a81f91e40e54
+PODFILE CHECKSUM: 139c767e7b73d667b94362bdb72752133eefe024
 
 COCOAPODS: 1.11.3

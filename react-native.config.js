@@ -18,5 +18,21 @@ module.exports = {
         },
       },
     },
+    'sample-native-datepicker': { // <--------- Add entry for "sample-native-datepicker"
+      root: path.resolve(__dirname, './sample-native-datepicker'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-datepicker/android'),
+        },
+      },
+    },
+    'sample-native-datepicker-classic': { // <--------- Add entry for "sample-native-datepicker-classic"
+      root: path.resolve(__dirname, './sample-native-datepicker-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-datepicker-classic/android'),
+        },
+      },
+    },
   },
 };

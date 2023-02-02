@@ -20,6 +20,8 @@ module.exports = {
         alias: {
           'sample-native-module': './sample-native-module',
           'sample-native-module-classic': './sample-native-module-classic',
+          'sample-native-datepicker': './sample-native-datepicker',
+          'sample-native-datepicker-classic': './sample-native-datepicker-classic',
         },
       },
     ],

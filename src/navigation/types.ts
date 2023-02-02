@@ -6,8 +6,10 @@ import type { ROUTES } from './routes';
 export type RootStackParamList = {
   [ROUTES.HOME]: undefined;
   [ROUTES.SIMPLE_MODULE]: { isClassic: boolean } | undefined;
+  [ROUTES.SIMPLE_UI_MODULE]: { isClassic: boolean } | undefined;
 };
 
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export type SimpleModuleRouteProp = RouteProp<RootStackParamList, 'SimpleModule'>;
+export type SimpleModuleRouteProp = RouteProp<RootStackParamList, typeof ROUTES.SIMPLE_MODULE>;
+export type SimpleUIModuleRouteProp = RouteProp<RootStackParamList, typeof ROUTES.SIMPLE_UI_MODULE>;

@@ -15,6 +15,14 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SIMPLE_MODULE, { isClassic: true });
   };
 
+  const navigateToSimpleUIModule = () => {
+    navigation.navigate(ROUTES.SIMPLE_UI_MODULE);
+  };
+
+  const navigateToSimpleUIModuleClassic = () => {
+    navigation.navigate(ROUTES.SIMPLE_UI_MODULE, { isClassic: true });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.titleBarText}>Demo</Text>
@@ -28,6 +36,12 @@ export const HomeScreen: FC = () => {
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleModuleClassic} title="Simple module (Classic)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleUIModule} title="Simple UI module" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleUIModuleClassic} title="Simple UI module (Classic)" />
           </View>
         </ScrollView>
       </View>
