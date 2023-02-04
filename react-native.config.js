@@ -34,5 +34,21 @@ module.exports = {
         },
       },
     },
+    'sample-event-module': { // <--------- Add entry for "sample-event-module"
+      root: path.resolve(__dirname, './sample-event-module'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-event-module/android'),
+        },
+      },
+    },
+    'sample-event-module-classic': { // <--------- Add entry for "sample-event-module-classic"
+      root: path.resolve(__dirname, './sample-event-module-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-event-module-classic/android'),
+        },
+      },
+    },
   },
 };

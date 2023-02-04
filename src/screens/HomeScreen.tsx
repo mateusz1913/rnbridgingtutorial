@@ -23,6 +23,10 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SIMPLE_UI_MODULE, { isClassic: true });
   };
 
+  const navigateToSimpleEventModule = () => {
+    navigation.navigate(ROUTES.SIMPLE_EVENT_MODULE);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.titleBarText}>Demo</Text>
@@ -32,16 +36,19 @@ export const HomeScreen: FC = () => {
         </View>
         <ScrollView contentContainerStyle={styles.bodyContent} style={styles.body}>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleModule} title="Simple module" />
+            <Button onPress={navigateToSimpleModule} title="Simple module (Modern)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleModuleClassic} title="Simple module (Classic)" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleUIModule} title="Simple UI module" />
+            <Button onPress={navigateToSimpleUIModule} title="Simple UI module (Modern)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleUIModuleClassic} title="Simple UI module (Classic)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleEventModule} title="Simple event module (Modern & Classic)" />
           </View>
         </ScrollView>
       </View>
@@ -57,7 +64,6 @@ const styles = StyleSheet.create({
   bodyContent: {
     alignItems: 'center',
     alignSelf: 'stretch',
-    // flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },

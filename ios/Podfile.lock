@@ -758,6 +758,20 @@ PODS:
     - React-Codegen
     - React-RCTFabric
     - ReactCommon/turbomodule/core
+  - SampleEventModule (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - SampleEventModuleClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - SampleNativeDatepicker (0.0.1):
     - Fastis (~> 2.0)
     - RCT-Folly
@@ -859,6 +873,8 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - SampleEventModule (from `../sample-event-module`)
+  - SampleEventModuleClassic (from `../sample-event-module-classic`)
   - SampleNativeDatepicker (from `../sample-native-datepicker`)
   - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeModule (from `../sample-native-module`)
@@ -965,6 +981,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  SampleEventModule:
+    :path: "../sample-event-module"
+  SampleEventModuleClassic:
+    :path: "../sample-event-module-classic"
   SampleNativeDatepicker:
     :path: "../sample-native-datepicker"
   SampleNativeDatepickerClassic:
@@ -1032,6 +1052,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 311feb67600774723fe10eb8801d3138cae9ad67
   ReactCommon: 03be76588338a27a88d103b35c3c44a3fd43d136
   RNScreens: a838934f2f0d915c8a756409d674a862b70b1677
+  SampleEventModule: 7069f3f8ff2a5f6a98d725db31b50ff1c36ba62e
+  SampleEventModuleClassic: 875860573053d82e5fe1d8e861c27dae852a1bad
   SampleNativeDatepicker: 57fd1b0fd5a248ef7dedd26db023846e621428f8
   SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeModule: a453a10bfb5a72ea76aeb825b2649a911a04b91c
