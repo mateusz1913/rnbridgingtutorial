@@ -802,6 +802,22 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
+  - SampleReactView (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
+  - SampleReactViewClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -879,6 +895,8 @@ DEPENDENCIES:
   - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeModule (from `../sample-native-module`)
   - SampleNativeModuleClassic (from `../sample-native-module-classic`)
+  - SampleReactView (from `../sample-react-view`)
+  - SampleReactViewClassic (from `../sample-react-view-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -993,6 +1011,10 @@ EXTERNAL SOURCES:
     :path: "../sample-native-module"
   SampleNativeModuleClassic:
     :path: "../sample-native-module-classic"
+  SampleReactView:
+    :path: "../sample-react-view"
+  SampleReactViewClassic:
+    :path: "../sample-react-view-classic"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1058,6 +1080,8 @@ SPEC CHECKSUMS:
   SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeModule: a453a10bfb5a72ea76aeb825b2649a911a04b91c
   SampleNativeModuleClassic: 8fa0498c76e09e7c2c734967ca4670d1edf87885
+  SampleReactView: fc2816d6ab47b68345917a9312ddd13d65944496
+  SampleReactViewClassic: 669e80e394d71a389cd07de254beefb8fdefc573
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

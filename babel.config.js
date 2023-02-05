@@ -24,6 +24,8 @@ module.exports = {
           'sample-native-datepicker-classic': './sample-native-datepicker-classic',
           'sample-event-module': './sample-event-module',
           'sample-event-module-classic': './sample-event-module-classic',
+          'sample-react-view': './sample-react-view',
+          'sample-react-view-classic': './sample-react-view-classic',
         },
       },
     ],

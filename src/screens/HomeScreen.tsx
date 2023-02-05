@@ -27,6 +27,14 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SIMPLE_EVENT_MODULE);
   };
 
+  const navigateToSimpleReactView = () => {
+    navigation.navigate(ROUTES.SIMPLE_REACT_VIEW);
+  };
+
+  const navigateToSimpleReactViewClassic = () => {
+    navigation.navigate(ROUTES.SIMPLE_REACT_VIEW, { isClassic: true });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.titleBarText}>Demo</Text>
@@ -50,6 +58,12 @@ export const HomeScreen: FC = () => {
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleEventModule} title="Simple event module (Modern & Classic)" />
           </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleReactView} title="Simple extended React View (Modern)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleReactViewClassic} title="Simple extended React View (Classic)" />
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -64,6 +78,7 @@ const styles = StyleSheet.create({
   bodyContent: {
     alignItems: 'center',
     alignSelf: 'stretch',
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
@@ -75,8 +90,8 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    flex: 1,
     justifyContent: 'center',
+    margin: 40,
     paddingHorizontal: 20,
   },
   headerText: {

@@ -2,15 +2,14 @@
   "name": "rnbridgingtutorial",
   "version": "0.0.1",
   "private": true,
-  "workspaces": [
-    "sample-native-module"
-  ],
   "scripts": {
     "android": "react-native run-android --active-arch-only",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "codegen:android": "./android/gradlew -p android generateArtifactsFromSchema",
+    "codegen:ios": "node node_modules/react-native/scripts/generate-codegen-artifacts.js --path . --outputPath ./ios"
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.2",

@@ -50,5 +50,21 @@ module.exports = {
         },
       },
     },
+    'sample-react-view': { // <--------- Add entry for "sample-react-view"
+      root: path.resolve(__dirname, './sample-react-view'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-react-view/android'),
+        },
+      },
+    },
+    'sample-react-view-classic': { // <--------- Add entry for "sample-react-view-classic"
+      root: path.resolve(__dirname, './sample-react-view-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-react-view-classic/android'),
+        },
+      },
+    },
   },
 };
