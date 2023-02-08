@@ -66,5 +66,21 @@ module.exports = {
         },
       },
     },
+    'sample-native-slider': { // <--------- Add entry for "sample-native-slider"
+      root: path.resolve(__dirname, './sample-native-slider'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-slider/android'),
+        },
+      },
+    },
+    'sample-native-slider-classic': { // <--------- Add entry for "sample-native-slider-classic"
+      root: path.resolve(__dirname, './sample-native-slider-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-slider-classic/android'),
+        },
+      },
+    },
   },
 };

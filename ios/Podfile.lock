@@ -83,6 +83,7 @@ PODS:
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - PrettyCards (1.0.5)
+  - RangeUISlider (3.1.0)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -802,6 +803,24 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
+  - SampleNativeSlider (0.0.1):
+    - RangeUISlider (~> 3.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
+  - SampleNativeSliderClassic (0.0.1):
+    - RangeUISlider (~> 3.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - SampleReactView (0.0.1):
     - RCT-Folly
     - RCTRequired
@@ -895,6 +914,8 @@ DEPENDENCIES:
   - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeModule (from `../sample-native-module`)
   - SampleNativeModuleClassic (from `../sample-native-module-classic`)
+  - SampleNativeSlider (from `../sample-native-slider`)
+  - SampleNativeSliderClassic (from `../sample-native-slider-classic`)
   - SampleReactView (from `../sample-react-view`)
   - SampleReactViewClassic (from `../sample-react-view-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -917,6 +938,7 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - PrettyCards
+    - RangeUISlider
     - SocketRocket
     - YogaKit
 
@@ -1011,6 +1033,10 @@ EXTERNAL SOURCES:
     :path: "../sample-native-module"
   SampleNativeModuleClassic:
     :path: "../sample-native-module-classic"
+  SampleNativeSlider:
+    :path: "../sample-native-slider"
+  SampleNativeSliderClassic:
+    :path: "../sample-native-slider-classic"
   SampleReactView:
     :path: "../sample-react-view"
   SampleReactViewClassic:
@@ -1041,6 +1067,7 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PrettyCards: 2b078f2396a42f7f0c4d6624b875149dcb49d3ed
+  RangeUISlider: bb1a82942ef5b6315bd8bf1c12a6b953f0ed02e8
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
   RCTTypeSafety: c276d85975bde3d8448907235c70bf0da257adfd
@@ -1080,6 +1107,8 @@ SPEC CHECKSUMS:
   SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeModule: a453a10bfb5a72ea76aeb825b2649a911a04b91c
   SampleNativeModuleClassic: 8fa0498c76e09e7c2c734967ca4670d1edf87885
+  SampleNativeSlider: 276bc26486179c11f5a141bd238fc333a357b96b
+  SampleNativeSliderClassic: eb6bae2a1bdff6b0ce8e88a784192ea928e08615
   SampleReactView: fc2816d6ab47b68345917a9312ddd13d65944496
   SampleReactViewClassic: 669e80e394d71a389cd07de254beefb8fdefc573
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608

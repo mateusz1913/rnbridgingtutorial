@@ -35,6 +35,14 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SIMPLE_REACT_VIEW, { isClassic: true });
   };
 
+  const navigateToSimpleView = () => {
+    navigation.navigate(ROUTES.SIMPLE_VIEW);
+  };
+
+  const navigateToSimpleViewClassic = () => {
+    navigation.navigate(ROUTES.SIMPLE_VIEW, { isClassic: true });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.titleBarText}>Demo</Text>
@@ -63,6 +71,12 @@ export const HomeScreen: FC = () => {
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleReactViewClassic} title="Simple extended React View (Classic)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleView} title="Simple View (Modern)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleViewClassic} title="Simple View (Classic)" />
           </View>
         </ScrollView>
       </View>

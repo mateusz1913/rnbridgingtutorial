@@ -26,6 +26,8 @@ module.exports = {
           'sample-event-module-classic': './sample-event-module-classic',
           'sample-react-view': './sample-react-view',
           'sample-react-view-classic': './sample-react-view-classic',
+          'sample-native-slider': './sample-native-slider',
+          'sample-native-slider-classic': './sample-native-slider-classic',
         },
       },
     ],
