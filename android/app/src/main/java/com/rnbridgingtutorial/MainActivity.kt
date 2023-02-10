@@ -6,6 +6,8 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import com.samplenativescreen.SampleNativeScreenModuleImpl
+import com.samplenativescreenclassic.SampleNativeScreenClassicModuleImpl
 
 class MainActivity : ReactActivity() {
 
@@ -19,6 +21,8 @@ class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(null)
+    SampleNativeScreenModuleImpl.registerActivityLauncher(this)
+    SampleNativeScreenClassicModuleImpl.registerActivityLauncher(this)
     WindowCompat.setDecorFitsSystemWindows(this.window, false)
   }
 

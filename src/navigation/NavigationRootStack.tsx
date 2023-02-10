@@ -5,6 +5,7 @@ import type { FC } from 'react';
 import {
   HomeScreen,
   SimpleEventModuleScreen,
+  SimpleLaunchNativeScreenModuleScreen,
   SimpleModuleScreen,
   SimpleReactViewScreen,
   SimpleUIModuleScreen,
@@ -25,6 +26,10 @@ export const NavigationRootStack: FC = () => {
       <RootStack.Screen name={ROUTES.SIMPLE_EVENT_MODULE} component={SimpleEventModuleScreen} />
       <RootStack.Screen name={ROUTES.SIMPLE_REACT_VIEW} component={SimpleReactViewScreen} />
       <RootStack.Screen name={ROUTES.SIMPLE_VIEW} component={SimpleViewScreen} />
+      <RootStack.Screen
+        name={ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE}
+        component={SimpleLaunchNativeScreenModuleScreen}
+      />
     </RootStack.Navigator>
   </NavigationContainer>;
 };

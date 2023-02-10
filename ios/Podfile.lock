@@ -803,6 +803,20 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
+  - SampleNativeScreen (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - SampleNativeScreenClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - SampleNativeSlider (0.0.1):
     - RangeUISlider (~> 3.0)
     - RCT-Folly
@@ -914,6 +928,8 @@ DEPENDENCIES:
   - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeModule (from `../sample-native-module`)
   - SampleNativeModuleClassic (from `../sample-native-module-classic`)
+  - SampleNativeScreen (from `../sample-native-screen`)
+  - SampleNativeScreenClassic (from `../sample-native-screen-classic`)
   - SampleNativeSlider (from `../sample-native-slider`)
   - SampleNativeSliderClassic (from `../sample-native-slider-classic`)
   - SampleReactView (from `../sample-react-view`)
@@ -1033,6 +1049,10 @@ EXTERNAL SOURCES:
     :path: "../sample-native-module"
   SampleNativeModuleClassic:
     :path: "../sample-native-module-classic"
+  SampleNativeScreen:
+    :path: "../sample-native-screen"
+  SampleNativeScreenClassic:
+    :path: "../sample-native-screen-classic"
   SampleNativeSlider:
     :path: "../sample-native-slider"
   SampleNativeSliderClassic:
@@ -1107,6 +1127,8 @@ SPEC CHECKSUMS:
   SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeModule: a453a10bfb5a72ea76aeb825b2649a911a04b91c
   SampleNativeModuleClassic: 8fa0498c76e09e7c2c734967ca4670d1edf87885
+  SampleNativeScreen: 1ba1cb3368991923bcde767f8752897e5a797321
+  SampleNativeScreenClassic: 966bee54456658d5d1a49868c613e744510a9fd5
   SampleNativeSlider: 276bc26486179c11f5a141bd238fc333a357b96b
   SampleNativeSliderClassic: eb6bae2a1bdff6b0ce8e88a784192ea928e08615
   SampleReactView: fc2816d6ab47b68345917a9312ddd13d65944496

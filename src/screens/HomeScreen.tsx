@@ -43,6 +43,14 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SIMPLE_VIEW, { isClassic: true });
   };
 
+  const navigateToSimpleLaunchNativeScreen = () => {
+    navigation.navigate(ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE);
+  };
+
+  const navigateToSimpleLaunchNativeScreenClassic = () => {
+    navigation.navigate(ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE, { isClassic: true });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.titleBarText}>Demo</Text>
@@ -78,6 +86,12 @@ export const HomeScreen: FC = () => {
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleViewClassic} title="Simple View (Classic)" />
           </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleLaunchNativeScreen} title="Simple launch native screen module (Modern)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToSimpleLaunchNativeScreenClassic} title="Simple launch native screen module (Classic)" />
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -105,7 +119,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 40,
+    margin: 20,
     paddingHorizontal: 20,
   },
   headerText: {

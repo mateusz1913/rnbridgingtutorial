@@ -82,5 +82,21 @@ module.exports = {
         },
       },
     },
+    'sample-native-screen': { // <--------- Add entry for "sample-native-screen"
+      root: path.resolve(__dirname, './sample-native-screen'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-screen/android'),
+        },
+      },
+    },
+    'sample-native-screen-classic': { // <--------- Add entry for "sample-native-screen-classic"
+      root: path.resolve(__dirname, './sample-native-screen-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-screen-classic/android'),
+        },
+      },
+    },
   },
 };

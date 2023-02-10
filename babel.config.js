@@ -28,6 +28,8 @@ module.exports = {
           'sample-react-view-classic': './sample-react-view-classic',
           'sample-native-slider': './sample-native-slider',
           'sample-native-slider-classic': './sample-native-slider-classic',
+          'sample-native-screen': './sample-native-screen',
+          'sample-native-screen-classic': './sample-native-screen-classic',
         },
       },
     ],
