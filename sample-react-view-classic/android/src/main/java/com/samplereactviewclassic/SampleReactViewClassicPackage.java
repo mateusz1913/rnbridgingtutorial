@@ -15,59 +15,59 @@ import java.util.List;
 import java.util.Map;
 
 public class SampleReactViewClassicPackage extends TurboReactPackage {
-  /**
-   * Initialize and export modules based on the name of the required module
-   */
-  @Override
-  @Nullable
-  public NativeModule getModule(String name, ReactApplicationContext reactContext) {
-    return null;
-  }
-
-  /**
-   * Declare info about exported modules
-   */
-  @Override
-  public ReactModuleInfoProvider getReactModuleInfoProvider() {
     /**
-     * Here declare the array of exported modules
-     */
-    Class<? extends NativeModule>[] moduleList = new Class[] {
-    };
-    final Map<String, ReactModuleInfo> reactModuleInfoMap = new HashMap<>();
-    /**
-     * And here just iterate on that array and produce the info provider instance
-     */
-    for (Class<? extends NativeModule> moduleClass : moduleList) {
-      ReactModule reactModule = moduleClass.getAnnotation(ReactModule.class);
-
-      reactModuleInfoMap.put(
-        reactModule.name(),
-        new ReactModuleInfo(
-          reactModule.name(),
-          moduleClass.getName(),
-          true,
-          reactModule.needsEagerInit(),
-          reactModule.hasConstants(),
-          reactModule.isCxxModule(),
-          TurboModule.class.isAssignableFrom(moduleClass)
-        )
-      );
+    * Initialize and export modules based on the name of the required module
+    */
+    @Override
+    @Nullable
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+        return null;
     }
 
-    return new ReactModuleInfoProvider() {
-      @Override
-      public Map<String, ReactModuleInfo> getReactModuleInfos() {
-        return reactModuleInfoMap;
-      }
-    };
-  }
-
-  @Override
-  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     /**
-     * Here declare the list of exported native components
-     */
-    return Arrays.<ViewManager>asList(new SampleConicGradientClassicViewManager());
-  }
+    * Declare info about exported modules
+    */
+    @Override
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        /**
+        * Here declare the array of exported modules
+        */
+        Class<? extends NativeModule>[] moduleList = new Class[] {
+        };
+        final Map<String, ReactModuleInfo> reactModuleInfoMap = new HashMap<>();
+        /**
+        * And here just iterate on that array and produce the info provider instance
+        */
+        for (Class<? extends NativeModule> moduleClass : moduleList) {
+            ReactModule reactModule = moduleClass.getAnnotation(ReactModule.class);
+
+            reactModuleInfoMap.put(
+                reactModule.name(),
+                new ReactModuleInfo(
+                reactModule.name(),
+                moduleClass.getName(),
+                true,
+                reactModule.needsEagerInit(),
+                reactModule.hasConstants(),
+                reactModule.isCxxModule(),
+                TurboModule.class.isAssignableFrom(moduleClass)
+                )
+            );
+        }
+
+        return new ReactModuleInfoProvider() {
+            @Override
+            public Map<String, ReactModuleInfo> getReactModuleInfos() {
+                return reactModuleInfoMap;
+            }
+        };
+    }
+
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        /**
+        * Here declare the list of exported native components
+        */
+        return Arrays.<ViewManager>asList(new SampleConicGradientClassicViewManager());
+    }
 }

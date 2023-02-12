@@ -13,40 +13,40 @@ import com.facebook.react.views.view.ReactViewManager
 
 @ReactModule(name = SampleConicGradientView.NAME)
 class SampleConicGradientViewManager : ReactViewManager(), SampleConicGradientViewManagerInterface<ReactViewGroup> {
-  private var mDelegate = SampleConicGradientViewManagerDelegate(this)
+    private var mDelegate = SampleConicGradientViewManagerDelegate(this)
 
-  override fun getName() = SampleConicGradientView.NAME
+    override fun getName() = SampleConicGradientView.NAME
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
+    override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
 
-  override fun createViewInstance(reactContext: ThemedReactContext): SampleConicGradientView {
-    return SampleConicGradientView(reactContext)
-  }
-
-  @ReactProp(name = "colors")
-  override fun setColors(view: ReactViewGroup, colors: ReadableArray?) {
-    check(view is SampleConicGradientView)
-    if (colors == null) {
-      return
+    override fun createViewInstance(reactContext: ThemedReactContext): SampleConicGradientView {
+        return SampleConicGradientView(reactContext)
     }
-    view.setColors(colors)
-  }
 
-  @ReactProp(name = "locations")
-  override fun setLocations(view: ReactViewGroup, locations: ReadableArray?) {
-    check(view is SampleConicGradientView)
-    if (locations == null) {
-      return
+    @ReactProp(name = "colors")
+    override fun setColors(view: ReactViewGroup, colors: ReadableArray?) {
+        check(view is SampleConicGradientView)
+        if (colors == null) {
+            return
+        }
+        view.setColors(colors)
     }
-    view.setLocations(locations)
-  }
 
-  @ReactProp(name = "centerPoint")
-  override fun setCenterPoint(view: ReactViewGroup, centerPoint: ReadableMap?) {
-    check(view is SampleConicGradientView)
-    if (centerPoint == null) {
-      return
+    @ReactProp(name = "locations")
+    override fun setLocations(view: ReactViewGroup, locations: ReadableArray?) {
+        check(view is SampleConicGradientView)
+        if (locations == null) {
+            return
+        }
+        view.setLocations(locations)
     }
-    view.setCenterPoint(centerPoint)
-  }
+
+    @ReactProp(name = "centerPoint")
+    override fun setCenterPoint(view: ReactViewGroup, centerPoint: ReadableMap?) {
+        check(view is SampleConicGradientView)
+        if (centerPoint == null) {
+            return
+        }
+        view.setCenterPoint(centerPoint)
+    }
 }

@@ -10,37 +10,37 @@ import com.facebook.react.views.view.ReactViewManager;
 
 @ReactModule(name = SampleConicGradientClassicView.NAME)
 public class SampleConicGradientClassicViewManager extends ReactViewManager {
-  @Override
-  public String getName() {
-    return SampleConicGradientClassicView.NAME;
-  }
-
-  @Override
-  public SampleConicGradientClassicView createViewInstance(ThemedReactContext reactContext) {
-    return new SampleConicGradientClassicView(reactContext);
-  }
-
-  @ReactProp(name = "colors")
-  public void setColors(SampleConicGradientClassicView view, @Nullable ReadableArray colors) {
-    if (colors == null) {
-      return;
+    @Override
+    public String getName() {
+        return SampleConicGradientClassicView.NAME;
     }
-    view.setColors(colors);
-  }
 
-  @ReactProp(name = "locations")
-  public void setLocations(SampleConicGradientClassicView view, @Nullable ReadableArray locations) {
-    if (locations == null) {
-      return;
+    @Override
+    public SampleConicGradientClassicView createViewInstance(ThemedReactContext reactContext) {
+        return new SampleConicGradientClassicView(reactContext);
     }
-    view.setLocations(locations);
-  }
 
-  @ReactProp(name = "centerPoint")
-  public void setCenterPoint(SampleConicGradientClassicView view, @Nullable ReadableMap centerPoint) {
-    if (centerPoint == null) {
-      return;
+    @ReactProp(name = "colors")
+    public void setColors(SampleConicGradientClassicView view, @Nullable ReadableArray colors) {
+        if (colors == null) {
+            return;
+        }
+        view.setColors(colors);
     }
-    view.setCenterPoint(centerPoint);
-  }
+
+    @ReactProp(name = "locations")
+    public void setLocations(SampleConicGradientClassicView view, @Nullable ReadableArray locations) {
+        if (locations == null) {
+            return;
+        }
+        view.setLocations(locations);
+    }
+
+    @ReactProp(name = "centerPoint")
+    public void setCenterPoint(SampleConicGradientClassicView view, @Nullable ReadableMap centerPoint) {
+        if (centerPoint == null) {
+            return;
+        }
+        view.setCenterPoint(centerPoint);
+    }
 }

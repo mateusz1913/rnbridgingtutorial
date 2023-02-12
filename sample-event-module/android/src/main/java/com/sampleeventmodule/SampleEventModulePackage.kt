@@ -9,43 +9,43 @@ import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.turbomodule.core.interfaces.TurboModule
 
 class SampleEventModulePackage : TurboReactPackage() {
-  /**
-   * Initialize and export modules based on the name of the required module
-   */
-  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    if (name == SampleScreenOrientationModule.NAME) {
-      return SampleScreenOrientationModule(reactContext)
+    /**
+     * Initialize and export modules based on the name of the required module
+     */
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
+        if (name == SampleScreenOrientationModule.NAME) {
+            return SampleScreenOrientationModule(reactContext)
+        }
+        return null
     }
-    return null
-  }
 
-  /**
-   * Declare info about exported modules
-   */
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
     /**
-     * Here declare the array of exported modules
+     * Declare info about exported modules
      */
-    val moduleList: Array<Class<out NativeModule?>> = arrayOf(
-      SampleScreenOrientationModule::class.java
-    )
-    val reactModuleInfoMap: MutableMap<String, ReactModuleInfo> = HashMap()
-    /**
-     * And here just iterate on that array and produce the info provider instance
-     */
-    for (moduleClass in moduleList) {
-      val reactModule = moduleClass.getAnnotation(ReactModule::class.java) ?: continue
-      reactModuleInfoMap[reactModule.name] =
-        ReactModuleInfo(
-          reactModule.name,
-          moduleClass.name,
-          true,
-          reactModule.needsEagerInit,
-          reactModule.hasConstants,
-          reactModule.isCxxModule,
-          TurboModule::class.java.isAssignableFrom(moduleClass)
+    override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
+        /**
+         * Here declare the array of exported modules
+         */
+        val moduleList: Array<Class<out NativeModule?>> = arrayOf(
+            SampleScreenOrientationModule::class.java
         )
+        val reactModuleInfoMap: MutableMap<String, ReactModuleInfo> = HashMap()
+        /**
+         * And here just iterate on that array and produce the info provider instance
+         */
+        for (moduleClass in moduleList) {
+            val reactModule = moduleClass.getAnnotation(ReactModule::class.java) ?: continue
+            reactModuleInfoMap[reactModule.name] =
+                ReactModuleInfo(
+                    reactModule.name,
+                    moduleClass.name,
+                    true,
+                    reactModule.needsEagerInit,
+                    reactModule.hasConstants,
+                    reactModule.isCxxModule,
+                    TurboModule::class.java.isAssignableFrom(moduleClass)
+                )
+        }
+        return ReactModuleInfoProvider { reactModuleInfoMap }
     }
-    return ReactModuleInfoProvider { reactModuleInfoMap }
-  }
 }

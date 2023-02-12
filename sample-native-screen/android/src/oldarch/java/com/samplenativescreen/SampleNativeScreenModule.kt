@@ -14,28 +14,28 @@ import com.facebook.react.module.annotations.ReactModule
  */
 @ReactModule(name = SampleNativeScreenModule.NAME)
 class SampleNativeScreenModule(
-  // Each native module class consumes react application context
-  reactContext: ReactApplicationContext
+    // Each native module class consumes react application context
+    reactContext: ReactApplicationContext
 ) : ReactContextBaseJavaModule(reactContext) {
-  // Return the name of the module - it should match the name provided in JS specification
-  override fun getName() = SampleNativeScreenModuleImpl.NAME
+    // Return the name of the module - it should match the name provided in JS specification
+    override fun getName() = SampleNativeScreenModuleImpl.NAME
 
-  override fun initialize() {
-    super.initialize()
-    SampleNativeScreenModuleImpl.setReactApplicationContext(reactApplicationContext)
-  }
+    override fun initialize() {
+        super.initialize()
+        SampleNativeScreenModuleImpl.setReactApplicationContext(reactApplicationContext)
+    }
 
-  // Exported methods must be annotated with @ReactMethod decorator
-  @ReactMethod
-  fun launchNativeScreen(valueFromJS: String) = SampleNativeScreenModuleImpl.launchNativeScreen(valueFromJS)
+    // Exported methods must be annotated with @ReactMethod decorator
+    @ReactMethod
+    fun launchNativeScreen(valueFromJS: String) = SampleNativeScreenModuleImpl.launchNativeScreen(valueFromJS)
 
-  @ReactMethod
-  fun addListener(eventName: String?) = Unit
+    @ReactMethod
+    fun addListener(eventName: String?) = Unit
 
-  @ReactMethod
-  fun removeListeners(count: Double) = Unit
+    @ReactMethod
+    fun removeListeners(count: Double) = Unit
 
-  companion object {
-    const val NAME = SampleNativeScreenModuleImpl.NAME
-  }
+    companion object {
+        const val NAME = SampleNativeScreenModuleImpl.NAME
+    }
 }

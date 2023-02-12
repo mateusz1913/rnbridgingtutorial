@@ -19,30 +19,30 @@ import java.util.Map;
  */
 @ReactModule(name = SampleNativeDatepickerClassicModule.NAME)
 public class SampleNativeDatepickerClassicModule extends ReactContextBaseJavaModule {
-  public static final String NAME = SampleNativeDatepickerClassicModuleImpl.NAME;
+    public static final String NAME = SampleNativeDatepickerClassicModuleImpl.NAME;
 
-  // Use shared module implementation and forward react application context
-  private final SampleNativeDatepickerClassicModuleImpl moduleImpl;
+    // Use shared module implementation and forward react application context
+    private final SampleNativeDatepickerClassicModuleImpl moduleImpl;
 
-  public SampleNativeDatepickerClassicModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.moduleImpl = new SampleNativeDatepickerClassicModuleImpl(reactContext);
-  }
+    public SampleNativeDatepickerClassicModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.moduleImpl = new SampleNativeDatepickerClassicModuleImpl(reactContext);
+    }
 
-  // Return the name of the module - it should match the name provided in JS specification
-  @Override
-  public String getName() {
-    return SampleNativeDatepickerClassicModuleImpl.NAME;
-  }
+    // Return the name of the module - it should match the name provided in JS specification
+    @Override
+    public String getName() {
+        return SampleNativeDatepickerClassicModuleImpl.NAME;
+    }
 
-  // Exported methods must be annotated with @ReactMethod decorator
-  @ReactMethod
-  public void showRangeDatepickerWithCallback(String title, Callback onResult) {
-    moduleImpl.showRangeDatepickerWithCallback(title, callback);
-  }
+    // Exported methods must be annotated with @ReactMethod decorator
+    @ReactMethod
+    public void showRangeDatepickerWithCallback(String title, Callback onResult) {
+        moduleImpl.showRangeDatepickerWithCallback(title, callback);
+    }
 
-  @ReactMethod
-  public void showRangeDatepickerWithPromise(ReadableMap config, Promise promise) {
-    moduleImpl.showRangeDatepickerWithPromise(config, promise);
-  }
+    @ReactMethod
+    public void showRangeDatepickerWithPromise(ReadableMap config, Promise promise) {
+        moduleImpl.showRangeDatepickerWithPromise(config, promise);
+    }
 }

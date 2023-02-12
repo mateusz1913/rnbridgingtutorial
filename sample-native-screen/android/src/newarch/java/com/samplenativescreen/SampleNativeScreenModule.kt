@@ -12,25 +12,25 @@ import com.facebook.react.module.annotations.ReactModule
  */
 @ReactModule(name = SampleNativeScreenModule.NAME)
 class SampleNativeScreenModule(
-  // Each native module class consumes react application context
-  reactContext: ReactApplicationContext
+    // Each native module class consumes react application context
+    reactContext: ReactApplicationContext
 ) : NativeSampleNativeScreenModuleSpec(reactContext) {
-  // Return the name of the module - it should match the name provided in JS specification
-  override fun getName() = SampleNativeScreenModuleImpl.NAME
+    // Return the name of the module - it should match the name provided in JS specification
+    override fun getName() = SampleNativeScreenModuleImpl.NAME
 
-  override fun initialize() {
-    super.initialize()
-    SampleNativeScreenModuleImpl.setReactApplicationContext(reactApplicationContext)
-  }
+    override fun initialize() {
+        super.initialize()
+        SampleNativeScreenModuleImpl.setReactApplicationContext(reactApplicationContext)
+    }
 
-  // Exported methods are overriden - based on the spec class
-  override fun launchNativeScreen(valueFromJS: String) = SampleNativeScreenModuleImpl.launchNativeScreen(valueFromJS)
+    // Exported methods are overriden - based on the spec class
+    override fun launchNativeScreen(valueFromJS: String) = SampleNativeScreenModuleImpl.launchNativeScreen(valueFromJS)
 
-  override fun addListener(eventName: String?) = Unit
+    override fun addListener(eventName: String?) = Unit
 
-  override fun removeListeners(count: Double) = Unit
+    override fun removeListeners(count: Double) = Unit
 
-  companion object {
-    const val NAME = SampleNativeScreenModuleImpl.NAME
-  }
+    companion object {
+        const val NAME = SampleNativeScreenModuleImpl.NAME
+    }
 }

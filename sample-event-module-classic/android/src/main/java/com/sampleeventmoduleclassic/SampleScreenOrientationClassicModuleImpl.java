@@ -13,62 +13,62 @@ import java.util.Objects;
  * Native module's shared implementation
  */
 public class SampleScreenOrientationClassicModuleImpl {
-  private final ReactApplicationContext reactContext;
+    private final ReactApplicationContext reactContext;
 
-  public static final String NAME = "SampleScreenOrientationClassicModule";
-  public static final String EVENT_NAME = "onSampleScreenOrientationClassicModuleChange";
-  public static final String EVENT_KEY = "value";
+    public static final String NAME = "SampleScreenOrientationClassicModule";
+    public static final String EVENT_NAME = "onSampleScreenOrientationClassicModuleChange";
+    public static final String EVENT_KEY = "value";
 
-  public SampleScreenOrientationClassicModuleImpl(ReactApplicationContext reactContext) {
-    this.reactContext = reactContext;
-  }
-
-  /**
-   * Example usage:
-   * 
-   * ```java
-   * WritableMap payload = Arguments.createMap();
-   * payload.putDouble(EVENT_KEY, 42);
-   * sendEvent(EVENT_NAME, payload);
-   * ```
-   */
-  private void sendEvent(String eventName, WritableMap params) {
-    reactContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(eventName, params);
-  }
-
-  private OrientationEventListener mOrientationDidChangeListener = null;
-  private String mLastOrientation = "unknown";
-
-  public void onInitialize() {
-    mOrientationDidChangeListener = new OrientationEventListener(reactContext, SensorManager.SENSOR_DELAY_NORMAL) {
-      @Override
-      public void onOrientationChanged(int orientation) {
-        String screenOrientation;
-        if (orientation > 315 || orientation < 45 || (orientation > 135 && orientation < 225)) {
-          screenOrientation = "portrait";
-        } else {
-          screenOrientation = "landscape";
-        }
-
-        if (Objects.equals(mLastOrientation, screenOrientation)) {
-          return;
-        }
-        mLastOrientation = screenOrientation;
-
-        WritableMap payload = Arguments.createMap();
-        payload.putString("orientation", screenOrientation);
-        sendEvent(EVENT_NAME, payload);
-      }
-    };
-    mOrientationDidChangeListener.enable();
-  }
-
-  public void onInvalidate() {
-    if (mOrientationDidChangeListener != null) {
-      mOrientationDidChangeListener.disable();
+    public SampleScreenOrientationClassicModuleImpl(ReactApplicationContext reactContext) {
+        this.reactContext = reactContext;
     }
-    mOrientationDidChangeListener = null;
-  }
+
+    /**
+     * Example usage:
+     *
+     * ```java
+     * WritableMap payload = Arguments.createMap();
+     * payload.putDouble(EVENT_KEY, 42);
+     * sendEvent(EVENT_NAME, payload);
+     * ```
+     */
+    private void sendEvent(String eventName, WritableMap params) {
+        reactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(eventName, params);
+    }
+
+    private OrientationEventListener mOrientationDidChangeListener = null;
+    private String mLastOrientation = "unknown";
+
+    public void onInitialize() {
+        mOrientationDidChangeListener = new OrientationEventListener(reactContext, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                String screenOrientation;
+                if (orientation > 315 || orientation < 45 || (orientation > 135 && orientation < 225)) {
+                    screenOrientation = "portrait";
+                } else {
+                    screenOrientation = "landscape";
+                }
+
+                if (Objects.equals(mLastOrientation, screenOrientation)) {
+                    return;
+                }
+                mLastOrientation = screenOrientation;
+
+                WritableMap payload = Arguments.createMap();
+                payload.putString("orientation", screenOrientation);
+                sendEvent(EVENT_NAME, payload);
+            }
+        };
+        mOrientationDidChangeListener.enable();
+    }
+
+    public void onInvalidate() {
+        if (mOrientationDidChangeListener != null) {
+            mOrientationDidChangeListener.disable();
+        }
+        mOrientationDidChangeListener = null;
+    }
 }

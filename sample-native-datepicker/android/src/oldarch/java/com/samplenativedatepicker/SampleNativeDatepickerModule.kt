@@ -17,23 +17,23 @@ import com.facebook.react.module.annotations.ReactModule
  */
 @ReactModule(name = SampleNativeDatepickerModule.NAME)
 class SampleNativeDatepickerModule(
-  // Each native module class consumes react application context
-  reactContext: ReactApplicationContext
+    // Each native module class consumes react application context
+    reactContext: ReactApplicationContext
 ) : ReactContextBaseJavaModule(reactContext) {
-  // Use shared module implementation and forward react application context
-  private val moduleImpl = SampleNativeDatepickerModuleImpl(reactContext)
+    // Use shared module implementation and forward react application context
+    private val moduleImpl = SampleNativeDatepickerModuleImpl(reactContext)
 
-  // Return the name of the module - it should match the name provided in JS specification
-  override fun getName() = SampleNativeDatepickerModuleImpl.NAME
+    // Return the name of the module - it should match the name provided in JS specification
+    override fun getName() = SampleNativeDatepickerModuleImpl.NAME
 
-  // Exported methods must be annotated with @ReactMethod decorator
-  @ReactMethod
-  fun showRangeDatepickerWithCallback(title: String, onResult: Callback) = moduleImpl.showRangeDatepickerWithCallback(title, onResult)
+    // Exported methods must be annotated with @ReactMethod decorator
+    @ReactMethod
+    fun showRangeDatepickerWithCallback(title: String, onResult: Callback) = moduleImpl.showRangeDatepickerWithCallback(title, onResult)
 
-  @ReactMethod
-  fun showRangeDatepickerWithPromise(config: ReadableMap, promise: Promise) = moduleImpl.showRangeDatepickerWithPromise(config, promise)
+    @ReactMethod
+    fun showRangeDatepickerWithPromise(config: ReadableMap, promise: Promise) = moduleImpl.showRangeDatepickerWithPromise(config, promise)
 
-  companion object {
-    const val NAME = SampleNativeDatepickerModuleImpl.NAME
-  }
+    companion object {
+        const val NAME = SampleNativeDatepickerModuleImpl.NAME
+    }
 }

@@ -38,18 +38,18 @@
 RCT_EXPORT_MODULE(SampleNativeDatepickerModule)
 
 - (instancetype)init {
-  self = [super init];
-  if (self) {
-    moduleImpl = [SampleNativeDatepickerModuleImpl new];
-    moduleImpl.delegate = self;
-  }
-  return self;
+    self = [super init];
+    if (self) {
+        moduleImpl = [SampleNativeDatepickerModuleImpl new];
+        moduleImpl.delegate = self;
+    }
+    return self;
 }
 
 // Declare if module should be initialized on the main queue
 + (BOOL)requiresMainQueueSetup
 {
-  return YES;
+    return YES;
 }
 
 /**
@@ -57,7 +57,7 @@ RCT_EXPORT_MODULE(SampleNativeDatepickerModule)
  * it can declare that its methods should be run on main queue
  */
 - (dispatch_queue_t)methodQueue {
-  return dispatch_get_main_queue();
+    return dispatch_get_main_queue();
 }
 
 // Exported methods are overriden - based on the spec class
@@ -124,7 +124,7 @@ RCT_EXPORT_METHOD(showRangeDatepickerWithPromise:(JS::NativeSampleNativeDatepick
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
-  return std::make_shared<facebook::react::NativeSampleNativeDatepickerModuleSpecJSI>(params);
+    return std::make_shared<facebook::react::NativeSampleNativeDatepickerModuleSpecJSI>(params);
 }
 #endif
 

@@ -51,11 +51,4 @@ class SampleNativeModulePackage : TurboReactPackage() {
         }
         return ReactModuleInfoProvider { reactModuleInfoMap }
     }
-
-    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        /**
-         * Here declare the list of exported native components
-         */
-        return listOf()
-    }
 }

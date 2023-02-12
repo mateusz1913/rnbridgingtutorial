@@ -19,24 +19,24 @@
 
 // Declare the ObjC implementation for that native module class
 @implementation SampleAppInfoClassicModule {
-  SampleAppInfoClassicModuleImpl *moduleImpl;
+    SampleAppInfoClassicModuleImpl *moduleImpl;
 }
 
 // Return the name of the module - it should match the name provided in JS specification
 RCT_EXPORT_MODULE(SampleAppInfoClassicModule)
 
 - (instancetype)init {
-  self = [super init];
-  if (self) {
-    moduleImpl = [SampleAppInfoClassicModuleImpl new];
-  }
-  return self;
+    self = [super init];
+    if (self) {
+        moduleImpl = [SampleAppInfoClassicModuleImpl new];
+    }
+    return self;
 }
 
 // Declare if module should be initialized on the main queue
 + (BOOL)requiresMainQueueSetup
 {
-  return NO;
+    return NO;
 }
 
 // Exported methods are overriden - based on the spec class
@@ -60,7 +60,7 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, getAppVersion)
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
-  return std::make_shared<facebook::react::NativeSampleAppInfoClassicModuleSpecJSI>(params);
+    return std::make_shared<facebook::react::NativeSampleAppInfoClassicModuleSpecJSI>(params);
 }
 #endif
 
