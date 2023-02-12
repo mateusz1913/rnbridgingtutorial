@@ -51,6 +51,14 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE, { isClassic: true });
   };
 
+  const navigateToNativeList = () => {
+    navigation.navigate(ROUTES.NATIVE_LIST);
+  };
+
+  const navigateToNativeListClassic = () => {
+    navigation.navigate(ROUTES.NATIVE_LIST, { isClassic: true });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.titleBarText}>Demo</Text>
@@ -91,6 +99,12 @@ export const HomeScreen: FC = () => {
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleLaunchNativeScreenClassic} title="Simple launch native screen module (Classic)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToNativeList} title="Native List (Modern)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToNativeListClassic} title="Native List (Classic)" />
           </View>
         </ScrollView>
       </View>

@@ -26,40 +26,40 @@ import com.facebook.react.modules.network.NetworkingModule
  * flavor of it. Here you can add your own plugins and customize the Flipper setup.
  */
 object ReactNativeFlipper {
-  @JvmStatic
-  fun initializeFlipper(context: Context?, reactInstanceManager: ReactInstanceManager) {
-    if (FlipperUtils.shouldEnableFlipper(context)) {
-      val client = AndroidFlipperClient.getInstance(context)
+    @JvmStatic
+    fun initializeFlipper(context: Context?, reactInstanceManager: ReactInstanceManager) {
+        if (FlipperUtils.shouldEnableFlipper(context)) {
+            val client = AndroidFlipperClient.getInstance(context)
 
-      client.addPlugin(InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()))
-      client.addPlugin(DatabasesFlipperPlugin(context))
-      client.addPlugin(SharedPreferencesFlipperPlugin(context))
-      client.addPlugin(CrashReporterPlugin.getInstance())
+            client.addPlugin(InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()))
+            client.addPlugin(DatabasesFlipperPlugin(context))
+            client.addPlugin(SharedPreferencesFlipperPlugin(context))
+            client.addPlugin(CrashReporterPlugin.getInstance())
 
-      val networkFlipperPlugin = NetworkFlipperPlugin()
-      NetworkingModule.setCustomClientBuilder { builder ->
-        builder.addNetworkInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
-      }
-      client.addPlugin(networkFlipperPlugin)
-      client.start()
-
-      // Fresco Plugin needs to ensure that ImagePipelineFactory is initialized
-      // Hence we run if after all native modules have been initialized
-      val reactContext = reactInstanceManager.currentReactContext
-      if (reactContext == null) {
-        reactInstanceManager.addReactInstanceEventListener(
-          object : ReactInstanceManager.ReactInstanceEventListener {
-            override fun onReactContextInitialized(reactContext: ReactContext) {
-              reactInstanceManager.removeReactInstanceEventListener(this)
-              reactContext.runOnNativeModulesQueueThread {
-                client.addPlugin(FrescoFlipperPlugin())
-              }
+            val networkFlipperPlugin = NetworkFlipperPlugin()
+            NetworkingModule.setCustomClientBuilder { builder ->
+                builder.addNetworkInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
             }
-          }
-        )
-      } else {
-        client.addPlugin(FrescoFlipperPlugin())
-      }
+            client.addPlugin(networkFlipperPlugin)
+            client.start()
+
+            // Fresco Plugin needs to ensure that ImagePipelineFactory is initialized
+            // Hence we run if after all native modules have been initialized
+            val reactContext = reactInstanceManager.currentReactContext
+            if (reactContext == null) {
+                reactInstanceManager.addReactInstanceEventListener(
+                    object : ReactInstanceManager.ReactInstanceEventListener {
+                        override fun onReactContextInitialized(reactContext: ReactContext) {
+                            reactInstanceManager.removeReactInstanceEventListener(this)
+                            reactContext.runOnNativeModulesQueueThread {
+                                client.addPlugin(FrescoFlipperPlugin())
+                            }
+                        }
+                    }
+                )
+            } else {
+                client.addPlugin(FrescoFlipperPlugin())
+            }
+        }
     }
-  }
 }

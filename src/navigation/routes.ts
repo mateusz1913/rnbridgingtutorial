@@ -6,4 +6,5 @@ export const ROUTES = Object.freeze({
   SIMPLE_REACT_VIEW: 'SimpleReactView',
   SIMPLE_VIEW: 'SimpleView',
   SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE: 'SimpleLaunchNativeScreenModule',
+  NATIVE_LIST: 'NativeList',
 });

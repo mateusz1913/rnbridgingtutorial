@@ -30,6 +30,8 @@ module.exports = {
           'sample-native-slider-classic': './sample-native-slider-classic',
           'sample-native-screen': './sample-native-screen',
           'sample-native-screen-classic': './sample-native-screen-classic',
+          'sample-native-list': './sample-native-list',
+          'sample-native-list-classic': './sample-native-list-classic',
         },
       },
     ],

@@ -11,6 +11,7 @@ export type RootStackParamList = {
   [ROUTES.SIMPLE_REACT_VIEW]: { isClassic: boolean } | undefined;
   [ROUTES.SIMPLE_VIEW]: { isClassic: boolean } | undefined;
   [ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE]: { isClassic: boolean } | undefined;
+  [ROUTES.NATIVE_LIST]: { isClassic: boolean } | undefined;
 };
 
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -23,3 +24,4 @@ export type SimpleLaunchNativeScreenModuleRouteProp = RouteProp<
   RootStackParamList,
   typeof ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE
 >;
+export type NativeListRouteProp = RouteProp<RootStackParamList, typeof ROUTES.NATIVE_LIST>;

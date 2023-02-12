@@ -98,5 +98,21 @@ module.exports = {
         },
       },
     },
+    'sample-native-list': { // <--------- Add entry for "sample-native-list"
+      root: path.resolve(__dirname, './sample-native-list'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-list/android'),
+        },
+      },
+    },
+    'sample-native-list-classic': { // <--------- Add entry for "sample-native-list-classic"
+      root: path.resolve(__dirname, './sample-native-list-classic'),
+      platforms: {
+        android: {
+          sourceDir: path.resolve(__dirname, './sample-native-list-classic/android'),
+        },
+      },
+    },
   },
 };
