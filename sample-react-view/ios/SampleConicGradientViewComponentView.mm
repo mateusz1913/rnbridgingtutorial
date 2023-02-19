@@ -11,24 +11,36 @@
 
 #import "RCTFabricComponentsPlugins.h"
 
-#import "SampleConicGradientView.h"
-
 using namespace facebook::react;
 
 @interface SampleConicGradientViewComponentView () <RCTSampleConicGradientViewViewProtocol>
 @end
 
-@implementation SampleConicGradientViewComponentView
+@implementation SampleConicGradientViewComponentView {
+    NSArray<UIColor *> *colors;
+    NSArray<NSNumber *> *locations;
+    CGPoint centerPoint;
+}
+
+@dynamic layer;
+
++ (Class)layerClass
+{
+    return [CAGradientLayer classForCoder];
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         static const auto defaultProps = std::make_shared<const SampleConicGradientViewProps>();
         _props = defaultProps;
-
-        SampleConicGradientView *view = [[SampleConicGradientView alloc] initWithFrame:CGRectZero];
-
-        self.contentView = (UIView *)view;
+        
+        colors = @[];
+        locations = @[];
+        centerPoint = CGPointMake(0.5, 0.5);
+        
+        self.layer.type = kCAGradientLayerConic;
+        self.layer.needsDisplayOnBoundsChange = YES;
     }
 
     return self;
@@ -39,38 +51,27 @@ using namespace facebook::react;
     const auto &oldViewProps = *std::static_pointer_cast<const SampleConicGradientViewProps>(_props);
     const auto &newViewProps = *std::static_pointer_cast<const SampleConicGradientViewProps>(props);
 
-    SampleConicGradientView *view = (SampleConicGradientView *)self.contentView;
-
     if (oldViewProps.colors != newViewProps.colors) {
         auto colors = RCTConvertVecToArray(newViewProps.colors, ^id(SharedColor item){
-            return RCTUIColorFromSharedColor(item);
+            return (id)RCTUIColorFromSharedColor(item).CGColor;
         });
-        [view setColors:colors];
+        self.layer.colors = colors;
     }
 
     if (oldViewProps.locations != newViewProps.locations) {
         auto locations = RCTConvertVecToArray(newViewProps.locations, ^id(double item){
             return @(item);
         });
-        [view setLocations:locations];
+        self.layer.locations = locations;
     }
 
     if (oldViewProps.centerPoint.x != newViewProps.centerPoint.x || oldViewProps.centerPoint.y != newViewProps.centerPoint.y) {
-        [view setCenterPoint:CGPointMake(newViewProps.centerPoint.x, newViewProps.centerPoint.y)];
+        auto centerPoint = CGPointMake(newViewProps.centerPoint.x, newViewProps.centerPoint.y);
+        self.layer.startPoint = centerPoint;
+        self.layer.endPoint = CGPointMake(1, centerPoint.y);
     }
 
     [super updateProps:props oldProps:oldProps];
-}
-
-- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
-{
-    // Forward child components to the content view
-    [self.contentView insertSubview:childComponentView atIndex:index];
-}
-
-- (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
-{
-    [childComponentView removeFromSuperview];
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider

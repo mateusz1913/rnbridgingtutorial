@@ -2,7 +2,10 @@
 
 #import <React/RCTConvert.h>
 
+#if RCT_NEW_ARCH_ENABLED
+#else
 #import "SampleConicGradientView.h"
+#endif
 
 @implementation SampleConicGradientViewManager
 
