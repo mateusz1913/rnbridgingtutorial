@@ -1,0 +1,91 @@
+---
+sidebar_label: Module constants
+sidebar_position: 7
+title: Module constants
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Constants declaration
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  getConstants(): { ALONSO: string, HAMILTON: string, LATIFI: string, VERSTAPPEN: string }
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+- (facebook::react::ModuleConstants<JS::NativeMyAwesomeModule::Constants::Builder>)constantsToExport
+{
+    return [self getConstants];
+}
+
+- (facebook::react::ModuleConstants<JS::NativeMyAwesomeModule::Constants::Builder>)getConstants {
+    facebook::react::ModuleConstants<JS::NativeMyAwesomeModule::Constants::Builder> constants;
+    constants = facebook::react::typedConstants<JS::NativeMyAwesomeModule::Constants::Builder>({
+        .ALONSO = @"You always have to leave the space!",
+        .HAMILTON = @"Dream the impossible!",
+        .LATIFI = @"GOAT"
+        .VERSTAPPEN = @"Radio ChECk"
+    });
+
+    return constants;
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+override fun getTypedExportedConstants(): MutableMap<String, Any> {
+    return mutableMapOf(
+        "ALONSO" to "You always have to leave the space!",
+        "HAMILTON" to "Dream the impossible!",
+        "LATIFI" to "GOAT",
+        "VERSTAPPEN" to "Radio ChECk"
+    )
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import java.util.HashMap;
+import java.util.Map;
+
+//
+
+@Override
+protected Map<String, Object> getTypedExportedConstants() {
+    final Map<String, Object> map = new HashMap<>();
+    map.put("ALONSO", "You always have to leave the space!");
+    map.put("HAMILTON", "Dream the impossible!");
+    map.put("LATIFI", "GOAT");
+    map.put("VERSTAPPEN", "Radio ChECk");
+    return map;
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>

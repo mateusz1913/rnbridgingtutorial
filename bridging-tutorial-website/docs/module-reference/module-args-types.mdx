@@ -1,0 +1,325 @@
+---
+sidebar_label: Method arguments
+sidebar_position: 4
+title: Method arguments
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Boolean argument
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myMethod(enabled: boolean, checked?: boolean): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myMethod:(BOOL) enabled
+                   checked:(NSNumber *) checked)
+{
+    //
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+override fun myMethod(enabled: Boolean, checked: Boolean?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import androidx.annotation.Nullable;
+
+//
+
+@Override
+public void myMethod(boolean enabled, @Nullable Boolean checked) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Number argument
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myMethod(count: number, optionalCount?: number): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myMethod:(double) count
+             optionalCount:(NSNumber *) optionalCount)
+{
+    //
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+override fun myMethod(count: Double, optionalCount: Double?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import androidx.annotation.Nullable;
+
+//
+
+@Override
+public void myMethod(double count, @Nullable Double optionalCount) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### String argument
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myMethod(name: string, label?: number): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myMethod:(NSString *) name
+                     label:(NSString * _Nullable) label)
+{
+    //
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+override fun myMethod(name: String, label: String?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import androidx.annotation.Nullable;
+
+//
+
+@Override
+public void myMethod(String name, @Nullable String label) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Array argument
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myMethod(data: number[], optionalData?: string[]): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myMethod:(NSArray *) data
+              optionalData:(NSArray * _Nullable) optionalData)
+{
+    //
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+import com.facebook.react.bridge.ReadableArray
+
+//
+
+override fun myMethod(data: ReadableArray, optionalData: ReadableArray?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.ReadableArray;
+
+//
+
+@Override
+public void myMethod(ReadableArray data, @Nullable ReadableArray optionalData) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Object argument
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myMethod(config: { flag: boolean, option: string }, optionalConfig?: { count: number }): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myMethod:(JS::NativeMyAwesomeModule::SpecMyMethodConfig &) config
+            optionalConfig:(JS::NativeMyAwesomeModule::SpecMyMethodOptionalConfig &) optionalConfig)
+{
+    //
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+import com.facebook.react.bridge.ReadableMap
+
+//
+
+override fun myMethod(config: ReadableMap, optionalConfig: ReadableMap?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.ReadableMap;
+
+//
+
+@Override
+public void myMethod(ReadableMap config, @Nullable ReadableMap optionalConfig) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>

@@ -9,7 +9,9 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.uimanager.events.EventDispatcher;
 import java.util.List;
+import java.util.Map;
 
 @ReactModule(name = SampleNativeSliderClassicView.NAME)
 public class SampleNativeSliderClassicViewManager extends ViewGroupManager<SampleNativeSliderClassicView> {
@@ -24,11 +26,11 @@ public class SampleNativeSliderClassicViewManager extends ViewGroupManager<Sampl
 
         switch (commandId) {
             case "setLeftKnobValueProgrammatically":
-                final int value = args.getInt(0);
+                final double value = args.getDouble(0);
                 setLeftKnobValueProgrammatically(root, value);
                 break;
             case "setRightKnobValueProgrammatically":
-                final int value = args.getInt(0);
+                final double value = args.getDouble(0);
                 setRightKnobValueProgrammatically(root, value);
                 break;
         }

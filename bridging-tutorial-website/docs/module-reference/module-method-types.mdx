@@ -1,0 +1,362 @@
+---
+sidebar_label: Method types
+sidebar_position: 2
+title: Method types
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Void method
+
+Void methods can take multiple amount of arguments and does not return any value.
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myAwesomeVoidMethod(): void
+  myAwesomeVoidMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myAwesomeVoidMethod)
+{
+    //
+}
+
+RCT_EXPORT_METHOD(myAwesomeVoidMethodWithArguments:(NSNumber *) numArg 
+                                            objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomeVoidMethodWithArgumentsObjArg &) objArg)
+{
+    //
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
+import com.facebook.react.bridge.ReadableMap
+
+//
+
+override fun myAwesomeVoidMethod() {
+    //
+}
+
+override fun myAwesomeVoidMethodWithArguments(numArg: Double, objArg: ReadableMap) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
+import com.facebook.react.bridge.ReadableMap;
+
+//
+
+@Override
+public void myAwesomeVoidMethod() {
+    //
+}
+
+@Override
+public void myAwesomeVoidMethodWithArguments(double numArg, ReadableMap objArg) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Sync method
+
+Sync methods can take multiple amount of arguments and synchronously return the value.
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myAwesomeSyncMethod(): number
+  myAwesomeSyncMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }): number
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethod)
+{
+    //
+    return 42;
+}
+
+RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethodWithArguments:(NSNumber *) numArg 
+                                                                      objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomeSyncMethodWithArgumentsObjArg &) objArg)
+{
+    //
+    return 42;
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/NativeMyAwesomeModule.kt"
+import com.facebook.react.bridge.ReadableMap
+
+//
+
+override fun myAwesomeSyncMethod(): Double {
+    //
+    return 42
+}
+
+override fun myAwesomeSyncMethodWithArguments(numArg: Double, objArg: ReadableMap): Double {
+    //
+    return 42
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/NativeMyAwesomeModule.java"
+import com.facebook.react.bridge.ReadableMap;
+
+//
+
+@Override
+public double myAwesomeSyncMethod() {
+    //
+    return 42;
+}
+
+@Override
+public double myAwesomeSyncMethodWithArguments(double numArg, ReadableMap objArg) {
+    //
+    return 42;
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Promise method
+
+Promise methods can take multiple amount of arguments and asynchronously return the value.
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myAwesomePromiseMethod(): Promise<boolean>
+  myAwesomePromiseMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }): Promise<boolean>
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myAwesomePromiseMethod:(RCTPromiseResolveBlock) resolve
+                                  reject:(RCTPromiseRejectBlock) reject)
+{
+    //
+    resolve(@(YES));
+}
+
+RCT_EXPORT_METHOD(myAwesomePromiseMethodWithArguments:(NSNumber *) numArg 
+                                               objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomePromiseMethodWithArgumentsObjArg &) objArg
+                                              resolve:(RCTPromiseResolveBlock) resolve
+                                               reject:(RCTPromiseRejectBlock) reject)
+{
+    //
+    resolve(@(YES));
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/NativeMyAwesomeModule.kt"
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableMap
+
+//
+
+override fun myAwesomePromiseMethod(promise: Promise) {
+    //
+    promise.resolve(true)
+}
+
+override fun myAwesomePromiseMethodWithArguments(numArg: Double, objArg: ReadableMap, promise: Promise) {
+    //
+    promise.resolve(true)
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/NativeMyAwesomeModule.java"
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReadableMap;
+
+//
+
+@Override
+public void myAwesomePromiseMethod(Promise promise) {
+    //
+    promise.resolve(true);
+}
+
+@Override
+public void myAwesomePromiseMethodWithArguments(double numArg, ReadableMap objArg, Promise promise) {
+    //
+    promise.resolve(true);
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Callback method
+
+Callback methods can take multiple amount of arguments and take callback arguments which are used to communicate from native to JS world. Callbacks should be put as last arguments in the method.
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+//
+
+export interface Spec extends TurboModule {
+  myAwesomeCallbackMethod(myResultCallback: () => void): void
+  myAwesomeCallbackMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }, myResultCallback: () => void): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/NativeMyAwesomeModule.mm"
+RCT_EXPORT_METHOD(myAwesomeCallbackMethod:(RCTResponseSenderBlock) myResultCallback)
+{
+    //
+    myResultCallback(@[nil]);
+}
+
+RCT_EXPORT_METHOD(myAwesomeCallbackMethodWithArguments:(NSNumber *) numArg 
+                                                objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomePromiseMethodWithArgumentsObjArg &) objArg
+                                      myResultCallback:(RCTResponseSenderBlock) myResultCallback)
+{
+    //
+    myResultCallback(@[nil]);
+}
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/NativeMyAwesomeModule.kt"
+import com.facebook.react.bridge.Callback
+import com.facebook.react.bridge.ReadableMap
+
+//
+
+override fun myAwesomeCallbackMethod(myResultCallback: Callback) {
+    //
+    callback.invoke(null)
+}
+
+override fun myAwesomeCallbackMethodWithArguments(numArg: Double, objArg: ReadableMap, myResultCallback: Callback) {
+    //
+    callback.invoke(null)
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/NativeMyAwesomeModule.java"
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableMap;
+
+//
+
+@Override
+public void myAwesomeCallbackMethod(Callback myResultCallback) {
+    //
+    callback.invoke(null);
+}
+
+@Override
+public void myAwesomeCallbackMethodWithArguments(double numArg, ReadableMap objArg, Callback myResultCallback) {
+    //
+    callback.invoke(null);
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>

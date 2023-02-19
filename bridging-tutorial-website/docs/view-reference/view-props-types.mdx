@@ -1,0 +1,1112 @@
+---
+sidebar_label: View props
+sidebar_position: 3
+title: View props
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Boolean prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  enabled: boolean
+  checked?: boolean
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.enabled != newViewProps.enabled) {
+        //
+    }
+
+    if (oldViewProps.checked != newViewProps.checked) {
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(checked, NSNumber)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "enabled")
+override fun setEnabled(view: MyAwesomeView, enabled: Boolean) {
+    //
+}
+
+@ReactProp(name = "checked")
+override fun setChecked(view: MyAwesomeView, checked: Boolean?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "enabled")
+public void setEnabled(MyAwesomeView view, boolean enabled) {
+    //
+}
+
+@Override
+@ReactProp(name = "checked")
+public void setChecked(MyAwesomeView view, @Nullable Boolean checked) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Number prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/MyAwesomeViewNativeComponent.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import type {
+  Double,
+  Float,
+  Int32,
+} from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  precision: Double
+  optionalPrecision?: Double
+  price: Float
+  discount?: Float
+  count: Int32
+  optionalCount?: Int32
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.precision != newViewProps.precision) {
+        //
+    }
+
+    if (oldViewProps.optionalPrecision != newViewProps.optionalPrecision) {
+        //
+    }
+
+    if (oldViewProps.price != newViewProps.price) {
+        //
+    }
+
+    if (oldViewProps.discount != newViewProps.discount) {
+        //
+    }
+
+    if (oldViewProps.count != newViewProps.count) {
+        //
+    }
+
+    if (oldViewProps.optionalCount != newViewProps.optionalCount) {
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(precision, double)
+RCT_EXPORT_VIEW_PROPERTY(optionalPrecision, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(price, float)
+RCT_EXPORT_VIEW_PROPERTY(discount, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(count, int)
+RCT_EXPORT_VIEW_PROPERTY(optionalCount, NSNumber)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "precision")
+override fun setPrecision(view: MyAwesomeView, precision: Double) {
+    //
+}
+
+@ReactProp(name = "optionalPrecision")
+override fun setOptionalPrecision(view: MyAwesomeView, optionalPrecision: Double?) {
+    //
+}
+
+@ReactProp(name = "price")
+override fun setPrice(view: MyAwesomeView, price: Float) {
+    //
+}
+
+@ReactProp(name = "discount")
+override fun setDiscount(view: MyAwesomeView, discount: Float?) {
+    //
+}
+
+@ReactProp(name = "count")
+override fun setCount(view: MyAwesomeView, count: Int) {
+    //
+}
+
+@ReactProp(name = "optionalCount")
+override fun setOptionalCount(view: MyAwesomeView, optionalCount: Int?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "precision")
+public void setPrecision(MyAwesomeView view, double precision) {
+    //
+}
+
+@Override
+@ReactProp(name = "optionalPrecision")
+public void setOptionalPrecision(MyAwesomeView view, @Nullable Double optionalPrecision) {
+    //
+}
+
+@Override
+@ReactProp(name = "price")
+public void setPrice(MyAwesomeView view, float price) {
+    //
+}
+
+@Override
+@ReactProp(name = "discount")
+public void setDiscount(MyAwesomeView view, @Nullable Float discount) {
+    //
+}
+
+@Override
+@ReactProp(name = "count")
+public void setCount(MyAwesomeView view, int count) {
+    //
+}
+
+@Override
+@ReactProp(name = "optionalCount")
+public void setOptionalCount(MyAwesomeView view, @Nullable Integer optionalCount) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### String prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  name: string
+  label?: string
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.name != newViewProps.name) {
+        //
+    }
+
+    if (oldViewProps.label != newViewProps.label) {
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(name, NSString)
+RCT_EXPORT_VIEW_PROPERTY(label, NSString)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "name")
+override fun setName(view: MyAwesomeView, name: String) {
+    //
+}
+
+@ReactProp(name = "label")
+override fun setLabel(view: MyAwesomeView, label: String?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "name")
+public void setName(MyAwesomeView view, String name) {
+    //
+}
+
+@Override
+@ReactProp(name = "label")
+public void setLabel(MyAwesomeView view, @Nullable String label) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Array prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  data: ReadonlyArray<number>
+  optionalData?: ReadonlyArray<Readonly<{ title: string, description: string }>>
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <React/RCTConversions.h>
+#import <RCTTypeSafety/RCTConvertHelpers.h>
+
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.data != newViewProps.data) {
+        NSArray<NSNumber *> *data = RCTConvertVecToArray(newViewProps.data, ^(double item){
+            return @(item);
+        });
+
+        //
+    }
+
+    auto optionalDataComparator = [](const facebook::react::MyAwesomeViewOptionalDataStruct &left, const facebook::react::MyAwesomeViewOptionalDataStruct &right) {
+        return left.title == right.title && left.description == right.description;
+    };
+    if (!std::equal(oldViewProps.data.begin(), oldViewProps.data.end(), newViewProps.data.begin(), newViewProps.data.end(), dataComparator)) {
+        NSArray<NSDictionary *> *data = RCTConvertVecToArray(newViewProps.data, ^(facebook::react::MyAwesomeViewOptionalDataStruct item){
+            NSString *title = RCTNSStringFromString(item.title);
+            NSString *descrption = RCTNSStringFromString(item.description);
+            return @{ @"title": title, @"description": description };
+        });
+
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(data, NSArray)
+RCT_EXPORT_VIEW_PROPERTY(optionalData, NSArray)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "data")
+override fun setData(view: MyAwesomeView, data: ReadableArray) {
+    //
+}
+
+@ReactProp(name = "optionalData")
+fun setOptionalData(view: MyAwesomeView, optionalData: ReadableArray?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "data")
+public void setData(MyAwesomeView view, ReadableArray data) {
+    //
+}
+
+@Override
+@ReactProp(name = "optionalData")
+public void setOptionalData(MyAwesomeView view, @Nullable ReadableArray optionalData) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Object prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  enabled: boolean
+  checked?: boolean
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <React/RCTConversions.h>
+
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.config != newViewProps.config) {
+        BOOL *flag = newViewProps.config.flag;
+        NSString *option = RCTNSStringFromString(newViewProps.config.option);
+
+        //
+    }
+
+    if (oldViewProps.optionalConfig != newViewProps.optionalConfig) {
+        NSNumber *count = @(newViewProps.optionalConfig.count);
+
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary)
+RCT_EXPORT_VIEW_PROPERTY(optionalConfig, NSDictionary)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "config")
+override fun setConfig(view: MyAwesomeView, config: ReadableMap) {
+    //
+}
+
+@ReactProp(name = "optionalConfig")
+override fun setOptionalConfig(view: MyAwesomeView, optionalConfig: ReadableMap?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "config")
+public void setConfig(MyAwesomeView view, ReadableMap config) {
+    //
+}
+
+@Override
+@ReactProp(name = "optionalConfig")
+public void setOptionalConfig(MyAwesomeView view, @Nullable ReadableMap optionalConfig) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Color prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { ColorValue, HostComponent, ViewProps } from 'react-native';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  tintColor: ColorValue
+  optionalColor?: ColorValue
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <React/RCTConversions.h>
+
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.tintColor != newViewProps.tintColor) {
+        UIColor *tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+
+        //
+    }
+
+    if (oldViewProps.optionalColor != newViewProps.optionalColor) {
+        UIColor *optionalColor = RCTUIColorFromSharedColor(newViewProps.optionalColor);
+
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+RCT_EXPORT_VIEW_PROPERTY(optionalColor, UIColor)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "tintColor")
+override fun setTintColor(view: MyAwesomeView, tintColor: Int?) {
+    //
+}
+
+@ReactProp(name = "optionalColor")
+override fun setOptionalColor(view: MyAwesomeView, optionalColor: Int?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "tintColor")
+public void setTintColor(MyAwesomeView view, @Nullable Integer tintColor) {
+    //
+}
+
+@Override
+@ReactProp(name = "optionalColor")
+public void setOptionalColor(MyAwesomeView view, @Nullable Integer optionalColor) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Event handler prop
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import type {
+  BubblingEventHandler,
+  DirectEventHandler,
+} from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  onAwesomeBubblingEvent?: BubblingEventHandler<Readonly<{ arg: string }>>
+  onAwesomeDirectEvent?: DirectEventHandler<Readonly<{ arg: string }>>
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <react/renderer/components/MyAwesomeView/EventEmitters.h>
+
+//
+
+- (void)handleBubblingEvent:(NSString *)payload
+{
+    if (_eventEmitter != nil) {
+        std::dynamic_pointer_cast<const facebook::react::MyAwesomeViewEventEmitter>(_eventEmitter)
+            ->onAwesomeBubblingEvent(
+                facebook::react::MyAwesomeViewEventEmitter::OnAwesomeBubblingEvent{
+                    .arg = payload
+                });
+    }
+}
+
+- (void)handleDirectEvent:(NSString *)payload
+{
+    if (_eventEmitter != nil) {
+        std::dynamic_pointer_cast<const facebook::react::MyAwesomeViewEventEmitter>(_eventEmitter)
+            ->onAwesomeDirectEvent(
+                facebook::react::MyAwesomeViewEventEmitter::OnAwesomeDirectEvent{
+                    .arg = payload
+                });
+    }
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(onAwesomeBubblingEvent, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAwesomeDirectEvent, RCTDirectEventBlock)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/java/com/myawesomeapp/OnAwesomeBubblingEvent.kt"
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.uimanager.events.Event
+
+//
+
+class OnAwesomeBubblingEvent(
+    surfaceId: Int,
+    viewId: Int,
+    private val payload: String
+) : Event<OnAwesomeBubblingEvent>(surfaceId, viewId) {
+    override fun getEventName() = NAME
+
+    override fun getEventData(): WritableMap? {
+        return createPayload()
+    }
+
+    private fun createPayload() = Arguments.createMap().apply {
+        putString("arg", payload)
+    }
+
+    companion object {
+        const val NAME = "topAwesomeBubblingEvent"
+        const val EVENT_PROP_NAME = "onAwesomeBubblingEvent"
+    }
+}
+```
+
+```kotlin title="android/src/main/java/com/myawesomeapp/OnAwesomeDirectEvent.kt"
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.uimanager.events.Event
+
+//
+
+class OnAwesomeDirectEvent(
+    surfaceId: Int,
+    viewId: Int,
+    private val payload: String
+) : Event<OnAwesomeDirectEvent>(surfaceId, viewId) {
+    override fun getEventName() = NAME
+
+    override fun getEventData(): WritableMap? {
+        return createPayload()
+    }
+
+    private fun createPayload() = Arguments.createMap().apply {
+        putString("arg", payload)
+    }
+
+    companion object {
+        const val NAME = "topAwesomeDirectEvent"
+        const val EVENT_PROP_NAME = "onAwesomeDirectEvent"
+    }
+}
+```
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.common.MapBuilder
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.UIManagerHelper
+
+//
+
+override fun addEventEmitters(reactContext: ThemedReactContext, view: MyAwesomeView) {
+    super.addEventEmitters(reactContext, view)
+    view.setOnAwesomeViewListener(object : MyAwesomeView.OnAwesomeViewListener {
+        override fun onAwesomeBubblingEvent(payload: String) {
+            UIManagerHelper.getEventDispatcherForReactTag(reactContext, view.id)
+                ?.dispatchEvent(
+                    OnAwesomeBubblingEvent(
+                        UIManagerHelper.getSurfaceId(reactContext),
+                        view.id,
+                        payload
+                    )
+                )
+        }
+
+        override fun onAwesomeDirectEvent(payload: String) {
+            UIManagerHelper.getEventDispatcherForReactTag(reactContext, view.id)
+                ?.dispatchEvent(
+                    OnAwesomeDirectEvent(
+                        UIManagerHelper.getSurfaceId(reactContext),
+                        view.id,
+                        payload
+                    )
+                )
+        }
+    })
+}
+
+override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any> {
+    return MapBuilder.of(
+        OnAwesomeBubblingEvent.NAME,
+        MapBuilder.of("registrationName", OnAwesomeBubblingEvent.EVENT_PROP_NAME)
+    )
+}
+
+override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
+    return MapBuilder.of(
+        OnAwesomeDirectEvent.NAME,
+        MapBuilder.of("registrationName", OnAwesomeDirectEvent.EVENT_PROP_NAME)
+    )
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/java/com/myawesomeapp/OnAwesomeBubblingEvent.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.Event;
+
+//
+
+public class OnAwesomeBubblingEvent extends Event<OnAwesomeBubblingEvent> {
+    private final String payload;
+
+    public static final String NAME = "topAwesomeBubblingEvent";
+    public static final String EVENT_PROP_NAME = "onAwesomeBubblingEvent";
+
+    public OnAwesomeBubblingEvent(int surfaceId, int viewId, String payload) {
+        super(surfaceId, viewId);
+        this.payload = payload;
+    }
+
+    @Override
+    public String getEventName() {
+        return NAME;
+    }
+
+    @Override
+    @Nullable
+    public WritableMap getEventData() {
+        return createPayload();
+    }
+
+    private WritableMap createPayload() {
+        WritableMap eventPayload = Arguments.createMap();
+        eventPayload.putString("arg", payload);
+        return eventPayload;
+    }
+}
+```
+
+```java title="android/src/main/java/com/myawesomeapp/OnAwesomeDirectEvent.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.Event;
+
+//
+
+public class OnAwesomeDirectEvent extends Event<OnAwesomeDirectEvent> {
+    private final String payload;
+
+    public static final String NAME = "topAwesomeDirectEvent";
+    public static final String EVENT_PROP_NAME = "onAwesomeDirectEvent";
+
+    public OnAwesomeDirectEvent(int surfaceId, int viewId, String payload) {
+        super(surfaceId, viewId);
+        this.payload = payload;
+    }
+
+    @Override
+    public String getEventName() {
+        return NAME;
+    }
+
+    @Override
+    @Nullable
+    public WritableMap getEventData() {
+        return createPayload();
+    }
+
+    private WritableMap createPayload() {
+        WritableMap eventPayload = Arguments.createMap();
+        eventPayload.putString("arg", payload);
+        return eventPayload;
+    }
+}
+```
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import com.facebook.react.common.MapBuilder;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.UIManagerHelper;
+import com.facebook.react.uimanager.events.EventDispatcher;
+
+import java.util.Map;
+
+//
+
+@Override
+protected void addEventEmitters(ThemedReactContext reactContext, MyAwesomeView view) {
+    super.addEventEmitters(reactContext, view);
+    view.setOnAwesomeViewListener(new MyAwesomeView.OnAwesomeViewListener() {
+        @Override
+        public void onAwesomeBubblingEvent(String payload) {
+            final EventDispatcher dispatcher =
+                UIManagerHelper.getEventDispatcherForReactTag(reactContext, view.getId());
+            if (dispatcher != null) {
+                dispatcher.dispatchEvent(
+                    new OnAwesomeBubblingEvent(
+                        UIManagerHelper.getSurfaceId(reactContext),
+                        view.getId(),
+                        payload
+                    )
+                );
+            }
+        }
+
+        @Override
+        public void onAwesomeDirectEvent(String payload) {
+            final EventDispatcher dispatcher =
+                UIManagerHelper.getEventDispatcherForReactTag(reactContext, view.getId());
+            if (dispatcher != null) {
+                dispatcher.dispatchEvent(
+                    new OnAwesomeDirectEvent(
+                        UIManagerHelper.getSurfaceId(reactContext),
+                        view.getId(),
+                        payload
+                    )
+                );
+            }
+        }
+    });
+}
+
+@Override
+public Map<String, Object> getExportedCustomBubblingEventTypeConstants() {
+    return MapBuilder.of(
+        OnAwesomeBubblingEvent.NAME,
+        MapBuilder.of("registrationName", OnAwesomeBubblingEvent.EVENT_PROP_NAME)
+    )
+}
+
+@Override
+public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
+    return MapBuilder.of(
+        OnAwesomeDirectEvent.NAME,
+        MapBuilder.of("registrationName", OnAwesomeDirectEvent.EVENT_PROP_NAME)
+    )
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Prop with default value
+
+<Tabs groupId="specs">
+<TabItem value="JS" label="JS Spec">
+
+```ts title="src/NativeMyAwesomeModule.ts"
+import type { HostComponent, ViewProps } from 'react-native';
+import type { WithDefault } from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+//
+
+export interface MyAwesomeViewProps extends ViewProps {
+  interval?: WithDefault<'slow' | 'normal' | 'fast', 'normal'>
+}
+
+export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as HostComponent<MyAwesomeViewProps>;
+```
+
+</TabItem>
+<TabItem value="iOS" label="iOS Spec">
+
+```objc title="ios/MyAwesomeViewComponentView.mm"
+#import <react/renderer/components/MyAwesomeView/Props.h>
+
+//
+
+- (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
+
+    if (oldViewProps.interval != newViewProps.interval) {
+        //
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
+```
+
+```objc title="ios/MyAwesomeViewManager.mm"
+RCT_EXPORT_VIEW_PROPERTY(interval, NSString)
+```
+
+</TabItem>
+<TabItem value="Android" label="Android Spec">
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
+import com.facebook.react.uimanager.annotations.ReactProp
+
+//
+
+@ReactProp(name = "interval")
+override fun setInterval(view: MyAwesomeView, interval: String?) {
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.java"
+import androidx.annotation.Nullable;
+
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+//
+
+@Override
+@ReactProp(name = "interval")
+public void setInterval(MyAwesomeView view, @Nullable String interval) {
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
