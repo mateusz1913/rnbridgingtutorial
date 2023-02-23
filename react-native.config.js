@@ -2,21 +2,11 @@ const path = require('path');
 
 module.exports = {
   dependencies: {
-    'sample-native-module': {
-      root: path.resolve(__dirname, './sample-native-module'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-module/android'),
-        },
-      },
+    'app-info-package': { // <--------- Add entry for "app-info-package"
+      root: path.resolve(__dirname, './app-info-package'),
     },
-    'sample-native-module-classic': { // <--------- Add entry for "sample-native-module-classic"
-      root: path.resolve(__dirname, './sample-native-module-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-module-classic/android'),
-        },
-      },
+    'app-info-package-classic': { // <--------- Add entry for "app-info-package-classic"
+      root: path.resolve(__dirname, './app-info-package-classic'),
     },
     'sample-native-datepicker': { // <--------- Add entry for "sample-native-datepicker"
       root: path.resolve(__dirname, './sample-native-datepicker'),

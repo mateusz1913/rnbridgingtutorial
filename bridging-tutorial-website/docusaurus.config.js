@@ -120,7 +120,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: [ 'java', 'kotlin' ],
+        additionalLanguages: [ 'java', 'kotlin', 'swift', 'ruby', 'groovy' ],
       },
     },
 };

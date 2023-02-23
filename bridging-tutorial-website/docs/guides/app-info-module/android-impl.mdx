@@ -1,0 +1,625 @@
+---
+sidebar_label: Android implementation
+sidebar_position: 5
+title: Android implementation
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Let's use Android Studio for writing Android code. Launch Android Studio and open the project under `<your-project-dir>/android` path
+
+When the project is opened, you should see following project-tree:
+
+![AppInfoPackage inside Android Studio](/img/appinfo-android-studio-package.png)
+
+The `app` project is the android app project where you have app's `AndroidManifest.xml`, activity and application source files or resources like fonts, images, themes, etc.
+
+The `app-info-package` contains 3 packages with the same name `com.appinfopackage`. After expanding them, you'll notice that these contain following things:
+
+- code-generated Java spec files
+- RN's module wrapper `AppInfoModule` class stub file
+- module-implementation `AppInfoModuleImpl` class stub file
+- `AppInfoPackage` class stub file
+
+Let's go with the stub files!
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+#### `AppInfoModule.kt`
+
+Let's start with `android/src/newarch/java/com/appinfopackage/AppInfoModule.kt`
+
+```kotlin title="android/src/newarch/java/com/appinfopackage/AppInfoModule.kt"
+package com.appinfopackage
+
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.annotations.ReactModule
+
+/**
+ * Declare Kotlin class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = AppInfoModule.NAME)
+class AppInfoModule(
+    // Each native module class consumes react application context
+    reactContext: ReactApplicationContext
+) : NativeAppInfoModuleSpec(reactContext) {
+    companion object {
+        const val NAME = "NAME"
+    }
+}
+```
+
+We start by adding `package com.appinfopackage` at the top of the file.
+This will "link" everything inside that file with `com.appinfopackage` android namespace.
+
+Second step is to import `ReactApplicationContext` class & `ReactModule` annotation.
+`ReactApplicationContext` instance is used as the only `AppInfoModule` constructor parameter.
+Additionally, `AppInfoModule` is annotated with `ReactModule` decorator.
+The name parameter's value is a static constant `NAME`.
+
+Next thing is to extend `AppInfoModule` with code-generated spec class.
+After extending, Android Studio will display error that `AppInfoModule` does not implement required methods.
+We will implement it later, now let's create module-implementation class.
+
+#### `AppInfoModuleImpl.kt`
+
+Open the `android/src/main/java/com/appinfopackage/AppInfoModuleImpl.kt` and paste following content:
+
+```kotlin title="android/src/main/java/com/appinfopackage/AppInfoModuleImpl.kt"
+package com.appinfopackage
+
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.os.Build
+
+import com.facebook.react.bridge.ReactApplicationContext
+
+/**
+ * Native module's shared implementation
+ */
+class AppInfoModuleImpl(
+    private val reactContext: ReactApplicationContext
+) {
+    fun getAppBuildNumber(): String {
+        var buildNumber = "unknown"
+        try {
+            buildNumber = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                getPackageInfo().longVersionCode.toString()
+            } else {
+                @Suppress("DEPRECATION")
+                getPackageInfo().versionCode.toString()
+            }
+        } catch (_: Exception) {}
+        return buildNumber
+    }
+
+    fun getAppBundleId() = reactContext.packageName as String
+
+    fun getAppVersion(): String {
+        var appVersion = "unknown"
+        try {
+            appVersion = getPackageInfo().versionName
+        } catch (_: Exception) {}
+        return appVersion
+    }
+
+    private fun getPackageInfo(): PackageInfo {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            reactContext
+                .packageManager
+                .getPackageInfo(
+                    reactContext.packageName,
+                    PackageManager.PackageInfoFlags.of(0L)
+                )
+        } else {
+            @Suppress("DEPRECATION")
+            reactContext
+                .packageManager
+                .getPackageInfo(reactContext.packageName, 0)
+        }
+    }
+
+    companion object {
+        const val NAME = "AppInfoModule"
+    }
+}
+```
+
+The purpose of creating separate class, instead of using `AppInfoModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
+
+`AppInfoModuleImpl` declares 3 methods, each of them returns string value. It also declares static `NAME` constant which will be used in RN's module wrapper.
+
+#### Use module-implementation in module
+
+Let's combine module-implementation with RN's wrapper class
+
+```diff title="android/src/newarch/java/com/appinfopackage/AppInfoModule.kt"
+package com.appinfopackage
+
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.annotations.ReactModule
+
+/**
+ * Declare Kotlin class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = AppInfoModule.NAME)
+class AppInfoModule(
+    // Each native module class consumes react application context
+    reactContext: ReactApplicationContext
+) : NativeAppInfoModuleSpec(reactContext) {
+// highlight-start
++   // Use shared module implementation and forward react application context
++   private val moduleImpl = AppInfoModuleImpl(reactContext)
++
++   // Return the name of the module - it should match the name provided in JS specification
++   override fun getName() = NAME
++
++   // Exported methods are overriden - based on the spec class
++   override fun getAppBuildNumber() = moduleImpl.getAppBuildNumber()
++
++   override fun getAppBundleId() = moduleImpl.getAppBundleId()
++
++   override fun getAppVersion() = moduleImpl.getAppVersion()
++
+// highlight-end
+    companion object {
+// highlight-start
+-       const val NAME = "NAME"
++       const val NAME = AppInfoModuleImpl.NAME
+// highlight-end
+    }
+}
+```
+
+The main 2 things we are doing here are:
+
+- using module-implementation methods to implement code-generated spec methods
+- using module-implementation `NAME` value
+
+<details>
+  <summary>Old architecture module</summary>
+  <div>
+    The implementation of old architecture module won't be visible in Android Studio when you have new architecture enabled.
+    If you want, you can open <code>android/src/oldarch/java/com/appinfopackage/AppInfoModule.kt</code> at other text editor and paste following content:
+    <br /><br />
+
+    package com.appinfopackage
+
+    import com.facebook.react.bridge.ReactApplicationContext
+    import com.facebook.react.bridge.ReactContextBaseJavaModule
+    import com.facebook.react.bridge.ReactMethod
+    import com.facebook.react.module.annotations.ReactModule
+
+    /**
+     * Declare Kotlin class for old arch native module implementation
+     *
+     * Each native module extends ReactContextBaseJavaModule class
+     *
+     * Class should be annotated with @ReactModule decorator
+     */
+    @ReactModule(name = AppInfoModule.NAME)
+    class AppInfoModule(
+        // Each native module class consumes react application context
+        reactContext: ReactApplicationContext
+    ) : ReactContextBaseJavaModule(reactContext) {
+        // Use shared module implementation and forward react application context
+        private val moduleImpl = AppInfoModuleImpl(reactContext)
+
+        // Return the name of the module - it should match the name provided in JS specification
+        override fun getName() = NAME
+
+        // Exported methods must be annotated with @ReactMethod decorator
+        @ReactMethod(isBlockingSynchronousMethod = true)
+        fun getAppBuildNumber() = moduleImpl.getAppBuildNumber()
+
+        @ReactMethod(isBlockingSynchronousMethod = true)
+        fun getAppBundleId() = moduleImpl.getAppBundleId()
+
+        @ReactMethod(isBlockingSynchronousMethod = true)
+        fun getAppVersion() = moduleImpl.getAppVersion()
+
+        companion object {
+            const val NAME = AppInfoModuleImpl.NAME
+        }
+    }
+  </div>
+</details>
+
+#### `AppInfoModulePackage.kt`
+
+The last thing we need to do is to export `AppInfoModule` in the `TurboReactPackage` instance.
+Let's go to `AppInfoModulePackage.kt` and add our new module.
+
+```kotlin title="android/src/main/java/com/appinfopackage/AppInfoModulePackage.kt"
+package com.appinfopackage
+
+import com.facebook.react.TurboReactPackage
+import com.facebook.react.bridge.NativeModule
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
+import com.facebook.react.module.model.ReactModuleInfoProvider
+import com.facebook.react.turbomodule.core.interfaces.TurboModule
+
+class AppInfoModulePackage : TurboReactPackage() {
+    // highlight-start
+    /**
+     * Initialize and export modules based on the name of the required module
+     */
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
+        return when (name) {
+            AppInfoModule.NAME -> AppInfoModule(reactContext)
+            else -> null
+        }
+    }
+    // highlight-end
+
+    /**
+     * Declare info about exported modules
+     */
+    override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
+        /**
+         * Here declare the array of exported modules
+         */
+        val moduleList: Array<Class<out NativeModule?>> = arrayOf(
+            AppInfoModule::class.java
+        )
+        val reactModuleInfoMap: MutableMap<String, ReactModuleInfo> = HashMap()
+        /**
+         * And here just iterate on that array and produce the info provider instance
+         */
+        for (moduleClass in moduleList) {
+            val reactModule = moduleClass.getAnnotation(ReactModule::class.java) ?: continue
+            reactModuleInfoMap[reactModule.name] =
+                ReactModuleInfo(
+                    reactModule.name,
+                    moduleClass.name,
+                    true,
+                    reactModule.needsEagerInit,
+                    reactModule.hasConstants,
+                    reactModule.isCxxModule,
+                    TurboModule::class.java.isAssignableFrom(moduleClass)
+                )
+        }
+        return ReactModuleInfoProvider { reactModuleInfoMap }
+    }
+}
+```
+
+To export the module, we need to return it from `getModule` method inside `AppInfoModulePackage`, if it's requested
+(the method takes name as a parameter and makes decision which module should be served).
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+#### `AppInfoModule.java`
+
+Let's start with `android/src/newarch/java/com/appinfopackage/AppInfoModule.java`
+
+```java title="android/src/newarch/java/com/appinfopackage/AppInfoModule.java"
+package com.appinfopackage;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = AppInfoModule.NAME)
+public class AppInfoModule extends NativeAppInfoModuleSpec {
+    public static final String NAME = "NAME";
+
+    public AppInfoModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+    }
+}
+```
+
+We start by adding `package com.appinfopackage;` at the top of the file.
+This will "link" everything inside that file with `com.appinfopackage` android namespace.
+
+Second step is to import `ReactApplicationContext` class & `ReactModule` annotation.
+`ReactApplicationContext` instance is used as the only `AppInfoModule` constructor parameter.
+Additionally, `AppInfoModule` is annotated with `ReactModule` decorator.
+The name parameter's value is a static constant `NAME`.
+
+Next thing is to extend `AppInfoModule` with code-generated spec class.
+After extending, Android Studio will display error that `AppInfoModule` does not implement required methods.
+We will implement it later, now let's create module-implementation class.
+
+#### `AppInfoModuleImpl.java`
+
+Open the `android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java` and paste following content:
+
+```java title="android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java"
+package com.appinfopackage;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+
+/**
+ * Native module's shared implementation
+ */
+public class AppInfoModuleImpl {
+    private final ReactApplicationContext reactContext;
+
+    public static final String NAME = "AppInfoModule";
+
+    public AppInfoModuleImpl(ReactApplicationContext reactContext) {
+        this.reactContext = reactContext;
+    }
+
+    public String getAppBuildNumber() {
+        String buildNumber = "unknown";
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                buildNumber = Long.toString(getPackageInfo().getLongVersionCode());
+            } else {
+                buildNumber = Long.toString(getPackageInfo().versionCode);
+            }
+        } catch (Exception ignored) {}
+
+        return buildNumber;
+    }
+
+    public String getAppBundleId() {
+        return reactContext.getPackageName();
+    }
+
+    public String getAppVersion() {
+        String appVersion = "unknown";
+        try {
+            appVersion = getPackageInfo().versionName;
+        } catch (Exception ignored) {}
+        return appVersion;
+    }
+
+    private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return reactContext
+                .getPackageManager()
+                .getPackageInfo(
+                        reactContext.getPackageName(),
+                        PackageManager.PackageInfoFlags.of(0L)
+                );
+        } else {
+            return reactContext
+                .getPackageManager()
+                .getPackageInfo(reactContext.getPackageName(), 0);
+        }
+    }
+}
+```
+
+The purpose of creating separate class, instead of using `AppInfoModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
+
+`AppInfoModuleImpl` declares 3 methods, each of them returns string value. It also declares static `NAME` constant which will be used in RN's module wrapper.
+
+#### Use module-implementation in module
+
+Let's combine module-implementation with RN's wrapper class
+
+```diff title="android/src/newarch/java/com/appinfopackage/AppInfoModule.java"
+package com.appinfopackage;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = AppInfoModule.NAME)
+public class AppInfoModule extends NativeAppInfoModuleSpec {
+// highlight-start
+-   public static final String NAME = "NAME";
++   public static final String NAME = AppInfoModuleImpl.NAME;
+// highlight-end
+
+// highlight-start
++   // Use shared module implementation and forward react application context
++   private final AppInfoModuleImpl moduleImpl;
++
+// highlight-end
+    public AppInfoModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+// highlight-next-line
++       this.moduleImpl = new AppInfoModuleImpl(reactContext);
+    }
+
+// highlight-start
++   // Return the name of the module - it should match the name provided in JS specification
++   @Override
++   public String getName() {
++       return NAME;
++   }
++
++   // Exported methods are overriden - based on the spec class
++   @Override
++   public String getAppBuildNumber() {
++       return moduleImpl.getAppBuildNumber();
++   }
++
++   @Override
++   public String getAppBundleId() {
++       return moduleImpl.getAppBundleId();
++   }
++
++   @Override
++   public String getAppVersion() {
++       return moduleImpl.getAppVersion();
++   }
+// highlight-end
+}
+```
+
+The main 2 things we are doing here are:
+
+- using module-implementation methods to implement code-generated spec methods
+- using module-implementation `NAME` value
+
+<details>
+  <summary>Old architecture module</summary>
+  <div>
+    The implementation of old architecture module won't be visible in Android Studio when you have new architecture enabled.
+    If you want, you can open <code>android/src/oldarch/java/com/appinfopackage/AppInfoModule.java</code> at other text editor and paste following content:
+    <br /><br />
+
+    package com.appinfopackage;
+
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.ReactContextBaseJavaModule;
+    import com.facebook.react.bridge.ReactMethod;
+    import com.facebook.react.module.annotations.ReactModule;
+
+    /**
+    * Declare Java class for old arch native module implementation
+    *
+    * Each native module extends ReactContextBaseJavaModule class
+    *
+    * Class should be annotated with @ReactModule decorator
+    */
+    @ReactModule(name = AppInfoModule.NAME)
+    public class AppInfoModule extends ReactContextBaseJavaModule {
+        public static final String NAME = AppInfoModuleImpl.NAME;
+
+        // Use shared module implementation and forward react application context
+        private final AppInfoModuleImpl moduleImpl;
+
+        public AppInfoModule(ReactApplicationContext reactContext) {
+            super(reactContext);
+            this.moduleImpl = new AppInfoModuleImpl(reactContext);
+        }
+
+        // Return the name of the module - it should match the name provided in JS specification
+        @Override
+        public String getName() {
+            return NAME;
+        }
+
+        // Exported methods must be annotated with @ReactMethod decorator
+        @ReactMethod(isBlockingSynchronousMethod = true)
+        public String getAppBuildNumber() {
+            return moduleImpl.getAppBuildNumber();
+        }
+
+        @ReactMethod(isBlockingSynchronousMethod = true)
+        public String getAppBundleId() {
+            return moduleImpl.getAppBundleId();
+        }
+
+        @ReactMethod(isBlockingSynchronousMethod = true)
+        public String getAppVersion() {
+            return moduleImpl.getAppVersion();
+        }
+    }
+  </div>
+</details>
+
+#### `AppInfoModulePackage.java`
+
+The last thing we need to do is to export `AppInfoModule` in the `TurboReactPackage` instance.
+Let's go to `AppInfoModulePackage.java` and add our new module.
+
+```java title="android/src/main/java/com/appinfopackage/AppInfoModulePackage.java"
+package com.appinfopackage;
+
+import androidx.annotation.Nullable;
+
+import com.facebook.react.TurboReactPackage;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
+import com.facebook.react.turbomodule.core.interfaces.TurboModule;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class AppInfoModulePackage extends TurboReactPackage {
+    // highlight-start
+    /**
+     * Initialize and export modules based on the name of the required module
+     */
+    @Override
+    @Nullable
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+        if (name.equals(AppInfoModule.NAME)) {
+            return new AppInfoModule(reactContext);
+        }
+        return null;
+    }
+    // highlight-end
+
+    /**
+     * Declare info about exported modules
+     */
+    @Override
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        /**
+         * Here declare the array of exported modules
+         */
+        Class<? extends NativeModule>[] moduleList = new Class[] {
+            AppInfoModule.class
+        };
+        final Map<String, ReactModuleInfo> reactModuleInfoMap = new HashMap<>();
+        /**
+         * And here just iterate on that array and produce the info provider instance
+         */
+        for (Class<? extends NativeModule> moduleClass : moduleList) {
+            ReactModule reactModule = moduleClass.getAnnotation(ReactModule.class);
+
+            reactModuleInfoMap.put(
+                reactModule.name(),
+                new ReactModuleInfo(
+                    reactModule.name(),
+                    moduleClass.getName(),
+                    true,
+                    reactModule.needsEagerInit(),
+                    reactModule.hasConstants(),
+                    reactModule.isCxxModule(),
+                    TurboModule.class.isAssignableFrom(moduleClass)
+                )
+            );
+        }
+
+        return new ReactModuleInfoProvider() {
+            @Override
+            public Map<String, ReactModuleInfo> getReactModuleInfos() {
+                return reactModuleInfoMap;
+            }
+        };
+    }
+}
+```
+
+To export the module, we need to return it from `getModule` method inside `AppInfoModulePackage`, if it's requested
+(the method takes name as a parameter and makes decision which module should be served).
+
+</TabItem>
+</Tabs>
+
+You can check Kotlin implementation [here](https://r.mtdv.me/FtXpuO4X9f) and Java implementation [here](https://r.mtdv.me/FtXpuO4X9f).
+
+That's Android implementation, now let's wrap things up and try to use AppInfo module in action!

@@ -1,4 +1,18 @@
 PODS:
+  - AppInfoPackage (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - AppInfoPackageClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -805,20 +819,6 @@ PODS:
     - React-Core
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - SampleNativeModule (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - SampleNativeModuleClassic (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
   - SampleNativeScreen (0.0.1):
     - RCT-Folly
     - RCTRequired
@@ -873,6 +873,8 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - AppInfoPackage (from `../app-info-package`)
+  - AppInfoPackageClassic (from `../app-info-package-classic`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -944,8 +946,6 @@ DEPENDENCIES:
   - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeList (from `../sample-native-list`)
   - SampleNativeListClassic (from `../sample-native-list-classic`)
-  - SampleNativeModule (from `../sample-native-module`)
-  - SampleNativeModuleClassic (from `../sample-native-module-classic`)
   - SampleNativeScreen (from `../sample-native-screen`)
   - SampleNativeScreenClassic (from `../sample-native-screen-classic`)
   - SampleNativeSlider (from `../sample-native-slider`)
@@ -977,6 +977,10 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
+  AppInfoPackage:
+    :path: "../app-info-package"
+  AppInfoPackageClassic:
+    :path: "../app-info-package-classic"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -1067,10 +1071,6 @@ EXTERNAL SOURCES:
     :path: "../sample-native-list"
   SampleNativeListClassic:
     :path: "../sample-native-list-classic"
-  SampleNativeModule:
-    :path: "../sample-native-module"
-  SampleNativeModuleClassic:
-    :path: "../sample-native-module-classic"
   SampleNativeScreen:
     :path: "../sample-native-screen"
   SampleNativeScreenClassic:
@@ -1087,6 +1087,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppInfoPackage: 50732bd33723a03b6e0cc0b5e6d77b581d865d66
+  AppInfoPackageClassic: ff653aeb0bb9a434173e2c47d8281ecde885d887
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -1149,8 +1151,6 @@ SPEC CHECKSUMS:
   SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeList: df789ab91c8d864db074fbfc9c74513086c60d95
   SampleNativeListClassic: 727c2a68624b1d23bd067e236521adf1eb750ad0
-  SampleNativeModule: a453a10bfb5a72ea76aeb825b2649a911a04b91c
-  SampleNativeModuleClassic: 8fa0498c76e09e7c2c734967ca4670d1edf87885
   SampleNativeScreen: 1ba1cb3368991923bcde767f8752897e5a797321
   SampleNativeScreenClassic: 966bee54456658d5d1a49868c613e744510a9fd5
   SampleNativeSlider: 276bc26486179c11f5a141bd238fc333a357b96b

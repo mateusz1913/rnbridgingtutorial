@@ -18,8 +18,8 @@ module.exports = {
           '.json',
         ],
         alias: {
-          'sample-native-module': './sample-native-module',
-          'sample-native-module-classic': './sample-native-module-classic',
+          'app-info-package': './app-info-package',
+          'app-info-package-classic': './app-info-package-classic',
           'sample-native-datepicker': './sample-native-datepicker',
           'sample-native-datepicker-classic': './sample-native-datepicker-classic',
           'sample-event-module': './sample-event-module',

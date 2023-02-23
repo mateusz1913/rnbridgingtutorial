@@ -7,12 +7,12 @@ import { ROUTES, useRootStackNavigation } from '../navigation';
 export const HomeScreen: FC = () => {
   const navigation = useRootStackNavigation();
 
-  const navigateToSimpleModule = () => {
-    navigation.navigate(ROUTES.SIMPLE_MODULE);
+  const navigateToAppInfo = () => {
+    navigation.navigate(ROUTES.APP_INFO);
   };
 
-  const navigateToSimpleModuleClassic = () => {
-    navigation.navigate(ROUTES.SIMPLE_MODULE, { isClassic: true });
+  const navigateToAppInfoClassic = () => {
+    navigation.navigate(ROUTES.APP_INFO, { isClassic: true });
   };
 
   const navigateToSimpleUIModule = () => {
@@ -68,10 +68,10 @@ export const HomeScreen: FC = () => {
         </View>
         <ScrollView contentContainerStyle={styles.bodyContent} style={styles.body}>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleModule} title="Simple module (Modern)" />
+            <Button onPress={navigateToAppInfo} title="Simple module (Modern)" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleModuleClassic} title="Simple module (Classic)" />
+            <Button onPress={navigateToAppInfoClassic} title="Simple module (Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleUIModule} title="Simple UI module (Modern)" />

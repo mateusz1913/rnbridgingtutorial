@@ -1,0 +1,554 @@
+---
+sidebar_label: Module boilerplate
+sidebar_position: 2
+title: Module boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Create package structure
+
+<Tabs groupId="package_structure">
+<TabItem value="auto" label="Automatic generation">
+
+DUPA
+
+</TabItem>
+<TabItem value="manual" label="Manual walkthrough">
+
+#### `package.json`
+
+Let's start with creating `app-info-package` directory containing package's code.
+
+Inside that directory, let's create `package.json` with the following content:
+
+```json title="package.json"
+{
+  "private": true,
+  "name": "app-info-package",
+  "version": "0.0.1",
+  "description": "App Info package",
+  "react-native": "src",
+  "source": "src",
+  "main": "src",
+  "module": "src",
+  "files": [
+    "src",
+    "android",
+    "ios",
+    "AppInfoPackage.podspec",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "repository": "<repository-url>",
+  "author": "<author>",
+  "license": "MIT",
+  "homepage": "<homepage-url>",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "AppInfoPackage",
+    "type": "all",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.appinfopackage"
+    }
+  }
+}
+```
+
+For `codegenConfig`, you can check out RN's [Configure Codegen](https://reactnative.dev/docs/new-architecture-library-intro#configure-codegen) docs section.
+
+In this case, we want to code-generate the package with name `AppInfoPackage` with JS specs in `src` directory and `com.appinfopackage` Android package name.
+
+#### `AppInfoPackage.podspec`
+
+Next, let's create `AppInfoPackage.podspec`, the "equivalent" of `package.json`, but for CocoaPods packages:
+
+```ruby title="AppInfoPackage.podspec"
+# `.podspec` file is like "`package.json`" for iOS CocoaPods packages
+
+require "json"
+
+package = JSON.parse(File.read(File.join(__dir__, "package.json")))
+
+# Detect if new arch is enabled
+fabric_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
+
+Pod::Spec.new do |s|
+  s.name            = "AppInfoPackage"
+  s.version         = package["version"]
+  s.summary         = package["description"]
+  s.description     = package["description"]
+  s.homepage        = package["homepage"]
+  s.license         = package["license"]
+  s.platforms       = { :ios => "13.0" }
+  s.author          = package["author"]
+  s.source          = { :git => package["repository"], :tag => "#{s.version}" }
+
+  # This is crucial - declare which files will be included in the package (similar to "files" field in `package.json`)
+  s.source_files    = "ios/**/*.{h,m,mm,swift}"
+  # Declare dependency (similar to entries under "dependencies" field in `package.json`)
+  s.dependency "React-Core"
+
+  # More configuration depending on new or old arch used
+  if fabric_enabled
+    # Some compiler flags
+    folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
+
+    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
+    # XCode flags for new arch
+    s.pod_target_xcconfig    = {
+      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+      "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
+      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
+      "DEFINES_MODULE" => "YES",
+      "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "AppInfoPackage-Swift.h",
+      # This is handy when we want to detect if new arch is enabled in Swift code
+      # and can be used like:
+      # #if APP_INFO_PACKAGE_NEW_ARCH_ENABLED
+      # // do sth when new arch is enabled
+      # #else
+      # // do sth when old arch is enabled
+      # #endif
+      "OTHER_SWIFT_FLAGS" => "-DAPP_INFO_PACKAGE_NEW_ARCH_ENABLED"
+    }
+
+    # Dependencies only for new arch
+    s.dependency "React-Codegen"
+    s.dependency "RCT-Folly"
+    s.dependency "RCTRequired"
+    s.dependency "RCTTypeSafety"
+    s.dependency "ReactCommon/turbomodule/core"
+  else
+    # XCode flags for old arch
+    s.pod_target_xcconfig = {
+      "DEFINES_MODULE" => "YES",
+      "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "AppInfoPackage-Swift.h"
+    }
+  end
+end
+```
+
+This will link ObjC++ & Swift files from `ios` directory and link iOS RN dependencies.
+
+#### `build.gradle`
+
+We also need similar configuration for Android - let's create `build.gradle` inside `android` directory
+
+<Tabs groupId="gradle">
+<TabItem value="groovy" label="Groovy script (build.gradle)">
+
+```groovy title="android/build.gradle"
+buildscript {
+    ext.safeExtGet = {prop, fallback ->
+        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
+
+    def kotlin_version = safeExtGet('kotlinVersion', '1.6.10') // Mandatory, if you will use Kotlin
+
+    repositories {
+        google()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version") // Mandatory, if you will use Kotlin
+    }
+}
+
+def isNewArchitectureEnabled() {
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android' // Mandatory, if you will use Kotlin
+if (isNewArchitectureEnabled()) {
+    apply plugin: "com.facebook.react"
+}
+
+android {
+    compileSdkVersion safeExtGet('compileSdkVersion', 33)
+
+    namespace "com.appinfopackage"
+
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 21)
+        targetSdkVersion safeExtGet('targetSdkVersion', 33)
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    }
+
+    sourceSets {
+        main {
+            if (isNewArchitectureEnabled()) {
+                java.srcDirs += ['src/newarch/java', "${project.buildDir}/generated/source/codegen/java"]
+            } else {
+                java.srcDirs += ['src/oldarch/java']
+            }
+        }
+    }
+}
+
+repositories {
+    maven {
+        url "$projectDir/../node_modules/react-native/android"
+    }
+    mavenCentral()
+    google()
+}
+
+apply from: "$projectDir/react-native-helpers.gradle"
+
+dependencies {
+    if (project.ext.shouldConsumeReactNativeFromMavenCentral()) {
+        implementation "com.facebook.react:react-android" // Set by the React Native Gradle Plugin
+    } else {
+        implementation 'com.facebook.react:react-native:+' // From node_modules
+    }
+}
+```
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin script (build.gradle.kts)">
+
+```kotlin title="android/build.gradle.kts"
+buildscript {
+    val safeExtGet by extra {
+        fun(prop: String, fallback: Any): Any? {
+            return when (rootProject.extra.has(prop)) {
+                true -> rootProject.extra.get(prop)
+                else -> fallback
+            }
+        }
+    }
+
+    val kotlin_version = safeExtGet("kotlinVersion", "1.6.10")
+
+    repositories {
+        google()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath(kotlin("gradle-plugin", version = "$kotlin_version"))
+    }
+}
+
+fun isNewArchitectureEnabled(): Boolean {
+    if (!project.hasProperty("newArchEnabled")) {
+        return false
+    }
+    val newArchEnabled: String by project
+    return newArchEnabled == "true"
+}
+
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+}
+if (isNewArchitectureEnabled()) {
+    apply(plugin = "com.facebook.react")
+}
+
+android {
+    val safeExtGet: (prop: String, fallback: Any) -> Any? by project.extra
+
+    compileSdk = safeExtGet("compileSdkVersion", 33) as Int?
+
+    namespace = "com.appinfopackage"
+
+    defaultConfig {
+        minSdk = safeExtGet("minSdkVersion", 21) as Int?
+        targetSdk = safeExtGet("targetSdkVersion", 33) as Int?
+        buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
+    }
+
+    sourceSets {
+        named("main") {
+            if (isNewArchitectureEnabled()) {
+                java.srcDirs(listOf("src/newarch/java", "${project.buildDir}/generated/source/codegen/java"))
+            } else {
+                java.srcDirs(listOf("src/oldarch/java"))
+            }
+        }
+    }
+}
+
+repositories {
+    maven(
+        "$projectDir/../node_modules/react-native/android"
+    )
+    mavenCentral()
+    google()
+}
+
+apply(from = "$projectDir/react-native-helpers.gradle.kts")
+
+val shouldConsumeReactNativeFromMavenCentral: () -> Boolean by project.extra
+
+dependencies {
+    if (shouldConsumeReactNativeFromMavenCentral()) {
+        implementation("com.facebook.react:react-android") // Set by the React Native Gradle Plugin
+    } else {
+        implementation("com.facebook.react:react-native:+") // From node_modules
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+This will link Java & Kotlin files under `android/src/{main|newarch|oldarch}/java/com/appinfopackage` as well as code-generated files under `android/build/generated/source/codegen/java/com/appinfopackage` (combined values declared under `namespace` and `sourceSets`).
+
+You may noticed, that the configuration loads sth from `$projectDir/react-native-helpers.gradle`. In fact that file includes implementation for `shouldConsumeReactNativeFromMavenCentral` helper. Let's create it:
+
+<Tabs groupId="gradle">
+<TabItem value="groovy" label="Groovy script (build.gradle)">
+
+```groovy title="android/react-native-helpers.gradle"
+def safeAppExtGet(prop, fallback) {
+    def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+    appProject?.ext?.has(prop) ? appProject.ext.get(prop) : fallback
+}
+
+// Let's detect react-native's directory, it will be used to determine RN's version
+// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L88
+def resolveReactNativeDirectory() {
+    def reactNativeLocation = safeAppExtGet("REACT_NATIVE_NODE_MODULES_DIR", null)
+    if (reactNativeLocation != null) {
+        return file(reactNativeLocation)
+    }
+
+    // monorepo workaround
+    // react-native can be hoisted or in project's own node_modules
+    def reactNativeFromProjectNodeModules = file("${rootProject.projectDir}/../node_modules/react-native")
+    if (reactNativeFromProjectNodeModules.exists()) {
+        return reactNativeFromProjectNodeModules
+    }
+
+    def reactNativeFromNodeModules = file("${projectDir}/../../react-native")
+    if (reactNativeFromNodeModules.exists()) {
+        return reactNativeFromNodeModules
+    }
+
+    throw new GradleException(
+        "[app-info-module] Unable to resolve react-native location in " +
+        "node_modules. You should project extension property (in app/build.gradle) " +
+        "`REACT_NATIVE_NODE_MODULES_DIR` with path to react-native."
+    )
+}
+
+// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L199#L205
+def reactNativeRootDir = resolveReactNativeDirectory()
+
+def reactProperties = new Properties()
+file("$reactNativeRootDir/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }
+
+def REACT_NATIVE_VERSION = reactProperties.getProperty("VERSION_NAME")
+def REACT_NATIVE_MINOR_VERSION = REACT_NATIVE_VERSION.startsWith("0.0.0-") ? 1000 : REACT_NATIVE_VERSION.split("\\.")[1].toInteger()
+
+project.ext.shouldConsumeReactNativeFromMavenCentral = { ->
+    return REACT_NATIVE_MINOR_VERSION >= 71
+}
+```
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin script (build.gradle.kts)">
+
+```kotlin title="android/react-native-helpers.gradle.kts"
+fun safeAppExtGet(prop: String, fallback: Any?): Any? {
+    val appProject = rootProject.allprojects.find { it.plugins.hasPlugin("com.android.application") }
+    return when (appProject?.extra?.has(prop)) {
+        true -> appProject.extra.get(prop)
+        else -> fallback
+    }
+}
+
+// Let"s detect react-native"s directory, it will be used to determine RN"s version
+// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L88
+fun resolveReactNativeDirectory(): File {
+    val reactNativeLocation = safeAppExtGet("REACT_NATIVE_NODE_MODULES_DIR", null)
+    if (reactNativeLocation != null) {
+        return File(reactNativeLocation as String)
+    }
+
+    // monorepo workaround
+    // react-native can be hoisted or in project"s own node_modules
+    val reactNativeFromProjectNodeModules = File("${rootProject.projectDir}/../node_modules/react-native")
+    if (reactNativeFromProjectNodeModules.exists() == true) {
+        return reactNativeFromProjectNodeModules
+    }
+
+    val reactNativeFromNodeModules = File("${projectDir}/../../react-native")
+    if (reactNativeFromNodeModules.exists() == true) {
+        return reactNativeFromNodeModules
+    }
+
+    throw GradleException(
+        "[app-info-module] Unable to resolve react-native location in " +
+        "node_modules. You should project extension property (in app/build.gradle) " +
+        "`REACT_NATIVE_NODE_MODULES_DIR` with path to react-native."
+    )
+}
+
+// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L199#L205
+val reactNativeRootDir = resolveReactNativeDirectory()
+
+val reactProperties = java.util.Properties()
+java.io.InputStreamReader(
+    java.io.FileInputStream(File("$reactNativeRootDir/ReactAndroid/gradle.properties")),
+    Charsets.UTF_8
+).use { reactProperties.load(it) }
+
+val REACT_NATIVE_VERSION: String = reactProperties.getProperty("VERSION_NAME")
+val REACT_NATIVE_MINOR_VERSION = if (REACT_NATIVE_VERSION.startsWith("0.0.0-")) {
+    1000
+} else {
+    REACT_NATIVE_VERSION.split(Regex("\\."))[1].toInt()
+}
+
+val shouldConsumeReactNativeFromMavenCentral by extra {
+    fun(): Boolean {
+        return REACT_NATIVE_MINOR_VERSION >= 71
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+Wow, lots of code just to detect used RN version. Fortunately, you will have to write it only once.
+
+If you are curious, this code tries to locate `react-native/ReactAndroid/gradle.properties` file, where `VERSION_NAME` property is saved. Then it tries to retrieve minor part and use it in `shouldConsumeReactNativeFromMavenCentral`.
+That function checks if minor version is greater or equal than 71 (the first version with RN's Android code published to MavenCentral - sth like npm, but for Android packages). The function is declared as `project.ext`/`by extra`,
+which makes it possible, to use that in other Gradle script file.
+
+#### Source files stubs
+
+Finally, let's create stubs for source files. For JS, create following empty files:
+
+- `src/index.ts`
+- `src/NativeAppInfoModule.ts`
+
+For iOS implementation, create:
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+- `ios/AppInfoModule.h`
+- `ios/AppInfoModule.mm`
+- `ios/AppInfoModuleImpl.swift`
+- `ios/AppInfoPackage-Bridging-Header.h`
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+- `ios/AppInfoModule.h`
+- `ios/AppInfoModule.mm`
+- `ios/AppInfoModuleImpl.h`
+- `ios/AppInfoModuleImpl.mm`
+
+</TabItem>
+</Tabs>
+
+For Android implementation, create:
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+- `android/src/main/java/com/appinfopackage/AppInfoModuleImpl.kt`
+- `android/src/main/java/com/appinfopackage/AppInfoModulePackage.kt`
+- `android/src/newarch/java/com/appinfopackage/AppInfoModule.kt`
+- `android/src/oldarch/java/com/appinfopackage/AppInfoModule.kt`
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+- `android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java`
+- `android/src/main/java/com/appinfopackage/AppInfoModulePackage.java`
+- `android/src/newarch/java/com/appinfopackage/AppInfoModule.java`
+- `android/src/oldarch/java/com/appinfopackage/AppInfoModule.java`
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Link the package with the app
+
+To link the package without adding it to node_modules, we will use `react-native.config.js`
+
+1. Go to `react-native.config.js` (create it, if needed) inside root directory of your app and add `app-info-package` under `dependencies` property:
+
+```js title="react-native.config.js"
+const path = require('path');
+
+module.exports = {
+  dependencies: {
+    'app-info-package': { // <--------- Add entry for "app-info-package"
+      root: path.resolve(__dirname, './app-info-package'),
+    },
+  },
+};
+```
+
+2. Go to `babel.config.js` and add `app-info-package` under `alias` property of `babel-plugin-module-resolver`:
+
+```diff title="babel.config.js"
+module.exports = {
+  presets: [ 'module:metro-react-native-babel-preset' ],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: [ './' ],
+        extensions: [
+          '.ios.js',
+          '.ios.ts',
+          '.ios.tsx',
+          '.android.js',
+          '.android.ts',
+          '.android.tsx',
+          '.js',
+          '.ts',
+          '.tsx',
+          '.json',
+        ],
++       alias: {
++         'app-info-package': './app-info-package'
++       }
+      },
+    ],
+  ],
+};
+```
+
+3. Go to `tsconfig.json` and add `app-info-package` under `compilerOptions.paths` field:
+
+```diff title="tsconfig.json"
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Completeness */
+    "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
++   "paths": {
++     "app-info-package": ["./app-info-package"],
++   }
+  }
+}
+```
+
+4. Install Pods to link them to iOS project.
+
+```sh
+npx pod-install
+```

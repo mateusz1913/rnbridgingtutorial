@@ -8665,15 +8665,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sample-native-module@workspace:sample-native-module":
-  version: 0.0.0-use.local
-  resolution: "sample-native-module@workspace:sample-native-module"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  languageName: unknown
-  linkType: soft
-
 "scheduler@npm:^0.23.0":
   version: 0.23.0
   resolution: "scheduler@npm:0.23.0"
