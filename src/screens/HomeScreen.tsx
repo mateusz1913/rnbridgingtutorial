@@ -14,6 +14,14 @@ export const HomeScreen: FC = () => {
   const navigateToAppInfoClassic = () => {
     navigation.navigate(ROUTES.APP_INFO, { isClassic: true });
   };
+  
+  const navigateToConicGradient = () => {
+    navigation.navigate(ROUTES.CONIC_GRADIENT);
+  };
+
+  const navigateToConicGradientClassic = () => {
+    navigation.navigate(ROUTES.CONIC_GRADIENT, { isClassic: true });
+  };
 
   const navigateToSimpleUIModule = () => {
     navigation.navigate(ROUTES.SIMPLE_UI_MODULE);
@@ -25,14 +33,6 @@ export const HomeScreen: FC = () => {
 
   const navigateToSimpleEventModule = () => {
     navigation.navigate(ROUTES.SIMPLE_EVENT_MODULE);
-  };
-
-  const navigateToSimpleReactView = () => {
-    navigation.navigate(ROUTES.SIMPLE_REACT_VIEW);
-  };
-
-  const navigateToSimpleReactViewClassic = () => {
-    navigation.navigate(ROUTES.SIMPLE_REACT_VIEW, { isClassic: true });
   };
 
   const navigateToSimpleView = () => {
@@ -68,10 +68,16 @@ export const HomeScreen: FC = () => {
         </View>
         <ScrollView contentContainerStyle={styles.bodyContent} style={styles.body}>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToAppInfo} title="Simple module (Modern)" />
+            <Button onPress={navigateToAppInfo} title="AppInfo" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToAppInfoClassic} title="Simple module (Classic)" />
+            <Button onPress={navigateToAppInfoClassic} title="AppInfo (Classic)" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToConicGradient} title="Conic gradient" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToConicGradientClassic} title="Conic gradient (Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleUIModule} title="Simple UI module (Modern)" />
@@ -81,12 +87,6 @@ export const HomeScreen: FC = () => {
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleEventModule} title="Simple event module (Modern & Classic)" />
-          </View>
-          <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleReactView} title="Simple extended React View (Modern)" />
-          </View>
-          <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleReactViewClassic} title="Simple extended React View (Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleView} title="Simple View (Modern)" />

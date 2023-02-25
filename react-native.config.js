@@ -8,6 +8,12 @@ module.exports = {
     'app-info-package-classic': { // <--------- Add entry for "app-info-package-classic"
       root: path.resolve(__dirname, './app-info-package-classic'),
     },
+    'conic-gradient-package': { // <--------- Add entry for "conic-gradient-package"
+      root: path.resolve(__dirname, './conic-gradient-package'),
+    },
+    'conic-gradient-package-classic': { // <--------- Add entry for "conic-gradient-package-classic"
+      root: path.resolve(__dirname, './conic-gradient-package-classic'),
+    },
     'sample-native-datepicker': { // <--------- Add entry for "sample-native-datepicker"
       root: path.resolve(__dirname, './sample-native-datepicker'),
       platforms: {
@@ -37,22 +43,6 @@ module.exports = {
       platforms: {
         android: {
           sourceDir: path.resolve(__dirname, './sample-event-module-classic/android'),
-        },
-      },
-    },
-    'sample-react-view': { // <--------- Add entry for "sample-react-view"
-      root: path.resolve(__dirname, './sample-react-view'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-react-view/android'),
-        },
-      },
-    },
-    'sample-react-view-classic': { // <--------- Add entry for "sample-react-view-classic"
-      root: path.resolve(__dirname, './sample-react-view-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-react-view-classic/android'),
         },
       },
     },

@@ -4,11 +4,13 @@ sidebar_position: 6
 title: Usage in practice
 ---
 
+import Result from './_result.mdx';
+
 Now that we have our module prepared, let's try to use it in practice!
 
 Prepare some screen where you can try AppInfo module
 
-```ts title="AppInfoScreen.tsx"
+```tsx title="AppInfoScreen.tsx"
 import { AppInfoModule } from 'app-info-package';
 import type { FC } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
@@ -87,6 +89,6 @@ const styles = StyleSheet.create({
 });
 ```
 
-![AppInfo module in action](/img/appinfo-result.png)
+<Result />
 
 Congratulations, you've created fully functional AppInfo module!

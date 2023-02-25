@@ -8,7 +8,7 @@ export type RootStackParamList = {
   [ROUTES.APP_INFO]: { isClassic: boolean } | undefined;
   [ROUTES.SIMPLE_UI_MODULE]: { isClassic: boolean } | undefined;
   [ROUTES.SIMPLE_EVENT_MODULE]: undefined;
-  [ROUTES.SIMPLE_REACT_VIEW]: { isClassic: boolean } | undefined;
+  [ROUTES.CONIC_GRADIENT]: { isClassic: boolean } | undefined;
   [ROUTES.SIMPLE_VIEW]: { isClassic: boolean } | undefined;
   [ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE]: { isClassic: boolean } | undefined;
   [ROUTES.NATIVE_LIST]: { isClassic: boolean } | undefined;
@@ -17,8 +17,8 @@ export type RootStackParamList = {
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export type AppInfoRouteProp = RouteProp<RootStackParamList, typeof ROUTES.APP_INFO>;
+export type ConicGradientRouteProp = RouteProp<RootStackParamList, typeof ROUTES.CONIC_GRADIENT>;
 export type SimpleUIModuleRouteProp = RouteProp<RootStackParamList, typeof ROUTES.SIMPLE_UI_MODULE>;
-export type SimpleReactViewRouteProp = RouteProp<RootStackParamList, typeof ROUTES.SIMPLE_REACT_VIEW>;
 export type SimpleViewRouteProp = RouteProp<RootStackParamList, typeof ROUTES.SIMPLE_VIEW>;
 export type SimpleLaunchNativeScreenModuleRouteProp = RouteProp<
   RootStackParamList,

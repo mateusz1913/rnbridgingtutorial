@@ -1,0 +1,52 @@
+#### `ConicGradientViewManager.h`
+
+Let's navigate to `ios/ConicGradientViewManager.h` - the header file for the `ConicGradientViewManager` view manager class. It will extend `RCTViewManager` class.
+
+```objc title="ios/ConicGradientViewManager.h
+#import <React/RCTViewManager.h>
+
+/**
+ * Declare the ObjC interface for that view manager class.
+ * 
+ * It must extend RCTViewManager
+ */
+@interface ConicGradientViewManager : RCTViewManager
+
+@end
+```
+
+#### `ConicGradientViewManager.mm`
+
+Wrap everything up in `ios/ConicGradientViewManager.mm`
+
+```objc title="ios/ConicGradientViewManager.mm"
+#import "ConicGradientViewManager.h"
+
+#if RCT_NEW_ARCH_ENABLED
+#else
+#import "ConicGradientView.h"
+#endif
+
+@implementation ConicGradientViewManager
+
+RCT_EXPORT_MODULE(ConicGradientView)
+
+RCT_EXPORT_VIEW_PROPERTY(colors, NSArray<UIColor>)
+RCT_EXPORT_VIEW_PROPERTY(locations, NSArray<NSNumber *>)
+RCT_EXPORT_VIEW_PROPERTY(centerPoint, CGPoint)
+
+#if RCT_NEW_ARCH_ENABLED
+#else
+- (UIView *)view
+{
+    ConicGradientView *view = [ConicGradientView new];
+    return view;
+}
+#endif
+
+@end
+```
+
+In the implementation file for `ConicGradientViewManager` class we use `RCT_EXPORT_MODULE` macro with the `ConicGradientView` name that will be accessed on the JS side.
+The props are declared with `RCT_EXPORT_VIEW_PROPERTY` macro (1st arg - name of the prop; 2nd arg - its native type).
+Additionally, we are declaring managed view for the old architecture mode - for the new architecture mode, we just need to register the name of our module and the props it accepts.

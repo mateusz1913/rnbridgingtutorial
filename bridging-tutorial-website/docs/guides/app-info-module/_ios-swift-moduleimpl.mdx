@@ -1,0 +1,38 @@
+#### `AppInfoModuleImpl.swift`
+
+Make module-implementation class `AppInfoModuleImpl.swift`
+
+```swift title="ios/AppInfoModuleImpl.swift"
+import Foundation
+
+@objc(AppInfoModuleImpl)
+public class AppInfoModuleImpl : NSObject {
+    @objc public func getAppBuildNumber() -> String {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+    }
+
+    @objc public func getAppBundleId() -> String {
+        return Bundle.main.bundleIdentifier!
+    }
+
+    @objc public func getAppVersion() -> String {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+    }
+}
+```
+
+The purpose of creating separate class, instead of using `AppInfoModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
+
+Here, we declare `AppInfoModuleImpl` class, which has 3 synchronous methods. To make things accessible to ObjC world, we have to do 4 things:
+
+- make class extending `NSObject`
+- mark class and its methods (at least those methods that are meant to be exposed) as public
+- mark class with `@objc(exported-objc-name)` decorator
+- mark exposed methods with `@objc` decorator
+
+Methods in the class are using `Bundle` class, for the reference, check out Apple's [dedicated docs section](https://developer.apple.com/documentation/foundation/bundle).
+
+We will use main `Bundle` instance to [retrieve some information about the app](https://developer.apple.com/documentation/foundation/bundle#1652578).
+
+In case of `getAppBundleId` method, we will use `bundleIdentifier` property, for other methods we use _generic_ `object(forInfoDictionaryKey:)` method, where the argument is a key from `Info.plist`.
+For possible `Info.plist` keys, visit ["About Info.plist keys and values"](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html).

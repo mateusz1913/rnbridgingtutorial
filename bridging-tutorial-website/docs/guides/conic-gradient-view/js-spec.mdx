@@ -1,0 +1,64 @@
+---
+sidebar_label: JS specification
+sidebar_position: 3
+title: JS specification
+---
+
+When all boilerplate is ready, let's navigate to `src/ConicGradientViewNativeComponent.ts`. To declare native component spec, let's paste following content:
+
+```tsx title="src/ConicGradientViewNativeComponent.ts"
+import type {
+  ColorValue,
+  HostComponent,
+  ViewProps,
+} from 'react-native';
+import type { Double } from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+export interface ConicGradientViewProps extends ViewProps {
+  colors: ReadonlyArray<ColorValue>;
+  locations: ReadonlyArray<Double>;
+  centerPoint?: Readonly<{ x: Double, y: Double }>;
+}
+
+export type ConicGradientViewComponent = HostComponent<ConicGradientViewProps>;
+
+export default codegenNativeComponent<ConicGradientViewProps>('ConicGradientView') as ConicGradientViewComponent;
+```
+
+This does 2 things:
+- declares native component specification with 3 props
+- declares that native component, should be available under `ConicGradientView` name
+
+You can run codegen to generate native classes and interfaces, and also check if specification is defined in correct way:
+
+- on iOS: `yarn codegen:ios`
+- on Android: `yarn codegen:android`
+
+After that, go to `src/ConicGradientView.tsx` and paste following code:
+
+```tsx title="src/ConicGradientView.tsx"
+import * as React from 'react';
+import type { ColorValue } from 'react-native';
+import { processColor } from 'react-native';
+
+import ConicGradientViewNativeComponent from './ConicGradientViewNativeComponent';
+
+type Props = React.ComponentProps<typeof ConicGradientViewNativeComponent>;
+
+export class ConicGradientView extends React.Component<Props> {
+  render() {
+    const colors = this.props.colors.map(processColor) as ReadonlyArray<ColorValue>;
+
+    return <ConicGradientViewNativeComponent {...this.props} colors={colors} />;
+  }
+}
+```
+
+Here we are forwarding all props to the native component, additionally we are making sure that values in `colors` prop are parsed with `processColor` function.
+
+After that, let's finalize JS part with exporting module from `index.ts`
+
+```tsx title="src/index.ts"
+export { ConicGradientView } from './ConicGradientView';
+```

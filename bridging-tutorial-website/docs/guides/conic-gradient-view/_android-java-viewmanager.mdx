@@ -1,0 +1,144 @@
+#### `ConicGradientViewManager.java`
+
+We are starting with the view manager class for our conic gradient view, paste the following code in `android/src/newarch/java/com/conicgradientpackage/ConicGradientViewManager.java`
+
+```java title="android/src/newarch/java/com/conicgradientpackage/ConicGradientViewManager.java"
+package com.conicgradientpackage;
+
+import androidx.annotation.Nullable;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.ViewManagerDelegate;
+import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.viewmanagers.ConicGradientViewManagerDelegate;
+import com.facebook.react.viewmanagers.ConicGradientViewManagerInterface;
+import com.facebook.react.views.view.ReactViewGroup;
+import com.facebook.react.views.view.ReactViewManager;
+
+@ReactModule(name = ConicGradientView.NAME)
+public class ConicGradientViewManager extends ReactViewManager implements ConicGradientViewManagerInterface<ReactViewGroup> {
+    private final ConicGradientViewManagerDelegate mDelegate = new ConicGradientViewManagerDelegate(this);
+    
+    @Override
+    public String getName() {
+        return ConicGradientView.NAME;
+    }
+
+    @Override
+    protected ViewManagerDelegate<ReactViewGroup> getDelegate() {
+        return mDelegate;
+    }
+
+    @Override
+    public ConicGradientView createViewInstance(ThemedReactContext reactContext) {
+        return new ConicGradientView(reactContext);
+    }
+
+    @Override
+    @ReactProp(name = "colors")
+    public void setColors(ReactViewGroup view, @Nullable ReadableArray colors) {
+        if (!(view instanceof ConicGradientView)) {
+            throw new IllegalStateException("Check failed.");
+        }
+        ConicGradientView typedView = (ConicGradientView)view;
+        if (colors == null) {
+            return;
+        }
+        typedView.setColors(colors);
+    }
+
+    @Override
+    @ReactProp(name = "locations")
+    public void setLocations(ReactViewGroup view, @Nullable ReadableArray locations) {
+        if (!(view instanceof ConicGradientView)) {
+            throw new IllegalStateException("Check failed.");
+        }
+        ConicGradientView typedView = (ConicGradientView)view;
+        if (locations == null) {
+            return;
+        }
+        typedView.setLocations(locations);
+    }
+
+    @Override
+    @ReactProp(name = "centerPoint")
+    public void setCenterPoint(ReactViewGroup view, @Nullable ReadableMap centerPoint) {
+        if (!(view instanceof ConicGradientView)) {
+            throw new IllegalStateException("Check failed.");
+        }
+        ConicGradientView typedView = (ConicGradientView)view;
+        if (centerPoint == null) {
+            return;
+        }
+        typedView.setCenterPoint(centerPoint);
+    }
+}
+```
+
+Let's see what's happening here:
+
+- we declare `package com.conicgradientpackage;` at the top of the file - this "links" content of the file with our package
+- we import bunch of classes and interfaces
+- we declare the view manager class that extends `ReactViewManager` and implement code-generated spec interface
+- we override required methods: `getName`, `getDelegate` & `createViewInstance`
+- we override props setters based on JS spec
+
+<details>
+  <summary>Old architecture view manager</summary>
+  <div>
+    The implementation of old architecture view manager won't be visible in Android Studio when you have new architecture enabled.
+    If you want, you can open <code>android/src/oldarch/java/com/conicgradientpackage/ConicGradientViewManager.java</code> at other text editor and paste following content:
+    <br /><br />
+
+    package com.conicgradientpackage;
+
+    import androidx.annotation.Nullable;
+    import com.facebook.react.bridge.ReadableArray;
+    import com.facebook.react.bridge.ReadableMap;
+    import com.facebook.react.module.annotations.ReactModule;
+    import com.facebook.react.uimanager.ThemedReactContext;
+    import com.facebook.react.uimanager.annotations.ReactProp;
+    import com.facebook.react.views.view.ReactViewManager;
+
+    @ReactModule(name = ConicGradientView.NAME)
+    public class ConicGradientViewManager extends ReactViewManager {
+        @Override
+        public String getName() {
+            return ConicGradientView.NAME;
+        }
+
+        @Override
+        public ConicGradientView createViewInstance(ThemedReactContext reactContext) {
+            return new ConicGradientView(reactContext);
+        }
+
+        @ReactProp(name = "colors")
+        public void setColors(ConicGradientView view, @Nullable ReadableArray colors) {
+            if (colors == null) {
+                return;
+            }
+            view.setColors(colors);
+        }
+
+        @ReactProp(name = "locations")
+        public void setLocations(ConicGradientView view, @Nullable ReadableArray locations) {
+            if (locations == null) {
+                return;
+            }
+            view.setLocations(locations);
+        }
+
+        @ReactProp(name = "centerPoint")
+        public void setCenterPoint(ConicGradientView view, @Nullable ReadableMap centerPoint) {
+            if (centerPoint == null) {
+                return;
+            }
+            view.setCenterPoint(centerPoint);
+        }
+    }
+  </div>
+</details>
+
+For now, Android Studio will display bunch of errors about unknown `ConicGradientView` class - let's create it!

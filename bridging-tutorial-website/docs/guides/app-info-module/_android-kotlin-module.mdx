@@ -1,0 +1,39 @@
+#### `AppInfoModule.kt`
+
+Let's start with `android/src/newarch/java/com/appinfopackage/AppInfoModule.kt`
+
+```kotlin title="android/src/newarch/java/com/appinfopackage/AppInfoModule.kt"
+package com.appinfopackage
+
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.annotations.ReactModule
+
+/**
+ * Declare Kotlin class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = AppInfoModule.NAME)
+class AppInfoModule(
+    // Each native module class consumes react application context
+    reactContext: ReactApplicationContext
+) : NativeAppInfoModuleSpec(reactContext) {
+    companion object {
+        const val NAME = "NAME"
+    }
+}
+```
+
+We start by adding `package com.appinfopackage` at the top of the file.
+This will "link" everything inside that file with `com.appinfopackage` android namespace.
+
+Second step is to import `ReactApplicationContext` class & `ReactModule` annotation.
+`ReactApplicationContext` instance is used as the only `AppInfoModule` constructor parameter.
+Additionally, `AppInfoModule` is annotated with `ReactModule` decorator.
+The name parameter's value is a static constant `NAME`.
+
+Next thing is to extend `AppInfoModule` with code-generated spec class.
+After extending, Android Studio will display error that `AppInfoModule` does not implement required methods.
+We will implement it later, now let's create module-implementation class.

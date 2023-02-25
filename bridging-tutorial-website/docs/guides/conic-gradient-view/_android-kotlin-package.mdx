@@ -1,0 +1,63 @@
+#### `ConicGradientViewPackage.kt`
+
+```kotlin title="android/src/main/java/com/conicgradientpackage/ConicGradientViewPackage.kt"
+package com.conicgradientpackage
+
+import com.facebook.react.TurboReactPackage
+import com.facebook.react.bridge.NativeModule
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
+import com.facebook.react.module.model.ReactModuleInfoProvider
+import com.facebook.react.turbomodule.core.interfaces.TurboModule
+import com.facebook.react.uimanager.ViewManager
+
+class ConicGradientViewPackage : TurboReactPackage() {
+    /**
+    * Initialize and export modules based on the name of the required module
+    */
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
+        return null
+    }
+
+    /**
+    * Declare info about exported modules
+    */
+    override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
+        /**
+        * Here declare the array of exported modules
+        */
+        val moduleList: Array<Class<out NativeModule?>> = arrayOf(
+        )
+        val reactModuleInfoMap: MutableMap<String, ReactModuleInfo> = HashMap()
+        /**
+        * And here just iterate on that array and produce the info provider instance
+        */
+        for (moduleClass in moduleList) {
+            val reactModule = moduleClass.getAnnotation(ReactModule::class.java) ?: continue
+            reactModuleInfoMap[reactModule.name] =
+                ReactModuleInfo(
+                    reactModule.name,
+                    moduleClass.name,
+                    true,
+                    reactModule.needsEagerInit,
+                    reactModule.hasConstants,
+                    reactModule.isCxxModule,
+                    TurboModule::class.java.isAssignableFrom(moduleClass)
+                )
+            }
+        return ReactModuleInfoProvider { reactModuleInfoMap }
+    }
+// highlight-start
+    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+        /**
+        * Here declare the list of exported native components
+        */
+        return listOf(ConicGradientViewManager())
+    }
+// highlight-end
+}
+```
+
+Here the most important bit is `createViewManagers` method, which returns collection of view manager classes.
+Because our package exports only a single view, we register one-element list, with `ConicGradientViewManager` class.

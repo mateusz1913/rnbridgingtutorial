@@ -15,6 +15,22 @@ PODS:
     - ReactCommon/turbomodule/core
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
+  - ConicGradientPackage (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
+  - ConicGradientPackageClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - DoubleConversion (1.1.6)
   - Fastis (2.2.0):
     - JTAppleCalendar (~> 8.0.0)
@@ -851,22 +867,6 @@ PODS:
     - React-Core
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - SampleReactView (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-RCTFabric
-    - ReactCommon/turbomodule/core
-  - SampleReactViewClassic (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-RCTFabric
-    - ReactCommon/turbomodule/core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -876,6 +876,8 @@ DEPENDENCIES:
   - AppInfoPackage (from `../app-info-package`)
   - AppInfoPackageClassic (from `../app-info-package-classic`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
+  - ConicGradientPackage (from `../conic-gradient-package`)
+  - ConicGradientPackageClassic (from `../conic-gradient-package-classic`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -950,8 +952,6 @@ DEPENDENCIES:
   - SampleNativeScreenClassic (from `../sample-native-screen-classic`)
   - SampleNativeSlider (from `../sample-native-slider`)
   - SampleNativeSliderClassic (from `../sample-native-slider-classic`)
-  - SampleReactView (from `../sample-react-view`)
-  - SampleReactViewClassic (from `../sample-react-view-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -983,6 +983,10 @@ EXTERNAL SOURCES:
     :path: "../app-info-package-classic"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
+  ConicGradientPackage:
+    :path: "../conic-gradient-package"
+  ConicGradientPackageClassic:
+    :path: "../conic-gradient-package-classic"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -1079,18 +1083,16 @@ EXTERNAL SOURCES:
     :path: "../sample-native-slider"
   SampleNativeSliderClassic:
     :path: "../sample-native-slider-classic"
-  SampleReactView:
-    :path: "../sample-react-view"
-  SampleReactViewClassic:
-    :path: "../sample-react-view-classic"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AppInfoPackage: 50732bd33723a03b6e0cc0b5e6d77b581d865d66
-  AppInfoPackageClassic: ff653aeb0bb9a434173e2c47d8281ecde885d887
+  AppInfoPackage: 28a53b52304945861f265c1025379ada8e709b31
+  AppInfoPackageClassic: c8fb9a0e1bfc582460ee8a9898b2cd9f33182794
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  ConicGradientPackage: a6fb356446b4cdfd69325ae6e8c46982eae8cba2
+  ConicGradientPackageClassic: 2245c3f981761a6f1808a3fcc5d099227cc7356b
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   Fastis: 54b693d0602243f924f4dfb92d4ed0fb8216bf8e
   FBLazyVector: ad72713385db5289b19f1ead07e8e4aa26dcb01d
@@ -1155,8 +1157,6 @@ SPEC CHECKSUMS:
   SampleNativeScreenClassic: 966bee54456658d5d1a49868c613e744510a9fd5
   SampleNativeSlider: 276bc26486179c11f5a141bd238fc333a357b96b
   SampleNativeSliderClassic: eb6bae2a1bdff6b0ce8e88a784192ea928e08615
-  SampleReactView: fc2816d6ab47b68345917a9312ddd13d65944496
-  SampleReactViewClassic: 669e80e394d71a389cd07de254beefb8fdefc573
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

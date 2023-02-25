@@ -1,0 +1,73 @@
+#### `AppInfoModuleImpl.java`
+
+Open the `android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java` and paste following content:
+
+```java title="android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java"
+package com.appinfopackage;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+
+/**
+ * Native module's shared implementation
+ */
+public class AppInfoModuleImpl {
+    private final ReactApplicationContext reactContext;
+
+    public static final String NAME = "AppInfoModule";
+
+    public AppInfoModuleImpl(ReactApplicationContext reactContext) {
+        this.reactContext = reactContext;
+    }
+
+    public String getAppBuildNumber() {
+        String buildNumber = "unknown";
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                buildNumber = Long.toString(getPackageInfo().getLongVersionCode());
+            } else {
+                buildNumber = Long.toString(getPackageInfo().versionCode);
+            }
+        } catch (Exception ignored) {}
+
+        return buildNumber;
+    }
+
+    public String getAppBundleId() {
+        return reactContext.getPackageName();
+    }
+
+    public String getAppVersion() {
+        String appVersion = "unknown";
+        try {
+            appVersion = getPackageInfo().versionName;
+        } catch (Exception ignored) {}
+        return appVersion;
+    }
+
+    private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return reactContext
+                .getPackageManager()
+                .getPackageInfo(
+                        reactContext.getPackageName(),
+                        PackageManager.PackageInfoFlags.of(0L)
+                );
+        } else {
+            return reactContext
+                .getPackageManager()
+                .getPackageInfo(reactContext.getPackageName(), 0);
+        }
+    }
+}
+```
+
+The purpose of creating separate class, instead of using `AppInfoModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
+
+`AppInfoModuleImpl` declares 3 methods, each of them returns string value. It also declares static `NAME` constant which will be used in RN's module wrapper.
+
+To retrieve bundle id, we will use [Context#getPackageName](https://developer.android.com/reference/android/content/Context#getPackageName()) method.
+For other app informations we will be calling [PackageManager#getPackageInfo](https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20android.content.pm.PackageManager.PackageInfoFlags)) (which can be obtained with [Context#getPackageManager](https://developer.android.com/reference/android/content/Context#getPackageManager())).
