@@ -1,0 +1,108 @@
+#### `RangeDatePickerModuleImpl.h`
+
+Let's declare the header file for the module-implementation class:
+
+```objc title="ios/RangeDatePickerModuleImpl.h"
+#import <Foundation/Foundation.h>
+
+/**
+ * When using Swift classes in ObjC header, the class must have its
+ * "forward declaration"
+ * 
+ * @see https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations
+ */
+@class FastisWrapper;
+
+@protocol RangeDatePickerModuleDelegate
+
+- (void)onCancel;
+- (void)onError:(NSError *)error;
+- (void)onResult:(NSDictionary<NSString *, NSDictionary<NSString *, NSNumber *> *> *)resultDictionary;
+
+@end
+
+@interface RangeDatePickerModuleImpl : NSObject
+
+@property (nonatomic, weak) id <RangeDatePickerModuleDelegate> _Nullable delegate;
+
+- (void)showRangeDatePickerWithTitle:(NSString *)title;
+
+@end
+```
+
+Apart from declaring `RangeDatePickerModuleImpl` class, we also declare `RangeDatePickerModuleDelegate`.
+It's because our module-implementation class needs to communicate with module class (to return the range of dates picked by the user).
+In iOS world, this is usually done using [Delegate Pattern](https://developer.apple.com/documentation/swift/using-delegates-to-customize-object-behavior).
+Our module-implementation will provide the result by invoking methods on the delegate with result parameters.
+
+We also do "forward-declaration" for the `FastisWrapper` class we created before.
+
+Now let's take a closer look at our delegate protocol:
+
+```objc title="ios/RangeDatePickerModuleImpl.h"
+#import <Foundation/Foundation.h>
+
+//
+
+// highlight-start
+@protocol RangeDatePickerModuleDelegate
+
+- (void)onCancel;
+- (void)onError:(NSError *)error;
+- (void)onResult:(NSDictionary<NSString *, NSDictionary<NSString *, NSNumber *> *> *)resultDictionary;
+
+@end
+// highlight-end
+
+@interface RangeDatePickerModuleImpl : NSObject
+
+// highlight-start
+@property (nonatomic, weak) id <RangeDatePickerModuleDelegate> _Nullable delegate;
+// highlight-end
+
+//
+
+@end
+```
+
+We declare `RangeDatePickerModuleDelegate` protocol with 3 functions (these are public by default).
+In the `RangeDatePickerModuleImpl` we add `delegate` weak property of our delegate protocol type.
+We will use that property to communicate the result to the receiver object that implements delegate protocol.
+
+#### `RangeDatePickerModuleImpl.mm`
+
+```objc title="ios/RangeDatePickerModuleImpl.mm"
+#import "RangeDatePickerModuleImpl.h"
+
+#import "RangeDatePickerPackage-Swift.h"
+
+#import <React/RCTUtils.h>
+
+/**
+ * Native module's shared implementation
+ */
+@implementation RangeDatePickerModuleImpl
+
+- (void)showRangeDatePickerWithTitle:(NSString *)title
+{
+    UIViewController *_Nullable presentedViewController = RCTPresentedViewController();
+    if (presentedViewController == nil) {
+        [self.delegate onError:[[NSError alloc] initWithDomain:@"RangeDatePickerModuleImpl" code:1234 userInfo:nil]];
+        return;
+    }
+    [FastisWrapper presentWithTitle:title
+                     viewController:presentedViewController
+                           onCancel:^{ [self.delegate onCancel]; }
+                           onResult:^(NSDictionary<NSString *, NSDictionary<NSString *, NSNumber *> *> * result) { 
+                                [self.delegate onResult:result];}];
+}
+
+@end
+```
+
+Now let's analyze the implementation - our module-implementation has only a single function with string `title` parameter.
+
+Inside the function we obtain current displayed view controller with `RCTPresentedViewController` utility function from `React/RCTUtils.h`.
+If there's no such view controller, we early return and notify the delegate about an error.
+
+Next step is to use the `Fastis` library via our ObjC-Swift wrapper notifying the delegate in the `onCancel` & `onResult` callbacks.

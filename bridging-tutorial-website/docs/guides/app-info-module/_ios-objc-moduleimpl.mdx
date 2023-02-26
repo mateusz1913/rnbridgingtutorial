@@ -1,3 +1,17 @@
+#### `AppInfoModuleImpl.h`
+
+```objc title="ios/AppInfoModuleImpl.h"
+#import <Foundation/Foundation.h>
+
+@interface AppInfoModuleImpl : NSObject
+
+- (NSString *)getAppBuildNumber;
+- (NSString *)getAppBundleId;
+- (NSString *)getAppVersion;
+
+@end
+```
+
 #### `AppInfoModuleImpl.mm`
 
 ```objc title="ios/AppInfoModuleImpl.mm"

@@ -1,0 +1,123 @@
+#### Use module-implementation in module
+
+Let's combine module-implementation with RN's wrapper class
+
+```diff title="android/src/newarch/java/com/rangedatepickerpackage/RangeDatePickerModule.java"
+package com.rangedatepickerpackage;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+// highlight-start
++ import com.facebook.react.bridge.Callback;
++ import com.facebook.react.bridge.Promise;
++ import com.facebook.react.bridge.ReadableMap;
+// highlight-end
+import com.facebook.react.module.annotations.ReactModule;
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = RangeDatePickerModule.NAME)
+public class RangeDatePickerModule extends NativeRangeDatePickerModuleSpec {
+// highlight-start
+-   public static final String NAME = RangeDatePickerModuleImpl.NAME;
++   public static final String NAME = RangeDatePickerModuleImpl.NAME;
+// highlight-end
+
+// highlight-start
++   // Use shared module implementation and forward react application context
++   private final RangeDatePickerModuleImpl moduleImpl;
+// highlight-end
+
+    public RangeDatePickerModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+// highlight-start
++       this.moduleImpl = new RangeDatePickerModuleImpl(reactContext);
+// highlight-end
+    }
+
+// highlight-start
++   // Return the name of the module - it should match the name provided in JS specification
++   @Override
++   public String getName() {
++       return NAME;
++   }
++
++   // Exported methods are overriden - based on the spec class
++   @Override
++   public void showRangeDatePickerWithCallback(String title, Callback callback) {
++       moduleImpl.showRangeDatePickerWithCallback(title, callback);
++   }
++
++   @Override
++   public void showRangeDatePickerWithPromise(ReadableMap config, Promise promise) {
++       moduleImpl.showRangeDatePickerWithPromise(config, promise);
++   }
+// highlight-end
+}
+
+```
+
+As a first step, we have to import types needed for code-generated methods.
+Then, we declare the module-implementation instance.
+We have to update the `NAME` constant value with the value from module-implementation.
+And as a last step, we use module-implementation to implement methods from code-generated spec class.
+
+<details>
+  <summary>Old architecture module</summary>
+  <div>
+    The implementation of old architecture module won't be visible in Android Studio when you have new architecture enabled.
+    If you want, you can open <code>android/src/oldarch/java/com/rangedatepickerpackage/RangeDatePickerModule.java</code> at other text editor and paste following content:
+    <br /><br />
+
+    package com.rangedatepickerpackage;
+
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.ReactContextBaseJavaModule;
+    import com.facebook.react.bridge.ReactMethod;
+    import com.facebook.react.bridge.Callback;
+    import com.facebook.react.bridge.Promise;
+    import com.facebook.react.bridge.ReadableMap;
+    import com.facebook.react.module.annotations.ReactModule;
+
+    /**
+    * Declare Java class for old arch native module implementation
+    *
+    * Each native module extends ReactContextBaseJavaModule class
+    *
+    * Class should be annotated with @ReactModule decorator
+    */
+    @ReactModule(name = RangeDatePickerModule.NAME)
+    public class RangeDatePickerModule extends ReactContextBaseJavaModule {
+        public static final String NAME = RangeDatePickerModuleImpl.NAME;
+
+        // Use shared module implementation and forward react application context
+        private final RangeDatePickerModuleImpl moduleImpl;
+
+        public RangeDatePickerModule(ReactApplicationContext reactContext) {
+            super(reactContext);
+            this.moduleImpl = new RangeDatePickerModuleImpl(reactContext);
+        }
+
+        // Return the name of the module - it should match the name provided in JS specification
+        @Override
+        public String getName() {
+            return NAME;
+        }
+
+        // Exported methods must be annotated with @ReactMethod decorator
+        @ReactMethod
+        public void showRangeDatePickerWithCallback(String title, Callback onResult) {
+            moduleImpl.showRangeDatePickerWithCallback(title, callback);
+        }
+
+        @ReactMethod
+        public void showRangeDatePickerWithPromise(ReadableMap config, Promise promise) {
+            moduleImpl.showRangeDatePickerWithPromise(config, promise);
+        }
+    }
+  </div>
+</details>

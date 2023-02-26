@@ -1,0 +1,82 @@
+---
+sidebar_label: Module boilerplate
+sidebar_position: 2
+title: Module boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import LinkPackage from '../_link-package.mdx';
+
+### Create package structure
+
+<Tabs groupId="package_structure">
+<TabItem value="auto" label="Automatic generation">
+
+COMING SOON
+
+</TabItem>
+<TabItem value="manual" label="Manual walkthrough">
+
+#### Package boilerplate
+
+Start by [generating package boilerplate](../package-boilerplate) - use `range-datepicker-package` as the package name
+
+#### Source files stubs
+
+Finally, let's create stubs for source files. For JS, create following empty files:
+
+- `src/index.ts`
+- `src/NativeRangeDatePickerModule.ts`
+
+For iOS implementation, create:
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+- `ios/RangeDatePickerModule.h`
+- `ios/RangeDatePickerModule.mm`
+- `ios/RangeDatePickerModuleImpl.swift`
+- `ios/RangeDatePickerPackage-Bridging-Header.h`
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+- `ios/RangeDatePickerModule.h`
+- `ios/RangeDatePickerModule.mm`
+- `ios/RangeDatePickerModuleImpl.h`
+- `ios/RangeDatePickerModuleImpl.mm`
+- `ios/RangeDatePickerPackage-Bridging-Header.h`
+- `ios/FastisWrapper.swift` (needed to wrap Swift datepicker library)
+
+</TabItem>
+</Tabs>
+
+For Android implementation, create:
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+- `android/src/main/java/com/rangedatepickerpackage/RangeDatePickerModuleImpl.kt`
+- `android/src/main/java/com/rangedatepickerpackage/RangeDatePickerModulePackage.kt`
+- `android/src/newarch/java/com/rangedatepickerpackage/RangeDatePickerModule.kt`
+- `android/src/oldarch/java/com/rangedatepickerpackage/RangeDatePickerModule.kt`
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+- `android/src/main/java/com/rangedatepickerpackage/RangeDatePickerModuleImpl.java`
+- `android/src/main/java/com/rangedatepickerpackage/RangeDatePickerModulePackage.java`
+- `android/src/newarch/java/com/rangedatepickerpackage/RangeDatePickerModule.java`
+- `android/src/oldarch/java/com/rangedatepickerpackage/RangeDatePickerModule.java`
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Link the package with the app
+
+<LinkPackage package="range-datepicker-package" />

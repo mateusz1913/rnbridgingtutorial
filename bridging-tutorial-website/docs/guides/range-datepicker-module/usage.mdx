@@ -1,0 +1,118 @@
+---
+sidebar_label: Usage in practice
+sidebar_position: 6
+title: Usage in practice
+---
+
+import Result from './_result.mdx';
+
+Now that we integrated range datepicker, let's give it a shot!
+
+Prepare some screen where you can try RangeDatePicker module
+
+```tsx title="RangeDatePickerScreen.tsx"
+import { RangeDatePickerModule } from 'range-datepicker-package';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+
+const DATEPICKER_TITLE = 'Select dates';
+
+export const RangeDatePickerScreen: FC = () => {
+  const [ selectedStartDate, setSelectedStartDate ] = useState<string | null>(null);
+  const [ selectedEndDate, setSelectedEndDate ] = useState<string | null>(null);
+
+  const formatDateResponse = (day: number, month: number, year: number) => {
+    const date = new Date();
+
+    date.setUTCFullYear(year, month - 1, day);
+    date.setUTCHours(0, 0, 0, 0);
+
+    return date;
+  };
+
+  const showDatePickerWithCallback = () => {
+    RangeDatePickerModule.showRangeDatePickerWithCallback(DATEPICKER_TITLE, (result) => {
+      if (!result) {
+        console.log('Cancelled');
+        return;
+      }
+
+      const { from, to } = result;
+  
+      setSelectedStartDate(formatDateResponse(from.day, from.month, from.year).toISOString());
+      setSelectedEndDate(formatDateResponse(to.day, to.month, to.year).toISOString());
+    });
+  };
+
+  const showDatePickerWithPromise = async () => {
+    const result = await RangeDatePickerModule.showRangeDatePickerWithPromise({ title: DATEPICKER_TITLE });
+
+    if (!result) {
+      console.log('Cancelled');
+      return;
+    }
+
+    const { from, to } = result;
+  
+    setSelectedStartDate(formatDateResponse(from.day, from.month, from.year).toISOString());
+    setSelectedEndDate(formatDateResponse(to.day, to.month, to.year).toISOString());
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Text style={styles.header}>Range datepicker</Text>
+        <View style={styles.body}>
+          <View style={styles.buttonWrapper}>
+            <Button onPress={showDatePickerWithCallback} title="Display datepicker (Callback)" />
+          </View>
+          <View style={styles.buttonWrapper}>
+            <Button onPress={showDatePickerWithPromise} title="Display datepicker (Promise)" />
+          </View>
+          <Text style={styles.value}>{selectedStartDate}</Text>
+          <Text style={styles.value}>{selectedEndDate}</Text>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  body: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  buttonWrapper: {
+    alignSelf: 'stretch',
+    paddingVertical: 30,
+  },
+  container: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    paddingVertical: 20,
+    textTransform: 'capitalize',
+  },
+  safeArea: {
+    alignSelf: 'stretch',
+    flex: 1,
+  },
+  value: {
+    fontSize: 16,
+    padding: 8,
+  },
+});
+```
+
+<Result />
+
+Congratulations, you've learned how to use native datepicker library in RN!

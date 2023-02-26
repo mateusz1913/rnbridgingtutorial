@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "name": "range-datepicker-package",
+  "version": "0.0.1",
+  "description": "Awesome module",
+  "react-native": "src",
+  "source": "src",
+  "main": "src",
+  "module": "src",
+  "files": [
+    "src",
+    "android",
+    "ios",
+    "RangeDatePickerPackage.podspec",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__mocks__"
+  ],
+  "repository": "repository url",
+  "author": "author",
+  "license": "MIT",
+  "homepage": "homepage",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "RangeDatePickerPackage",
+    "type": "all",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.rangedatepickerpackage"
+    }
+  }
+}

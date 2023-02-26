@@ -14,21 +14,11 @@ module.exports = {
     'conic-gradient-package-classic': { // <--------- Add entry for "conic-gradient-package-classic"
       root: path.resolve(__dirname, './conic-gradient-package-classic'),
     },
-    'sample-native-datepicker': { // <--------- Add entry for "sample-native-datepicker"
-      root: path.resolve(__dirname, './sample-native-datepicker'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-datepicker/android'),
-        },
-      },
+    'range-datepicker-package': { // <--------- Add entry for "range-datepicker-package"
+      root: path.resolve(__dirname, './range-datepicker-package'),
     },
-    'sample-native-datepicker-classic': { // <--------- Add entry for "sample-native-datepicker-classic"
-      root: path.resolve(__dirname, './sample-native-datepicker-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-datepicker-classic/android'),
-        },
-      },
+    'range-datepicker-package-classic': { // <--------- Add entry for "range-datepicker-package-classic"
+      root: path.resolve(__dirname, './range-datepicker-package-classic'),
     },
     'sample-event-module': { // <--------- Add entry for "sample-event-module"
       root: path.resolve(__dirname, './sample-event-module'),

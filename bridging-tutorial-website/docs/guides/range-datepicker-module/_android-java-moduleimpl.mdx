@@ -1,0 +1,152 @@
+#### `RangeDatePickerModuleImpl.java`
+
+Open the `android/src/main/java/com/rangedatepickerpackage/RangeDatePickerModuleImpl.java` and paste following content:
+
+```java title="android/src/main/java/com/rangedatepickerpackage/RangeDatePickerModuleImpl.java"
+package com.rangedatepickerpackage;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.UiThreadUtil;
+import com.facebook.react.bridge.WritableMap;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import java.util.*;
+
+/**
+ * Native module's shared implementation
+ */
+public class RangeDatePickerModuleImpl {
+    private final ReactApplicationContext reactContext;
+  
+    @Nullable
+    private Callback mCallback = null;
+
+    public static final String NAME = "RangeDatePickerModule";
+
+    interface OnCancelFunction {
+        void run();
+    }
+
+    interface OnErrorFunction {
+        void run(Exception e);
+    }
+
+    interface OnResultFunction {
+        void run(WritableMap result);
+    }
+
+    public RangeDatePickerModuleImpl(ReactApplicationContext reactContext) {
+        this.reactContext = reactContext;
+    }
+
+    public void showRangeDatePickerWithCallback(String title, Callback onResult) {
+        mCallback = onResult;
+        showRangeDatePicker(
+            title,
+            () -> {
+                if (mCallback != null) {
+                    mCallback.invoke(null);
+                }
+                mCallback = null;
+            },
+            (error) -> {
+                if (mCallback != null) {
+                    mCallback.invoke(null);
+                }
+                mCallback = null;
+            },
+            (result) -> {
+                if (mCallback != null) {
+                    mCallback.invoke(result);
+                }
+                mCallback = null;
+            }
+        );
+    }
+
+    public void showRangeDatePickerWithPromise(ReadableMap config, Promise promise) {
+        showRangeDatePicker(
+            config.getString("title"),
+            () -> {
+                promise.resolve(null);
+            },
+            (error) -> {
+                promise.reject(error);
+            },
+            (result) -> {
+                promise.resolve(result);
+            }
+        );
+    }
+
+    private void showRangeDatePicker(
+        String title,
+        OnCancelFunction onCancel,
+        OnErrorFunction onError,
+        OnResultFunction onResult
+    ) {
+        AppCompatActivity activity = (AppCompatActivity)reactContext.getCurrentActivity();
+        if (activity == null) {
+            onError.run(new Exception("No activity"));
+            return;
+        }
+
+        MaterialDatePicker<Pair<Long, Long>> picker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTitleText(title)
+            .build();
+        picker.addOnCancelListener((dialog) -> { onCancel.run(); });
+        picker.addOnDismissListener((dialog) -> { onCancel.run(); });
+        picker.addOnNegativeButtonClickListener((dialog) -> { onCancel.run(); });
+        picker.addOnPositiveButtonClickListener((result) -> {
+            Calendar fromCalendar = Calendar.getInstance();
+            fromCalendar.setTimeInMillis(result.first);
+            int fromYear = fromCalendar.get(Calendar.YEAR);
+            int fromMonth = fromCalendar.get(Calendar.MONTH);
+            int fromDay = fromCalendar.get(Calendar.DAY_OF_MONTH);
+            Calendar toCalendar = Calendar.getInstance();
+            toCalendar.setTimeInMillis(result.second);
+            int toYear = toCalendar.get(Calendar.YEAR);
+            int toMonth = toCalendar.get(Calendar.MONTH);
+            int toDay = toCalendar.get(Calendar.DAY_OF_MONTH);
+
+            WritableMap payload = Arguments.createMap();
+            WritableMap from = Arguments.createMap();
+            from.putInt("day", fromDay);
+            from.putInt("month", fromMonth + 1);
+            from.putInt("year", fromYear);
+            payload.putMap("from", from);
+            WritableMap to = Arguments.createMap();
+            to.putInt("day", toDay);
+            to.putInt("month", toMonth + 1);
+            to.putInt("year", toYear);
+            payload.putMap("to", to);
+
+            onResult.run(payload);
+        });
+
+        UiThreadUtil.runOnUiThread(() -> {
+            picker.show(activity.getSupportFragmentManager(), NAME);
+        });
+    }
+}
+```
+
+The purpose of creating separate class, instead of using `RangeDatePickerModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
+
+In `RangeDatePickerModuleImpl` we declare the logic used for launching datepicker as well as the name for our module (static `NAME` constant at the bottom of the file).
+
+To create range datepicker, we use [`MaterialDatePicker.Builder.dateRangePicker` builder function](https://github.com/material-components/material-components-android/blob/master/docs/components/DatePicker.md#usage).
+
+Then, we attach listeners to the picker to react to picker's dismissal/cancellation and range date selection.
+For constructing result payload we are using RN's `Arguments.createMap` utility helper.
+
+Finally the picker needs to be displayed - because datepicker is extending [DialogFragment from androidx](https://developer.android.com/reference/kotlin/androidx/fragment/app/DialogFragment#show(androidx.fragment.app.FragmentManager,java.lang.String)) this can be achieved with `show` method that expects [`FragmentManager`](https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentManager) instance and fragment tag.
+In this case, we obtain the `FragmentManager` from the current displayed activity (usually it will be `MainActivity` from your app). For the fragment tag, we'll just use the `NAME` constant.
+As the datepicker is an UI element, we have to make sure that the code invoking `show` method is run on the main thread - we can use RN's `UIThreadUtil.runOnUiThread` helper for that purpose.

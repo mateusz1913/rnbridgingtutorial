@@ -1,0 +1,39 @@
+#### `RangeDatePickerModule.java`
+
+Let's start with `android/src/newarch/java/com/rangedatepickerpackage/RangeDatePickerModule.java`
+
+```kotlin title="android/src/newarch/java/com/rangedatepickerpackage/RangeDatePickerModule.java"
+package com.rangedatepickerpackage;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = RangeDatePickerModule.NAME)
+public class RangeDatePickerModule extends NativeRangeDatePickerModuleSpec {
+    public static final String NAME = "NAME";
+
+    public RangeDatePickerModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+    }
+}
+
+```
+
+We start by adding `package com.rangedatepickerpackage;` at the top of the file.
+This will "link" everything inside that file with `com.rangedatepickerpackage` android namespace.
+
+Second step is to import `ReactApplicationContext` class & `ReactModule` annotation.
+`ReactApplicationContext` instance is used as the only `RangeDatePickerModule` constructor parameter.
+Additionally, `RangeDatePickerModule` is annotated with `ReactModule` decorator.
+The name parameter's value is a static constant `NAME`.
+
+Next thing is to extend `RangeDatePickerModule` with code-generated spec class.
+After extending, Android Studio will display error that `RangeDatePickerModule` does not implement required methods.
+We will implement it later, now let's create module-implementation class.

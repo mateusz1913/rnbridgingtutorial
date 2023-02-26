@@ -7,6 +7,8 @@ title: View boilerplate
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+import LinkPackage from '../_link-package.mdx';
+
 ### Create package structure
 
 <Tabs groupId="package_structure">
@@ -70,72 +72,4 @@ For Android implementation, create:
 
 ### Link the package with the app
 
-To link the package without adding it to node_modules, we will use `react-native.config.js`
-
-1. Go to `react-native.config.js` (create it, if needed) inside root directory of your app and add `conic-gradient-package` under `dependencies` property:
-
-```js title="react-native.config.js"
-const path = require('path');
-
-module.exports = {
-  dependencies: {
-    'conic-gradient-package': { // <--------- Add entry for "conic-gradient-package"
-      root: path.resolve(__dirname, './conic-gradient-package'),
-    },
-  },
-};
-```
-
-2. Go to `babel.config.js` and add `conic-gradient-package` under `alias` property of `babel-plugin-module-resolver`:
-
-```diff title="babel.config.js"
-module.exports = {
-  presets: [ 'module:metro-react-native-babel-preset' ],
-  plugins: [
-    [
-      'module-resolver',
-      {
-        root: [ './' ],
-        extensions: [
-          '.ios.js',
-          '.ios.ts',
-          '.ios.tsx',
-          '.android.js',
-          '.android.ts',
-          '.android.tsx',
-          '.js',
-          '.ts',
-          '.tsx',
-          '.json',
-        ],
-+       alias: {
-+         'conic-gradient-package': './conic-gradient-package'
-+       }
-      },
-    ],
-  ],
-};
-```
-
-3. Go to `tsconfig.json` and add `conic-gradient-package` under `compilerOptions.paths` field:
-
-```diff title="tsconfig.json"
-{
-  "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
-  "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
-    /* Completeness */
-    "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
-+   "paths": {
-+     "conic-gradient-package": ["./conic-gradient-package"],
-+   }
-  }
-}
-```
-
-4. Install Pods to link them to iOS project.
-
-```sh
-npx pod-install
-```
+<LinkPackage package="conic-gradient-package" />

@@ -1,0 +1,176 @@
+#### `RangeDatePickerModuleImpl.swift`
+
+Now it's time to write some Swift code!
+
+```swift title="ios/RangeDatePickerModuleImpl.swift"
+import Fastis
+import Foundation
+
+@objc(RangeDatePickerModuleDelegate)
+public protocol RangeDatePickerModuleDelegate {
+    func onCancel()
+    func onError(_ error: Error)
+    func onResult(_ resultDictionary: Dictionary<String, Dictionary<String, Int>>)
+}
+
+/**
+ * Native module's shared implementation
+ */
+@objc(RangeDatePickerModuleImpl)
+public class RangeDatePickerModuleImpl : NSObject {
+    @objc public weak var delegate: RangeDatePickerModuleDelegate? = nil
+
+    @objc public func showRangeDatePicker(withTitle title: String) {
+        guard let presentedViewController = RCTPresentedViewController() else {
+            let error = CustomError.NoViewController("No ViewController")
+            self.delegate?.onError(error)
+            return
+        }
+        let fastisController = FastisController(mode: .range)
+        fastisController.title = title
+        fastisController.doneHandler = { selectedRange in
+            guard let selectedRange = selectedRange else {
+                self.delegate?.onCancel()
+                return
+            }
+            let fromDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: selectedRange.fromDate)
+            let toDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: selectedRange.toDate)
+            self.delegate?.onResult([
+                "from": [
+                    "day": fromDateComponents.day!,
+                    "month": fromDateComponents.month!,
+                    "year": fromDateComponents.year!
+                ],
+                "to": [
+                    "day": toDateComponents.day!,
+                    "month": toDateComponents.month!,
+                    "year": toDateComponents.year!
+                ]
+            ])
+        }
+        fastisController.dismissHandler = { self.delegate?.onCancel() }
+        fastisController.present(above: presentedViewController)
+    }
+}
+
+enum CustomError: Error {
+    case NoViewController(String)
+}
+```
+
+The purpose of creating separate class, instead of using `RangeDatePickerModule` directly is:
+- to separate RN's wrapper classes from the actual native implementation as much as possible
+- `Fastis` library is Swift only, so you would still have to write at least small Swift wrapper that exposes lib's code to ObjC code
+
+Apart from declaring `RangeDatePickerModuleImpl` class, we also declare `RangeDatePickerModuleDelegate`.
+It's because our module-implementation class needs to communicate with module class (to return the range of dates picked by the user).
+In iOS world, this is usually done using [Delegate Pattern](https://developer.apple.com/documentation/swift/using-delegates-to-customize-object-behavior).
+Our module-implementation will provide the result by invoking methods on the delegate with result parameters.
+
+Let's take a closer look at our delegate protocol:
+
+```swift title="ios/RangeDatePickerModuleImpl.swift"
+import Fastis
+import Foundation
+
+// highlight-start
+@objc(RangeDatePickerModuleDelegate)
+public protocol RangeDatePickerModuleDelegate {
+    func onCancel()
+    func onError(_ error: Error)
+    func onResult(_ resultDictionary: Dictionary<String, Dictionary<String, Int>>)
+}
+// highlight-end
+
+/**
+ * Native module's shared implementation
+ */
+@objc(RangeDatePickerModuleImpl)
+public class RangeDatePickerModuleImpl : NSObject {
+// highlight-start
+    @objc public weak var delegate: RangeDatePickerModuleDelegate? = nil
+// highlight-end
+
+    //
+}
+
+//
+```
+
+We declare `RangeDatePickerModuleDelegate` public protocol which is exposed with the same name to objc (by marking it with `@objc(<exported-objc-name>)`).
+Inside the protocol, there are 3 functions declared (these are public by default).
+In the `RangeDatePickerModuleImpl` we add `delegate` weak property of our delegate protocol type (it's also exported to ObjC).
+We will use that property to communicate the result to the receiver object that implements delegate protocol.
+
+Now let's analyze the rest of the class:
+
+```swift title="ios/RangeDatePickerModuleImpl.swift"
+import Fastis
+import Foundation
+
+//
+
+/**
+ * Native module's shared implementation
+ */
+@objc(RangeDatePickerModuleImpl)
+public class RangeDatePickerModuleImpl : NSObject {
+    //
+
+// highlight-start
+    @objc public func showRangeDatePicker(withTitle title: String) {
+        guard let presentedViewController = RCTPresentedViewController() else {
+            let error = CustomError.NoViewController("No ViewController")
+            self.delegate?.onError(error)
+            return
+        }
+        let fastisController = FastisController(mode: .range)
+        fastisController.title = title
+        fastisController.doneHandler = { selectedRange in
+            guard let selectedRange = selectedRange else {
+                self.delegate?.onCancel()
+                return
+            }
+            let fromDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: selectedRange.fromDate)
+            let toDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: selectedRange.toDate)
+            self.delegate?.onResult([
+                "from": [
+                    "day": fromDateComponents.day!,
+                    "month": fromDateComponents.month!,
+                    "year": fromDateComponents.year!
+                ],
+                "to": [
+                    "day": toDateComponents.day!,
+                    "month": toDateComponents.month!,
+                    "year": toDateComponents.year!
+                ]
+            ])
+        }
+        fastisController.dismissHandler = { self.delegate?.onCancel() }
+        fastisController.present(above: presentedViewController)
+    }
+// highlight-end
+}
+
+// highlight-start
+enum CustomError: Error {
+    case NoViewController(String)
+}
+// highlight-end
+```
+
+Our module-implementation has only a single function with string `title` parameter.
+
+Inside the function we obtain current displayed view controller with `RCTPresentedViewController` utility function we exposed from `RCTUtils.h` in the bridging header.
+If there's no such view controller, we create custom `Error` object (take a look at `enum CustomError` at the bottom of the file) and notify the delegate about an error.
+
+:::tip
+
+If you are confused with the `guard` statement, visit [Swift's dedicated docs section](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/controlflow/#Early-Exit).
+
+:::
+
+Next step is to initialize a modal view controller provided by `Fastis` library and configure it.
+As a datepicker title we assign `title` argument from our function.
+Next we assign result handlers where we parse selected dates and notify the delegate.
+Finally we display the modal with datepicker.

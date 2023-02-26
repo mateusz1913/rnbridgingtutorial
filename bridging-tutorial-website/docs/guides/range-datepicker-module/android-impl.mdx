@@ -1,0 +1,40 @@
+---
+sidebar_label: Android implementation
+sidebar_position: 5
+title: Android implementation
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import AndroidJavaImpl from './_android-java-impl.mdx'
+import AndroidKotlinImpl from './_android-kotlin-impl.mdx'
+
+Let's use Android Studio for writing Android code. Launch Android Studio and open the project under `<your-project-dir>/android` path.
+When the project is opened, find `range-datepicker-package` inside project-tree
+
+The `range-datepicker-package` contains 3 packages with the same name `com.rangedatepickerpackage`. After expanding them, you'll notice that these contain following things:
+
+- code-generated Java spec files
+- RN's module wrapper `RangeDatePickerModule` class stub files
+- module-implementation `RangeDatePickerModuleImpl` class stub file
+- `RangeDatePickerModulePackage` class stub file
+
+Let's start implementing!
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+<AndroidKotlinImpl />
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+<AndroidJavaImpl />
+
+</TabItem>
+</Tabs>
+
+You can check training repo for Kotlin implementation [here](https://r.mtdv.me/FtXpuO4X9f) and Java implementation [here](https://r.mtdv.me/FtXpuO4X9f).
+
+That's Android part, now let's wrap things up and try to use RangeDatePicker module in action!

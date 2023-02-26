@@ -23,12 +23,12 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.CONIC_GRADIENT, { isClassic: true });
   };
 
-  const navigateToSimpleUIModule = () => {
-    navigation.navigate(ROUTES.SIMPLE_UI_MODULE);
+  const navigateToRangeDatePicker = () => {
+    navigation.navigate(ROUTES.RANGE_DATEPICKER);
   };
 
-  const navigateToSimpleUIModuleClassic = () => {
-    navigation.navigate(ROUTES.SIMPLE_UI_MODULE, { isClassic: true });
+  const navigateToRangeDatePickerClassic = () => {
+    navigation.navigate(ROUTES.RANGE_DATEPICKER, { isClassic: true });
   };
 
   const navigateToSimpleEventModule = () => {
@@ -80,10 +80,10 @@ export const HomeScreen: FC = () => {
             <Button onPress={navigateToConicGradientClassic} title="Conic gradient (Classic)" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleUIModule} title="Simple UI module (Modern)" />
+            <Button onPress={navigateToRangeDatePicker} title="Range datepicker" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleUIModuleClassic} title="Simple UI module (Classic)" />
+            <Button onPress={navigateToRangeDatePickerClassic} title="Range datepicker (Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleEventModule} title="Simple event module (Modern & Classic)" />

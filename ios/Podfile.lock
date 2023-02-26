@@ -113,6 +113,22 @@ PODS:
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - PrettyCards (1.0.5)
+  - RangeDatePickerPackage (0.0.1):
+    - Fastis (~> 2.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - RangeDatePickerPackageClassic (0.0.1):
+    - Fastis (~> 2.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - RangeUISlider (3.1.0)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -803,22 +819,6 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
-  - SampleNativeDatepicker (0.0.1):
-    - Fastis (~> 2.0)
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - SampleNativeDatepickerClassic (0.0.1):
-    - Fastis (~> 2.0)
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
   - SampleNativeList (0.0.1):
     - RCT-Folly
     - RCTRequired
@@ -906,6 +906,8 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - OpenSSL-Universal (= 1.1.1100)
+  - RangeDatePickerPackage (from `../range-datepicker-package`)
+  - RangeDatePickerPackageClassic (from `../range-datepicker-package-classic`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -944,8 +946,6 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - SampleEventModule (from `../sample-event-module`)
   - SampleEventModuleClassic (from `../sample-event-module-classic`)
-  - SampleNativeDatepicker (from `../sample-native-datepicker`)
-  - SampleNativeDatepickerClassic (from `../sample-native-datepicker-classic`)
   - SampleNativeList (from `../sample-native-list`)
   - SampleNativeListClassic (from `../sample-native-list-classic`)
   - SampleNativeScreen (from `../sample-native-screen`)
@@ -997,6 +997,10 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
+  RangeDatePickerPackage:
+    :path: "../range-datepicker-package"
+  RangeDatePickerPackageClassic:
+    :path: "../range-datepicker-package-classic"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1067,10 +1071,6 @@ EXTERNAL SOURCES:
     :path: "../sample-event-module"
   SampleEventModuleClassic:
     :path: "../sample-event-module-classic"
-  SampleNativeDatepicker:
-    :path: "../sample-native-datepicker"
-  SampleNativeDatepickerClassic:
-    :path: "../sample-native-datepicker-classic"
   SampleNativeList:
     :path: "../sample-native-list"
   SampleNativeListClassic:
@@ -1113,6 +1113,8 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PrettyCards: 2b078f2396a42f7f0c4d6624b875149dcb49d3ed
+  RangeDatePickerPackage: 9be3e520391806f4d8948a19c71909aee66b0d14
+  RangeDatePickerPackageClassic: 185bb6ad41a0b777436dc93d378f8747c3da08a0
   RangeUISlider: bb1a82942ef5b6315bd8bf1c12a6b953f0ed02e8
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
@@ -1149,8 +1151,6 @@ SPEC CHECKSUMS:
   RNScreens: a838934f2f0d915c8a756409d674a862b70b1677
   SampleEventModule: 7069f3f8ff2a5f6a98d725db31b50ff1c36ba62e
   SampleEventModuleClassic: 875860573053d82e5fe1d8e861c27dae852a1bad
-  SampleNativeDatepicker: 57fd1b0fd5a248ef7dedd26db023846e621428f8
-  SampleNativeDatepickerClassic: 53f824f0d0c8f71c427e7848faeb0be49a61dc84
   SampleNativeList: df789ab91c8d864db074fbfc9c74513086c60d95
   SampleNativeListClassic: 727c2a68624b1d23bd067e236521adf1eb750ad0
   SampleNativeScreen: 1ba1cb3368991923bcde767f8752897e5a797321

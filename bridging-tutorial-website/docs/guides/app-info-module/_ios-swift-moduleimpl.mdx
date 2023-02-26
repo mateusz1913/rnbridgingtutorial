@@ -21,7 +21,7 @@ public class AppInfoModuleImpl : NSObject {
 }
 ```
 
-The purpose of creating separate class, instead of using `AppInfoModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
+The purpose of creating separate class, instead of using `AppInfoModule` directly is to separate RN's wrapper classes from the actual native implementation as much as possible.
 
 Here, we declare `AppInfoModuleImpl` class, which has 3 synchronous methods. To make things accessible to ObjC world, we have to do 4 things:
 

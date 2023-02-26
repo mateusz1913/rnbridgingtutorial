@@ -1,0 +1,35 @@
+---
+sidebar_label: JS specification
+sidebar_position: 3
+title: JS specification
+---
+
+When all boilerplate is ready, let's navigate to `src/NativeRangeDatePickerModule.ts`. To declare module spec, let's paste following content:
+
+```tsx title="src/NativeRangeDatePickerModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+export interface Spec extends TurboModule {
+  getAppBuildNumber(): string
+  getAppBundleId(): string
+  getAppVersion(): string
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('AppInfoModule');
+```
+
+This does 2 things:
+- declares module specification with 3 synchronous methods, each one returning string value
+- declares that module, should be available under `AppInfoModule` name
+
+You can run codegen to generate native classes and interfaces, and also check if specification is defined in correct way:
+
+- on iOS: `yarn codegen:ios`
+- on Android: `yarn codegen:android`
+
+After that, let's finalize JS part with exporting module from `index.ts`
+
+```tsx title="src/index.ts"
+export { default as AppInfoModule } from './NativeAppInfoModule';
+```

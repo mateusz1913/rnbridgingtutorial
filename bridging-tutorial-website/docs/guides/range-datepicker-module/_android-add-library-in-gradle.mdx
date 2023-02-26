@@ -1,0 +1,92 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+#### Add native library as dependency for the package
+
+When developing some Android native code, you often need to use some external package, whether it's from AndroidX, MaterialComponents or some 3rd party.
+Usually those libraries are integrated with [Gradle](https://docs.gradle.org/current/userguide/userguide.html).
+
+:::tip
+
+For more information on how to add dependencies to Android project visit [Android's dedicated docs](https://developer.android.com/studio/build/dependencies).
+
+:::
+
+Each RN library that includes some Android native code is, in fact, integrated with Gradle and our range datepicker will also need to depend on [MaterialComponents](https://github.com/material-components/material-components-android) dependency.
+So let's not waste time and navigate to the `build.gradle` in our package.
+
+<Tabs groupId="gradle">
+<TabItem value="groovy" label="Groovy script (build.gradle)">
+
+```groovy title="android/build.gradle"
+buildscript {
+    //
+}
+
+//
+
+android {
+    //
+}
+
+repositories {
+    //
+}
+
+dependencies {
+    //
+
+// highlight-start
+    // Add the dependency to the MaterialComponents library
+    implementation "com.google.android.material:material:1.8.0"
+// highlight-end
+}
+```
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin script (build.gradle.kts)">
+
+```kotlin title="android/build.gradle.kts"
+buildscript {
+    //
+}
+
+//
+
+plugins {
+    //
+}
+
+//
+
+android {
+    //
+}
+
+repositories {
+    //
+}
+
+//
+
+dependencies {
+    //
+
+// highlight-start
+    // Add the dependency to the MaterialComponents library
+    implementation("com.google.android.material:material:1.8.0")
+// highlight-end
+}
+```
+
+</TabItem>
+</Tabs>
+
+To add a dependency we need to write `implementation` keyword and declare the package (and its version) we want to include.
+After that you can invoke Gradle Sync in the Android Studio.
+
+:::info
+
+In this guide, version 1.8.0 of MaterialComponents library is used. In your case this version may be different, you can visit [Maven Repository](https://mvnrepository.com/artifact/com.google.android.material/material) and check available versions.
+
+:::
