@@ -1,0 +1,134 @@
+#### Events
+
+Let's start by handling direct events - go to `OnRangeSliderViewBeginDragEvent.java`, `OnRangeSliderViewEndDragEvent.java` & `OnRangeSliderViewValueChangeEvent.java`
+
+```java title="android/src/main/java/com/rangesliderpackage/OnRangeSliderViewBeginDragEvent.java"
+package com.rangesliderpackage;
+
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.Event;
+
+public class OnRangeSliderViewBeginDragEvent extends Event<OnRangeSliderViewBeginDragEvent> {
+    public static final String NAME = "topRangeSliderViewBeginDrag";
+    public static final String EVENT_PROP_NAME = "onRangeSliderViewBeginDrag";
+
+    public OnRangeSliderViewBeginDragEvent(int surfaceId, int viewId) {
+        super(surfaceId, viewId);
+    }
+
+    @Override
+    public String getEventName() {
+        return NAME;
+    }
+
+    @Nullable
+    @Override
+    public WritableMap getEventData() {
+        return Arguments.createMap();
+    }
+}
+```
+
+```java title="android/src/main/java/com/rangesliderpackage/OnRangeSliderViewEndDragEvent.java"
+package com.rangesliderpackage;
+
+import androidx.annotation.Nullable;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.Event;
+
+public class OnRangeSliderViewEndDragEvent extends Event<OnRangeSliderViewEndDragEvent> {
+    private final double leftKnobValue;
+    private final double rightKnobValue;
+    private static final String LEFT_KNOB_KEY = "leftKnobValue";
+    private static final String RIGHT_KNOB_KEY = "rightKnobValue";
+
+    public static final String NAME = "topRangeSliderViewEndDrag";
+    public static final String EVENT_PROP_NAME = "onRangeSliderViewEndDrag";
+
+    public OnRangeSliderViewEndDragEvent(
+        int surfaceId,
+        int viewId,
+        double leftKnobValue,
+        double rightKnobValue
+    ) {
+        super(surfaceId, viewId);
+        this.leftKnobValue = leftKnobValue;
+        this.rightKnobValue = rightKnobValue;
+    }
+
+    @Override
+    public String getEventName() {
+        return NAME;
+    }
+
+    @Nullable
+    @Override
+    public WritableMap getEventData() {
+        return createPayload();
+    }
+
+    private WritableMap createPayload() {
+        WritableMap payload = Arguments.createMap();
+        payload.putDouble(LEFT_KNOB_KEY, leftKnobValue);
+        payload.putDouble(RIGHT_KNOB_KEY, rightKnobValue);
+        return payload;
+    }
+}
+```
+
+```java title="android/src/main/java/com/rangesliderpackage/OnRangeSliderViewValueChangeEvent.java"
+package com.rangesliderpackage;
+
+import androidx.annotation.Nullable;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.Event;
+
+public class OnRangeSliderViewValueChangeEvent extends Event<OnRangeSliderViewValueChangeEvent> {
+    private final double leftKnobValue;
+    private final double rightKnobValue;
+    private static final String LEFT_KNOB_KEY = "leftKnobValue";
+    private static final String RIGHT_KNOB_KEY = "rightKnobValue";
+
+    public static final String NAME = "topRangeSliderViewValueChange";
+    public static final String EVENT_PROP_NAME = "onRangeSliderViewValueChange";
+
+    public OnRangeSliderViewValueChangeEvent(
+        int surfaceId,
+        int viewId,
+        double leftKnobValue,
+        double rightKnobValue
+    ) {
+        super(surfaceId, viewId);
+        this.leftKnobValue = leftKnobValue;
+        this.rightKnobValue = rightKnobValue;
+    }
+
+    @Override
+    public String getEventName() {
+        return NAME;
+    }
+
+    @Nullable
+    @Override
+    public WritableMap getEventData() {
+        return createPayload();
+    }
+
+    private WritableMap createPayload() {
+        WritableMap payload = Arguments.createMap();
+        payload.putDouble(LEFT_KNOB_KEY, leftKnobValue);
+        payload.putDouble(RIGHT_KNOB_KEY, rightKnobValue);
+        return payload;
+    }
+}
+```
+
+In each case we are creating event class that extends RN's `Event`.
+Those classes take at least 2 arguments - `surfaceId` and `viewId`.
+To construct the payload object, we use `Arguments.createMap` utility helper.
+And we also define static constants that will be used to register events with specified JS name.

@@ -8,9 +8,9 @@ import {
   HomeScreen,
   NativeListScreen,
   RangeDatePickerScreen,
+  RangeSliderScreen,
   SimpleEventModuleScreen,
   SimpleLaunchNativeScreenModuleScreen,
-  SimpleViewScreen,
 } from '../screens';
 
 import { ROUTES } from './routes';
@@ -25,8 +25,8 @@ export const NavigationRootStack: FC = () => {
       <RootStack.Screen name={ROUTES.APP_INFO} component={AppInfoScreen} />
       <RootStack.Screen name={ROUTES.CONIC_GRADIENT} component={ConicGradientScreen} />
       <RootStack.Screen name={ROUTES.RANGE_DATEPICKER} component={RangeDatePickerScreen} />
+      <RootStack.Screen name={ROUTES.RANGE_SLIDER} component={RangeSliderScreen} />
       <RootStack.Screen name={ROUTES.SIMPLE_EVENT_MODULE} component={SimpleEventModuleScreen} />
-      <RootStack.Screen name={ROUTES.SIMPLE_VIEW} component={SimpleViewScreen} />
       <RootStack.Screen
         name={ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE}
         component={SimpleLaunchNativeScreenModuleScreen}

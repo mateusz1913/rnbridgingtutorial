@@ -20,6 +20,12 @@ module.exports = {
     'range-datepicker-package-classic': { // <--------- Add entry for "range-datepicker-package-classic"
       root: path.resolve(__dirname, './range-datepicker-package-classic'),
     },
+    'range-slider-package': { // <--------- Add entry for "range-slider-package"
+      root: path.resolve(__dirname, './range-slider-package'),
+    },
+    'range-slider-package-classic': { // <--------- Add entry for "range-slider-package-classic"
+      root: path.resolve(__dirname, './range-slider-package-classic'),
+    },
     'sample-event-module': { // <--------- Add entry for "sample-event-module"
       root: path.resolve(__dirname, './sample-event-module'),
       platforms: {
@@ -33,22 +39,6 @@ module.exports = {
       platforms: {
         android: {
           sourceDir: path.resolve(__dirname, './sample-event-module-classic/android'),
-        },
-      },
-    },
-    'sample-native-slider': { // <--------- Add entry for "sample-native-slider"
-      root: path.resolve(__dirname, './sample-native-slider'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-slider/android'),
-        },
-      },
-    },
-    'sample-native-slider-classic': { // <--------- Add entry for "sample-native-slider-classic"
-      root: path.resolve(__dirname, './sample-native-slider-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-slider-classic/android'),
         },
       },
     },

@@ -1,0 +1,318 @@
+import CompleteFile from '../_complete-file.mdx';
+
+#### `RangeSliderView.kt`
+
+Now, let's declare the custom view that will hold our range slider:
+
+```kotlin title="android/src/main/java/com/rangesliderpackage/RangeSliderView.kt"
+package com.rangesliderpackage
+
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.widget.FrameLayout
+import com.facebook.react.bridge.ReactContext
+import com.facebook.react.uimanager.PixelUtil
+import com.google.android.material.slider.RangeSlider
+import kotlin.math.abs
+
+class RangeSliderView(private val reactContext: ReactContext) : FrameLayout(reactContext) {
+    private var mLastLeftKnobValue = 0f
+    private var mLastRightKnobValue = 1f
+    private var slider = RangeSlider(reactContext).apply {
+        trackHeight = PixelUtil.toPixelFromDIP(10f).toInt()
+        thumbTintList = ColorStateList.valueOf(Color.BLUE)
+        addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: RangeSlider) {
+                //
+            }
+
+            override fun onStopTrackingTouch(slider: RangeSlider) {
+                //
+            }
+        })
+        addOnChangeListener { slider, _, _ ->
+            val newLeftKnobValue = slider.values[0]
+            val newRightKnobValue = slider.values[1]
+            if (abs(newLeftKnobValue - mLastLeftKnobValue) < 0.1f && abs(newRightKnobValue - mLastRightKnobValue) < 0.1f) {
+                return@addOnChangeListener
+            }
+            mLastLeftKnobValue = newLeftKnobValue
+            mLastRightKnobValue = newRightKnobValue
+
+            //
+        }
+    }
+
+    init {
+        this.addView(slider, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+    }
+
+    companion object {
+        const val NAME = "RangeSliderView"
+    }
+}
+```
+
+Our custom view extends `FrameLayout` class, it declares static `NAME` constant that equals to the value we put in JS specification, it also declares `RangeSlider` instance with some default configuration.
+
+As a next step, let's forward props to the slider:
+
+```kotlin title="android/src/main/java/com/rangesliderpackage/RangeSliderView.kt"
+//
+
+class RangeSliderView(private val reactContext: ReactContext) : FrameLayout(reactContext) {
+    //
+
+    init {
+        this.addView(slider, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+    }
+
+// highlight-start
+    fun setActiveColor(activeColor: Int?) {
+        slider.trackActiveTintList = ColorStateList.valueOf(activeColor ?: Color.BLUE)
+    }
+
+    fun setInactiveColor(inactiveColor: Int?) {
+        slider.trackInactiveTintList = ColorStateList.valueOf(inactiveColor ?: Color.GRAY)
+    }
+
+    fun setMinValue(minValue: Double) {
+        slider.valueFrom = minValue.toFloat()
+    }
+
+    fun setMaxValue(maxValue: Double) {
+        slider.valueTo = maxValue.toFloat()
+    }
+
+    fun setLeftKnobValue(leftKnobValue: Double) {
+        if (leftKnobValue.isNaN()) {
+            return
+        }
+        val rightKnobValue = slider.values[1]
+        slider.values = listOf(leftKnobValue.toFloat(), rightKnobValue)
+    }
+
+    fun setRightKnobValue(rightKnobValue: Double) {
+        if (rightKnobValue.isNaN()) {
+            return
+        }
+        val leftKnobValue = slider.values[0]
+        slider.values = listOf(leftKnobValue, rightKnobValue.toFloat())
+    }
+
+    fun setStep(step: Int) {
+        slider.stepSize = step.toFloat()
+    }
+// highlight-end
+
+    //
+}
+```
+
+Here we are defining public setter function that will be used by view manager class.
+Inside those functions we parse arguments and pass them to the slider.
+
+Good, we communicate with our slider, but we still have to make the slider communicate back with us!
+We'll do it by introducing listener property, that view manager class will use to receive events from slider.
+
+Let's start by defining the interface:
+
+```kotlin title="android/src/main/java/com/rangesliderpackage/RangeSliderView.kt"
+class RangeSliderView(private val reactContext: ReactContext) : FrameLayout(reactContext) {
+    interface OnRangeSliderViewListener {
+        fun onRangeSliderViewBeginDrag()
+        fun onRangeSliderViewEndDrag(leftKnobValue: Double, rightKnobValue: Double)
+        fun onRangeSliderViewValueChange(leftKnobValue: Double, rightKnobValue: Double)
+    }
+
+    //
+}
+```
+
+Next, we'll add a listener property and use it to send events to the receiver:
+
+```kotlin title="android/src/main/java/com/rangesliderpackage/RangeSliderView.kt"
+class RangeSliderView(private val reactContext: ReactContext) : FrameLayout(reactContext) {
+    interface OnRangeSliderViewListener {
+        fun onRangeSliderViewBeginDrag()
+        fun onRangeSliderViewEndDrag(leftKnobValue: Double, rightKnobValue: Double)
+        fun onRangeSliderViewValueChange(leftKnobValue: Double, rightKnobValue: Double)
+    }
+
+// highlight-start
+    private var mListener: OnRangeSliderViewListener? = null
+// highlight-end
+    private var mLastLeftKnobValue = 0f
+    private var mLastRightKnobValue = 1f
+    private var slider = RangeSlider(reactContext).apply {
+        trackHeight = PixelUtil.toPixelFromDIP(10f).toInt()
+        thumbTintList = ColorStateList.valueOf(Color.BLUE)
+        addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: RangeSlider) {
+// highlight-start
+                sendOnRangeSliderViewBeginDragEvent()
+// highlight-end
+            }
+
+            override fun onStopTrackingTouch(slider: RangeSlider) {
+// highlight-start
+                sendOnRangeSliderViewEndDragEvent(slider.values[0].toDouble(), slider.values[1].toDouble())
+// highlight-end
+            }
+        })
+        addOnChangeListener { slider, _, _ ->
+            val newLeftKnobValue = slider.values[0]
+            val newRightKnobValue = slider.values[1]
+            if (abs(newLeftKnobValue - mLastLeftKnobValue) < 0.1f && abs(newRightKnobValue - mLastRightKnobValue) < 0.1f) {
+                return@addOnChangeListener
+            }
+            mLastLeftKnobValue = newLeftKnobValue
+            mLastRightKnobValue = newRightKnobValue
+// highlight-start
+            sendOnRangeSliderViewValueChangeEvent(newLeftKnobValue.toDouble(), newRightKnobValue.toDouble())
+// highlight-end
+        }
+    }
+
+    init {
+        this.addView(slider, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+    }
+
+// highlight-start
+    fun setOnRangeSliderViewListener(listener: OnRangeSliderViewListener?) {
+        mListener = listener
+    }
+// highlight-end
+
+    //
+
+// highlight-start
+    private fun sendOnRangeSliderViewValueChangeEvent(leftKnobValue: Double, rightKnobValue: Double) {
+        mListener?.onRangeSliderViewValueChange(leftKnobValue, rightKnobValue)
+    }
+
+    private fun sendOnRangeSliderViewBeginDragEvent() {
+        mListener?.onRangeSliderViewBeginDrag()
+    }
+
+    private fun sendOnRangeSliderViewEndDragEvent(leftKnobValue: Double, rightKnobValue: Double) {
+        mListener?.onRangeSliderViewEndDrag(leftKnobValue, rightKnobValue)
+    }
+// highlight-end
+
+    //
+}
+```
+
+Cool! Now we have everything in place, let's use it in view manager class.
+
+<CompleteFile
+  filename="RangeSliderView.kt"
+  language="kotlin"
+>
+
+    package com.rangesliderpackage
+
+    import android.content.res.ColorStateList
+    import android.graphics.Color
+    import android.widget.FrameLayout
+    import com.facebook.react.bridge.ReactContext
+    import com.facebook.react.uimanager.PixelUtil
+    import com.google.android.material.slider.RangeSlider
+    import kotlin.math.abs
+
+    class RangeSliderView(private val reactContext: ReactContext) : FrameLayout(reactContext) {
+        interface OnRangeSliderViewListener {
+            fun onRangeSliderViewBeginDrag()
+            fun onRangeSliderViewEndDrag(leftKnobValue: Double, rightKnobValue: Double)
+            fun onRangeSliderViewValueChange(leftKnobValue: Double, rightKnobValue: Double)
+        }
+
+        private var mListener: OnRangeSliderViewListener? = null
+        private var mLastLeftKnobValue = 0f
+        private var mLastRightKnobValue = 1f
+        private var slider = RangeSlider(reactContext).apply {
+            trackHeight = PixelUtil.toPixelFromDIP(10f).toInt()
+            thumbTintList = ColorStateList.valueOf(Color.BLUE)
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: RangeSlider) {
+                    sendOnRangeSliderViewBeginDragEvent()
+                }
+
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    sendOnRangeSliderViewEndDragEvent(slider.values[0].toDouble(), slider.values[1].toDouble())
+                }
+            })
+            addOnChangeListener { slider, _, _ ->
+                val newLeftKnobValue = slider.values[0]
+                val newRightKnobValue = slider.values[1]
+                if (abs(newLeftKnobValue - mLastLeftKnobValue) < 0.1f && abs(newRightKnobValue - mLastRightKnobValue) < 0.1f) {
+                    return@addOnChangeListener
+                }
+                mLastLeftKnobValue = newLeftKnobValue
+                mLastRightKnobValue = newRightKnobValue
+                sendOnRangeSliderViewValueChangeEvent(newLeftKnobValue.toDouble(), newRightKnobValue.toDouble())
+            }
+        }
+
+        init {
+            this.addView(slider, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        }
+
+        fun setOnRangeSliderViewListener(listener: OnRangeSliderViewListener?) {
+            mListener = listener
+        }
+
+        fun setActiveColor(activeColor: Int?) {
+            slider.trackActiveTintList = ColorStateList.valueOf(activeColor ?: Color.BLUE)
+        }
+
+        fun setInactiveColor(inactiveColor: Int?) {
+            slider.trackInactiveTintList = ColorStateList.valueOf(inactiveColor ?: Color.GRAY)
+        }
+
+        fun setMinValue(minValue: Double) {
+            slider.valueFrom = minValue.toFloat()
+        }
+
+        fun setMaxValue(maxValue: Double) {
+            slider.valueTo = maxValue.toFloat()
+        }
+
+        fun setLeftKnobValue(leftKnobValue: Double) {
+            if (leftKnobValue.isNaN()) {
+                return
+            }
+            val rightKnobValue = slider.values[1]
+            slider.values = listOf(leftKnobValue.toFloat(), rightKnobValue)
+        }
+
+        fun setRightKnobValue(rightKnobValue: Double) {
+            if (rightKnobValue.isNaN()) {
+                return
+            }
+            val leftKnobValue = slider.values[0]
+            slider.values = listOf(leftKnobValue, rightKnobValue.toFloat())
+        }
+
+        fun setStep(step: Int) {
+            slider.stepSize = step.toFloat()
+        }
+
+        private fun sendOnRangeSliderViewValueChangeEvent(leftKnobValue: Double, rightKnobValue: Double) {
+            mListener?.onRangeSliderViewValueChange(leftKnobValue, rightKnobValue)
+        }
+
+        private fun sendOnRangeSliderViewBeginDragEvent() {
+            mListener?.onRangeSliderViewBeginDrag()
+        }
+
+        private fun sendOnRangeSliderViewEndDragEvent(leftKnobValue: Double, rightKnobValue: Double) {
+            mListener?.onRangeSliderViewEndDrag(leftKnobValue, rightKnobValue)
+        }
+
+        companion object {
+            const val NAME = "RangeSliderView"
+        }
+    }
+</CompleteFile>

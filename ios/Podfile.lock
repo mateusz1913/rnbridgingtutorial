@@ -129,6 +129,24 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
+  - RangeSliderPackage (0.0.1):
+    - RangeUISlider (~> 3.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
+  - RangeSliderPackageClassic (0.0.1):
+    - RangeUISlider (~> 3.0)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - RangeUISlider (3.1.0)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -849,24 +867,6 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
-  - SampleNativeSlider (0.0.1):
-    - RangeUISlider (~> 3.0)
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-RCTFabric
-    - ReactCommon/turbomodule/core
-  - SampleNativeSliderClassic (0.0.1):
-    - RangeUISlider (~> 3.0)
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-RCTFabric
-    - ReactCommon/turbomodule/core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -908,6 +908,8 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.1.1100)
   - RangeDatePickerPackage (from `../range-datepicker-package`)
   - RangeDatePickerPackageClassic (from `../range-datepicker-package-classic`)
+  - RangeSliderPackage (from `../range-slider-package`)
+  - RangeSliderPackageClassic (from `../range-slider-package-classic`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -950,8 +952,6 @@ DEPENDENCIES:
   - SampleNativeListClassic (from `../sample-native-list-classic`)
   - SampleNativeScreen (from `../sample-native-screen`)
   - SampleNativeScreenClassic (from `../sample-native-screen-classic`)
-  - SampleNativeSlider (from `../sample-native-slider`)
-  - SampleNativeSliderClassic (from `../sample-native-slider-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1001,6 +1001,10 @@ EXTERNAL SOURCES:
     :path: "../range-datepicker-package"
   RangeDatePickerPackageClassic:
     :path: "../range-datepicker-package-classic"
+  RangeSliderPackage:
+    :path: "../range-slider-package"
+  RangeSliderPackageClassic:
+    :path: "../range-slider-package-classic"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1079,10 +1083,6 @@ EXTERNAL SOURCES:
     :path: "../sample-native-screen"
   SampleNativeScreenClassic:
     :path: "../sample-native-screen-classic"
-  SampleNativeSlider:
-    :path: "../sample-native-slider"
-  SampleNativeSliderClassic:
-    :path: "../sample-native-slider-classic"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1115,6 +1115,8 @@ SPEC CHECKSUMS:
   PrettyCards: 2b078f2396a42f7f0c4d6624b875149dcb49d3ed
   RangeDatePickerPackage: 9be3e520391806f4d8948a19c71909aee66b0d14
   RangeDatePickerPackageClassic: 185bb6ad41a0b777436dc93d378f8747c3da08a0
+  RangeSliderPackage: b35bcd58b72dc683bf3ea54cc6303654d25df3d8
+  RangeSliderPackageClassic: 25fa2a4902d7243dec4c76064a0130d2f2c29588
   RangeUISlider: bb1a82942ef5b6315bd8bf1c12a6b953f0ed02e8
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
@@ -1155,8 +1157,6 @@ SPEC CHECKSUMS:
   SampleNativeListClassic: 727c2a68624b1d23bd067e236521adf1eb750ad0
   SampleNativeScreen: 1ba1cb3368991923bcde767f8752897e5a797321
   SampleNativeScreenClassic: 966bee54456658d5d1a49868c613e744510a9fd5
-  SampleNativeSlider: 276bc26486179c11f5a141bd238fc333a357b96b
-  SampleNativeSliderClassic: eb6bae2a1bdff6b0ce8e88a784192ea928e08615
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

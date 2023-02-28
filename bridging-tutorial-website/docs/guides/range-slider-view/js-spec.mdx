@@ -1,0 +1,109 @@
+---
+sidebar_label: JS specification
+sidebar_position: 3
+title: JS specification
+---
+
+When all boilerplate is ready, let's navigate to `src/RangeSliderViewNativeComponent.ts`. To declare native component spec, let's paste following content:
+
+```tsx title="src/RangeSliderViewNativeComponent.ts"
+import type * as React from 'react';
+import type {
+  ColorValue,
+  HostComponent,
+  ViewProps,
+} from 'react-native';
+import type { DirectEventHandler, Double, Int32 } from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+export type OnRangeSliderViewEndDragEventData = Readonly<{ leftKnobValue: Double; rightKnobValue: Double }>;
+export type OnRangeSliderViewValueChangeEventData = Readonly<{ leftKnobValue: Double; rightKnobValue: Double }>;
+
+export interface RangeSliderViewProps extends ViewProps {
+  activeColor?: ColorValue;
+  inactiveColor?: ColorValue;
+  leftKnobValue: Double;
+  minValue?: Double;
+  maxValue?: Double;
+  onRangeSliderViewBeginDrag?: DirectEventHandler<null>;
+  onRangeSliderViewEndDrag?: DirectEventHandler<OnRangeSliderViewEndDragEventData>;
+  onRangeSliderViewValueChange?: DirectEventHandler<OnRangeSliderViewValueChangeEventData>;
+  rightKnobValue: Double;
+  step?: Int32;
+}
+
+export type RangeSliderViewComponent = HostComponent<RangeSliderViewProps>;
+
+export interface RangeSliderViewNativeCommands {
+  setLeftKnobValueProgrammatically: (viewRef: React.ElementRef<RangeSliderViewComponent>, value: Double) => void;
+  setRightKnobValueProgrammatically: (
+    viewRef: React.ElementRef<RangeSliderViewComponent>,
+    value: Double,
+  ) => void;
+}
+
+export const RangeSliderViewCommands = codegenNativeCommands<RangeSliderViewNativeCommands>({
+  supportedCommands: [ 'setLeftKnobValueProgrammatically', 'setRightKnobValueProgrammatically' ],
+});
+
+export default codegenNativeComponent<RangeSliderViewProps>('RangeSliderView') as RangeSliderViewComponent;
+```
+
+This is quite large spec, so let's analyze it piece by piece.
+
+First we create `RangeSliderViewProps` interface where all slider's props are declared, including event props with `DirectEventHandler<T>` codegen type.
+
+Next we create `RangeSliderViewNativeCommands` interface, where we declare imperative commands invoked on the native component.
+Each command takes reference to the native component as the first argument and commands can take multiple arguments.
+That interface is then used to type the object created with `codegenNativeCommands` function.
+
+Finally, we export default native component made with `codegenNativeComponent` function, where the `RangeSliderView` is used as the name of the component.
+
+You can run codegen to generate native classes and interfaces, and also check if specification is defined in correct way:
+
+- on iOS: `yarn codegen:ios`
+- on Android: `yarn codegen:android`
+
+After that, go to `src/RangeSliderView.tsx` and paste following code:
+
+```tsx title="src/RangeSliderView.tsx"
+import * as React from 'react';
+
+import type { RangeSliderViewComponent } from './RangeSliderViewNativeComponent';
+import RangeSliderViewNativeComponent, { RangeSliderViewCommands } from './RangeSliderViewNativeComponent';
+
+type Props = React.ComponentProps<typeof RangeSliderViewNativeComponent>;
+
+export class RangeSliderView extends React.Component<Props> {
+  private innerRef = React.createRef<React.ElementRef<RangeSliderViewComponent>>();
+
+  setLeftKnobValueProgrammatically = (value: number) => {
+    const ref = this.innerRef.current;
+
+    if (ref) {
+      RangeSliderViewCommands.setLeftKnobValueProgrammatically(ref, value);
+    }
+  };
+
+  setRightKnobValueProgrammatically = (value: number) => {
+    const ref = this.innerRef.current;
+
+    if (ref) {
+      RangeSliderViewCommands.setRightKnobValueProgrammatically(ref, value);
+    }
+  };
+
+  render() {
+    return <RangeSliderViewNativeComponent ref={this.innerRef} {...this.props} />;
+  }
+}
+```
+
+Here we are forwarding all props to the native component, as well as we pass internal ref, which is used to internally handle component's commands.
+
+After that, let's finalize JS part with exporting module from `index.ts`
+
+```tsx title="src/index.ts"
+export { RangeSliderView } from './RangeSliderView';
+```

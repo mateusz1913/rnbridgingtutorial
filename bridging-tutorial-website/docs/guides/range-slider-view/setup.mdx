@@ -1,0 +1,93 @@
+---
+sidebar_label: View boilerplate
+sidebar_position: 2
+title: View boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import LinkPackage from '../_link-package.mdx';
+
+### Create package structure
+
+<Tabs groupId="package_structure">
+<TabItem value="auto" label="Automatic generation">
+
+COMING SOON
+
+</TabItem>
+<TabItem value="manual" label="Manual walkthrough">
+
+#### Package boilerplate
+
+Start by [generating package boilerplate](../package-boilerplate) - use `range-slider-package` as the package name
+
+#### Source files stubs
+
+Finally, let's create stubs for source files. For JS, create following empty files:
+
+- `src/index.ts`
+- `src/RangeSliderView.tsx`
+- `src/RangeSliderViewNativeComponent.ts`
+
+For iOS implementation, create:
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+- `ios/RangeSliderView.swift`
+- `ios/RangeSliderViewComponentView.h`
+- `ios/RangeSliderViewComponentView.mm`
+- `ios/RangeSliderViewManager.h`
+- `ios/RangeSliderViewManager.mm`
+- `ios/RangeSliderPackage-Bridging-Header.h`
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+- `ios/RangeSliderView.h`
+- `ios/RangeSliderView.mm`
+- `ios/RangeSliderViewComponentView.h`
+- `ios/RangeSliderViewComponentView.mm`
+- `ios/RangeSliderViewManager.h`
+- `ios/RangeSliderViewManager.mm`
+- `ios/RangeSliderPackage-Bridging-Header.h`
+- `ios/RangeUISliderWrapper.swift` (needed to wrap Swift slider library)
+
+</TabItem>
+</Tabs>
+
+For Android implementation, create:
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+- `android/src/main/java/com/rangesliderpackage/RangeSliderView.kt`
+- `android/src/main/java/com/rangesliderpackage/RangeSliderViewPackage.kt`
+- `android/src/main/java/com/rangesliderpackage/OnRangeSliderViewBeginDragEvent.kt`
+- `android/src/main/java/com/rangesliderpackage/OnRangeSliderViewEndDragEvent.kt`
+- `android/src/main/java/com/rangesliderpackage/OnRangeSliderViewValueChangeEvent.kt`
+- `android/src/newarch/java/com/rangesliderpackage/RangeSliderViewManager.kt`
+- `android/src/oldarch/java/com/rangesliderpackage/RangeSliderViewManager.kt`
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+- `android/src/main/java/com/rangesliderpackage/RangeSliderView.java`
+- `android/src/main/java/com/rangesliderpackage/RangeSliderViewPackage.java`
+- `android/src/main/java/com/rangesliderpackage/OnRangeSliderViewBeginDragEvent.java`
+- `android/src/main/java/com/rangesliderpackage/OnRangeSliderViewEndDragEvent.java`
+- `android/src/main/java/com/rangesliderpackage/OnRangeSliderViewValueChangeEvent.java`
+- `android/src/newarch/java/com/rangesliderpackage/RangeSliderViewManager.java`
+- `android/src/oldarch/java/com/rangesliderpackage/RangeSliderViewManager.java`
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Link the package with the app
+
+<LinkPackage package="range-slider-package" />

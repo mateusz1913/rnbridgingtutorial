@@ -1,0 +1,363 @@
+import CompleteFile from '../_complete-file.mdx';
+
+#### Exposing Swift only library to ObjC
+
+Sometimes you may have to use some Swift-only libraries and sooner or later, you'll have to use them in ObjC code.
+
+In our case, we need to somehow use our slider library in ObjC view code.
+To do that we will create small Swift wrapper class that will expose functionality we need.
+
+Let's start by creating our slider with some default configuration:
+
+```swift title="ios/RangeUISliderWrapper.swift"
+import RangeUISlider
+import UIKit
+
+class RangeUISliderObject {
+    public var slider: RangeUISlider = {
+        let rangeSlider = RangeUISlider()
+        rangeSlider.barCorners = 5
+        rangeSlider.barHeight = 10
+        rangeSlider.leftKnobColor = UIColor.systemBlue
+        rangeSlider.leftKnobCorners = 10
+        rangeSlider.leftKnobHeight = 20
+        rangeSlider.leftKnobWidth = 20
+        rangeSlider.rightKnobColor = UIColor.systemBlue
+        rangeSlider.rightKnobCorners = 10
+        rangeSlider.rightKnobHeight = 20
+        rangeSlider.rightKnobWidth = 20
+        rangeSlider.showKnobsLabels = true
+        return rangeSlider
+    }()
+    
+    init() {
+        self.slider.delegate = self
+    }
+}
+
+extension RangeUISliderObject: RangeUISliderDelegate {
+    public func rangeIsChanging(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+        //
+    }
+    
+    public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+        //
+    }
+    
+    public func rangeChangeStarted() {
+        //
+    }
+}
+```
+
+So first we create `RangeUISliderObject` class, which will hold our slider.
+The slider property is created with some default configuration assigned to the slider.
+This object class will also react to the events emitted by slider - we do it by extending the object with `RangeUISliderDelegate` protocol and setting slider's delegate property to this object's instance.
+For now, slider event handlers are empty, but we will implement them in a second.
+
+:::tip
+
+For more about delegates and Delegate Pattern, see [Apple's docs](https://developer.apple.com/documentation/swift/using-delegates-to-customize-object-behavior).
+
+:::
+
+Now it's the time to implement the ObjC wrapper class - add the following code at the bottom of the file:
+
+```swift title="ios/RangeUISliderWrapper.swift"
+@objc(RangeUISliderWrapperDelegate)
+public protocol RangeUISliderWrapperDelegate: AnyObject {
+    func sendOnRangeSliderViewBeginDragEvent()
+    func sendOnRangeSliderViewEndDragEvent(minValue: Double, maxValue: Double)
+    func sendOnRangeSliderViewValueChangeEvent(minValue: Double, maxValue: Double)
+}
+
+@objc(RangeUISliderWrapper)
+public class RangeUISliderWrapper: NSObject {
+    @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil
+    
+    @objc public func setSliderFrame(_ frame: CGRect) {
+        //
+    }
+    
+    @objc public var activeColor: UIColor = UIColor.systemBlue
+    
+    @objc public var inactiveColor: UIColor = UIColor.systemGray
+    
+    @objc public var minValue: Double = 0.0
+    
+    @objc public var maxValue: Double = 1.0
+    
+    @objc public var leftKnobValue: Double = 0.0
+    
+    @objc public var rightKnobValue: Double = 1.0
+
+    @objc public var step: Int = 0
+}
+```
+
+In the ObjC wrapper class we declare  all the properties and methods that we want to expose to ObjC code.
+Additionally, we declare delegate protocol that will be also available to implement in ObjC receiver.
+
+So now, let's try to combine them.
+
+In `RangeUISliderObject` class let's declare `RangeUISliderWrapperDelegate` weak property, we will use to forward slider events to ObjC receiver.
+
+```diff title="ios/RangeUISliderWrapper.swift"
+import RangeUISlider
+import UIKit
+
+class RangeUISliderObject {
++   public weak var delegate: RangeUISliderWrapperDelegate? = nil
+
+    //
+}
+```
+
+Next, let's use that delegate property to properly implement `RangeUISliderDelegate`:
+
+```diff title="ios/RangeUISliderWrapper.swift"
+import RangeUISlider
+import UIKit
+
+extension RangeUISliderObject: RangeUISliderDelegate {
+    public func rangeIsChanging(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
++       self.delegate?.sendOnRangeSliderViewValueChangeEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+    }
+    
+    public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
++       self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+    }
+    
+    public func rangeChangeStarted() {
++       self.delegate?.sendOnRangeSliderViewBeginDragEvent()
+    }
+}
+```
+
+Now in `RangeUISliderWrapper` we have to initialize instance of `RangeUISliderObject`:
+
+```diff title="ios/RangeUISliderWrapper.swift"
+@objc(RangeUISliderWrapper)
+public class RangeUISliderWrapper: NSObject {
+    //
+    
++   private var sliderObject = RangeUISliderObject()
++   
++   @objc public var slider: UIView {
++       get {
++           return sliderObject.slider
++       }
++   }
+
+    //
+}
+```
+
+Cool! Finally we can wrap everything by forwarding events from slider and forwarding props to slider. Let's add following lines:
+
+```diff title="ios/RangeUISliderWrapper.swift"
+@objc(RangeUISliderWrapper)
+public class RangeUISliderWrapper: NSObject {
+-   @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil
++   @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil {
++       didSet {
++           sliderObject.delegate = delegate
++       }
++   }
+    
+    private var sliderObject = RangeUISliderObject()
+    
+    @objc public var slider: UIView {
+        get {
+            return sliderObject.slider
+        }
+    }
+    
+    @objc public func setSliderFrame(_ frame: CGRect) {
+-       //
++       sliderObject.slider.frame = frame
+    }
+    
+-   @objc public var activeColor: UIColor = UIColor.systemBlue
++   @objc public var activeColor: UIColor = UIColor.systemBlue {
++       didSet {
++           sliderObject.slider.rangeSelectedColor = activeColor
++       }
++   }
+    
+-   @objc public var inactiveColor: UIColor = UIColor.systemGray
++   @objc public var inactiveColor: UIColor = UIColor.systemGray {
++       didSet {
++           sliderObject.slider.rangeNotSelectedColor = inactiveColor
++       }
++   }
+    
+-   @objc public var minValue: Double = 0.0
++   @objc public var minValue: Double = 0.0 {
++       didSet {
++           sliderObject.slider.scaleMinValue = minValue
++       }
++   }
+    
+-   @objc public var maxValue: Double = 1.0
++   @objc public var maxValue: Double = 1.0 {
++       didSet {
++           sliderObject.slider.scaleMaxValue = maxValue
++       }
++   }
+    
+-   @objc public var leftKnobValue: Double = 0.0
++   @objc public var leftKnobValue: Double = 0.0 {
++       didSet {
++           sliderObject.slider.changeLeftKnob(value: leftKnobValue)
++           sliderObject.slider.defaultValueLeftKnob = leftKnobValue
++       }
++   }
+    
+-   @objc public var rightKnobValue: Double = 1.0
++   @objc public var rightKnobValue: Double = 1.0 {
++       didSet {
++           sliderObject.slider.changeRightKnob(value: rightKnobValue)
++           sliderObject.slider.defaultValueRightKnob = rightKnobValue
++       }
++   }
+
+-   @objc public var step: Int = 0
++   @objc public var step: Int = 0 {
++       didSet {
++           sliderObject.slider.stepIncrement = CGFloat(step)
++       }
++   }
+}
+```
+
+So here we forward all the props and the delegate to the slider instance thanks to Swift's `didSet` property observer.
+We also set the frame of the slider, so that it can be resized if slider's parent changes its bounds.
+
+:::tip
+
+Visit [Swift's docs](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties/#Property-Observers) to learn about `didSet` property observer
+
+:::
+
+
+Awesome! We have exposed Swift-only library and we can proceed with the rest of ObjC code.
+
+<CompleteFile
+  filename="RangeUISliderWrapper.swift"
+  language="swift"
+>
+
+    import RangeUISlider
+    import UIKit
+
+    class RangeUISliderObject {
+        public weak var delegate: RangeUISliderWrapperDelegate? = nil
+
+        public var slider: RangeUISlider = {
+            let rangeSlider = RangeUISlider()
+            rangeSlider.barCorners = 5
+            rangeSlider.barHeight = 10
+            rangeSlider.leftKnobColor = UIColor.systemBlue
+            rangeSlider.leftKnobCorners = 10
+            rangeSlider.leftKnobHeight = 20
+            rangeSlider.leftKnobWidth = 20
+            rangeSlider.rightKnobColor = UIColor.systemBlue
+            rangeSlider.rightKnobCorners = 10
+            rangeSlider.rightKnobHeight = 20
+            rangeSlider.rightKnobWidth = 20
+            rangeSlider.showKnobsLabels = true
+            return rangeSlider
+        }()
+        
+        init() {
+            self.slider.delegate = self
+        }
+    }
+
+    extension RangeUISliderObject: RangeUISliderDelegate {
+        public func rangeIsChanging(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+            self.delegate?.sendOnRangeSliderViewValueChangeEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+        }
+        
+        public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+            self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+        }
+        
+        public func rangeChangeStarted() {
+            self.delegate?.sendOnRangeSliderViewBeginDragEvent()
+        }
+    }
+
+    @objc(RangeUISliderWrapperDelegate)
+    public protocol RangeUISliderWrapperDelegate: AnyObject {
+        func sendOnRangeSliderViewBeginDragEvent()
+        func sendOnRangeSliderViewEndDragEvent(minValue: Double, maxValue: Double)
+        func sendOnRangeSliderViewValueChangeEvent(minValue: Double, maxValue: Double)
+    }
+
+    @objc(RangeUISliderWrapper)
+    public class RangeUISliderWrapper: NSObject {
+        @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil {
+            didSet {
+                sliderObject.delegate = delegate
+            }
+        }
+        
+        private var sliderObject = RangeUISliderObject()
+        
+        @objc public var slider: UIView {
+            get {
+                return sliderObject.slider
+            }
+        }
+        
+        @objc public func setSliderFrame(_ frame: CGRect) {
+            sliderObject.slider.frame = frame
+        }
+        
+        @objc public var activeColor: UIColor = UIColor.systemBlue {
+            didSet {
+                sliderObject.slider.rangeSelectedColor = activeColor
+            }
+        }
+        
+        @objc public var inactiveColor: UIColor = UIColor.systemGray {
+            didSet {
+                sliderObject.slider.rangeNotSelectedColor = inactiveColor
+            }
+        }
+        
+        @objc public var minValue: Double = 0.0 {
+            didSet {
+                sliderObject.slider.scaleMinValue = minValue
+            }
+        }
+        
+        @objc public var maxValue: Double = 1.0 {
+            didSet {
+                sliderObject.slider.scaleMaxValue = maxValue
+            }
+        }
+        
+        @objc public var leftKnobValue: Double = 0.0 {
+            didSet {
+                sliderObject.slider.changeLeftKnob(value: leftKnobValue)
+                sliderObject.slider.defaultValueLeftKnob = leftKnobValue
+            }
+        }
+        
+        @objc public var rightKnobValue: Double = 1.0 {
+            didSet {
+                sliderObject.slider.changeRightKnob(value: rightKnobValue)
+                sliderObject.slider.defaultValueRightKnob = rightKnobValue
+            }
+        }
+
+        @objc public var step: Int = 0 {
+            didSet {
+                sliderObject.slider.stepIncrement = CGFloat(step)
+            }
+        }
+    }
+</CompleteFile>

@@ -1,1 +1,0 @@
-export { SampleNativeSliderClassicView } from './SampleNativeSliderClassicView';

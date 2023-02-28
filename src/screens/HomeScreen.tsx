@@ -31,16 +31,16 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.RANGE_DATEPICKER, { isClassic: true });
   };
 
+  const navigateToRangeSlider = () => {
+    navigation.navigate(ROUTES.RANGE_SLIDER);
+  };
+
+  const navigateToRangeSliderClassic = () => {
+    navigation.navigate(ROUTES.RANGE_SLIDER, { isClassic: true });
+  };
+
   const navigateToSimpleEventModule = () => {
     navigation.navigate(ROUTES.SIMPLE_EVENT_MODULE);
-  };
-
-  const navigateToSimpleView = () => {
-    navigation.navigate(ROUTES.SIMPLE_VIEW);
-  };
-
-  const navigateToSimpleViewClassic = () => {
-    navigation.navigate(ROUTES.SIMPLE_VIEW, { isClassic: true });
   };
 
   const navigateToSimpleLaunchNativeScreen = () => {
@@ -86,13 +86,13 @@ export const HomeScreen: FC = () => {
             <Button onPress={navigateToRangeDatePickerClassic} title="Range datepicker (Classic)" />
           </View>
           <View style={styles.navigateLink}>
+            <Button onPress={navigateToRangeSlider} title="Range slider" />
+          </View>
+          <View style={styles.navigateLink}>
+            <Button onPress={navigateToRangeSliderClassic} title="Range slider (Classic)" />
+          </View>
+          <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleEventModule} title="Simple event module (Modern & Classic)" />
-          </View>
-          <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleView} title="Simple View (Modern)" />
-          </View>
-          <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleViewClassic} title="Simple View (Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToSimpleLaunchNativeScreen} title="Simple launch native screen module (Modern)" />

@@ -1,0 +1,438 @@
+import CompleteFile from '../_complete-file.mdx';
+
+#### `RangeSliderViewComponentView.h`
+
+```objc title="ios/RangeSliderViewComponentView.h"
+#if RCT_NEW_ARCH_ENABLED
+#import <React/RCTViewComponentView.h>
+
+@interface RangeSliderViewComponentView : RCTViewComponentView
+
+@end
+
+#endif
+```
+
+Nothing fancy here, Fabric component view extending base `RCTViewComponentView` class.
+
+#### `RangeSliderViewComponentView.mm`
+
+The implementation for the Fabric component will be quite large, so let's try to break it into parts.
+
+The first part - boilerplate:
+
+```objc title="ios/RangeSliderViewComponentView.mm"
+#if RCT_NEW_ARCH_ENABLED
+#import "RangeSliderViewComponentView.h"
+
+#import <React/RCTConversions.h>
+
+#import <react/renderer/components/RangeSliderPackage/ComponentDescriptors.h>
+#import <react/renderer/components/RangeSliderPackage/EventEmitters.h>
+#import <react/renderer/components/RangeSliderPackage/Props.h>
+#import <react/renderer/components/RangeSliderPackage/RCTComponentViewHelpers.h>
+
+#import "RCTFabricComponentsPlugins.h"
+
+using namespace facebook::react;
+
+@interface RangeSliderViewComponentView () <RCTRangeSliderViewViewProtocol>
+@end
+
+@implementation RangeSliderViewComponentView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        static const auto defaultProps = std::make_shared<const RangeSliderViewProps>();
+        _props = defaultProps;
+    }
+
+    return self;
+}
+
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const RangeSliderViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const RangeSliderViewProps>(props);
+
+    [super updateProps:props oldProps:oldProps];
+}
+
+- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+{
+    // That component does not accept child views
+}
+
+- (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+{
+    // That component does not accept child views
+}
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+    RCTRangeSliderViewHandleCommand(self, commandName, args);
+}
+
+- (void)setLeftKnobValueProgrammatically:(double)value
+{
+    //
+}
+
+- (void)setRightKnobValueProgrammatically:(double)value
+{
+    //
+}
+
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+    return concreteComponentDescriptorProvider<RangeSliderViewComponentDescriptor>();
+}
+
+@end
+
+Class<RCTComponentViewProtocol> RangeSliderViewCls(void)
+{
+    return RangeSliderViewComponentView.class;
+}
+#endif
+```
+
+Component begins with some new arch imports and conversion helpers.
+
+We make the component extending code-generated protocol - this protocol has all the native commands methods that we declared in JS spec.
+
+Next we implement all required methods and we create `RangeSliderViewCls` function.
+
+If you take a closer look, we override to methods related to the child components - `mountChildComponentView:index:` & `unmountChildComponentView:index:`.
+Those methods can be used to control how the child views should be added/removed in the Fabric component.
+In our case, we prevent adding/removal to be sure that our slider view does not have any child views.
+
+Another interesting thing takes place in `handleCommand:args:` method - it invokes `RCTRangeSliderViewHandleCommand` function.
+That function is code-generated as well as `RCTRangeSliderViewViewProtocol` protocol and is used to forward native commands calls, to dedicated methods (in our case: `setLeftKnobValueProgrammatically` & `setRightKnobValueProgrammatically`).
+
+OK - second part, let's start filling the boilerplate with our slider view:
+
+```objc title="ios/RangeSliderViewComponentView.mm"
+//
+
+// highlight-start
+#import "RangeSliderPackage-Swift.h"
+// highlight-end
+
+using namespace facebook::react;
+
+@interface RangeSliderViewComponentView () <RCTRangeSliderViewViewProtocol>
+@end
+
+// highlight-start
+@interface RangeSliderViewComponentView () <RangeSliderViewDelegate>
+@end
+// highlight-end
+
+@implementation RangeSliderViewComponentView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        static const auto defaultProps = std::make_shared<const RangeSliderViewProps>();
+        _props = defaultProps;
+
+// highlight-start
+        RangeSliderView *view = [RangeSliderView new];
+        view.delegate = self;
+
+        self.contentView = (UIView *)view;
+// highlight-end
+    }
+
+    return self;
+}
+
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const RangeSliderViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const RangeSliderViewProps>(props);
+
+// highlight-start
+    RangeSliderView *view = (RangeSliderView *)self.contentView;
+
+    if (oldViewProps.activeColor != newViewProps.activeColor) {
+        [view setActiveColor:RCTUIColorFromSharedColor(newViewProps.activeColor)];
+    }
+    
+    if (oldViewProps.inactiveColor != newViewProps.inactiveColor) {
+        [view setInactiveColor:RCTUIColorFromSharedColor(newViewProps.inactiveColor)];
+    }
+
+    if (oldViewProps.step != newViewProps.step) {
+        [view setStep:newViewProps.step];
+    }
+    
+    if (oldViewProps.minValue != newViewProps.minValue) {
+        [view setMinValue:newViewProps.minValue];
+    }
+    
+    if (oldViewProps.maxValue != newViewProps.maxValue) {
+        [view setMaxValue:newViewProps.maxValue];
+    }
+    
+    if (oldViewProps.leftKnobValue != newViewProps.leftKnobValue) {
+        [view setLeftKnobValue:newViewProps.leftKnobValue];
+    }
+    
+    if (oldViewProps.rightKnobValue != newViewProps.rightKnobValue) {
+        [view setRightKnobValue:newViewProps.rightKnobValue];
+    }
+// highlight-end
+
+    [super updateProps:props oldProps:oldProps];
+}
+
+//
+
+@end
+
+//
+```
+
+What's going on here?
+
+- `RangeSliderView` is imported via `RangeSliderPackage-Swift.h` import
+- `RangeSliderViewDelegate` is implemented by the Fabric component
+- `RangeSliderView` is initialized and set as a `contentView`, its delegate is set to this Fabric component's instance
+- all props are handled in `updateProps:oldProps:`
+
+But that's still only half of the things - XCode is probably warning you that `RangeSliderViewDelegate` is not implemented - let's fix it!
+
+```objc title="ios/RangeSliderViewComponentView.mm"
+//
+
+@implementation RangeSliderViewComponentView
+
+//
+
+// highlight-start
+- (void)sendOnRangeSliderViewValueChangeEventWithMinValue:(double)minValue maxValue:(double)maxValue
+{
+    if (_eventEmitter != nil) {
+        std::dynamic_pointer_cast<const RangeSliderViewEventEmitter>(_eventEmitter)
+            ->onRangeSliderViewValueChange(
+                RangeSliderViewEventEmitter::OnRangeSliderViewValueChange{
+                    .leftKnobValue = minValue,
+                    .rightKnobValue = maxValue
+                });
+    }
+}
+
+- (void)sendOnRangeSliderViewBeginDragEvent
+{
+    if (_eventEmitter != nil) {
+        std::dynamic_pointer_cast<const RangeSliderViewEventEmitter>(_eventEmitter)
+            ->onRangeSliderViewBeginDrag(
+                RangeSliderViewEventEmitter::OnRangeSliderViewBeginDrag{});
+    }
+}
+
+- (void)sendOnRangeSliderViewEndDragEventWithMinValue:(double)minValue maxValue:(double)maxValue
+{
+    if (_eventEmitter != nil) {
+        std::dynamic_pointer_cast<const RangeSliderViewEventEmitter>(_eventEmitter)
+            ->onRangeSliderViewEndDrag(
+                RangeSliderViewEventEmitter::OnRangeSliderViewEndDrag{
+                    .leftKnobValue = minValue,
+                    .rightKnobValue = maxValue
+                });
+    }
+}
+// highlight-end
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+    RCTRangeSliderViewHandleCommand(self, commandName, args);
+}
+
+// highlight-start
+- (void)setLeftKnobValueProgrammatically:(double)value
+{
+    RangeSliderView *view = (RangeSliderView *)self.contentView;
+    [view setLeftKnobValue:value];
+}
+
+- (void)setRightKnobValueProgrammatically:(double)value
+{
+    RangeSliderView *view = (RangeSliderView *)self.contentView;
+    [view setRightKnobValue:value];
+}
+// highlight-end
+
+//
+
+@end
+
+//
+```
+
+So now all warnings should be cleared - delegate methods are implemented and we also handled native commands.
+
+:::info
+
+Event emitters in new architecture mode are done in C++ and are code-generated
+
+:::
+
+<CompleteFile
+  filename="RangeSliderViewComponentView.mm"
+  language="objc"
+>
+
+    #if RCT_NEW_ARCH_ENABLED
+    #import "RangeSliderViewComponentView.h"
+
+    #import <React/RCTConversions.h>
+
+    #import <react/renderer/components/RangeSliderPackage/ComponentDescriptors.h>
+    #import <react/renderer/components/RangeSliderPackage/EventEmitters.h>
+    #import <react/renderer/components/RangeSliderPackage/Props.h>
+    #import <react/renderer/components/RangeSliderPackage/RCTComponentViewHelpers.h>
+
+    #import "RCTFabricComponentsPlugins.h"
+
+    #import "RangeSliderPackage-Swift.h"
+
+    using namespace facebook::react;
+
+    @interface RangeSliderViewComponentView () <RCTRangeSliderViewViewProtocol>
+    @end
+
+    @interface RangeSliderViewComponentView () <RangeSliderViewDelegate>
+    @end
+
+    @implementation RangeSliderViewComponentView
+
+    - (instancetype)initWithFrame:(CGRect)frame
+    {
+        if (self = [super initWithFrame:frame]) {
+            static const auto defaultProps = std::make_shared<const RangeSliderViewProps>();
+            _props = defaultProps;
+
+            RangeSliderView *view = [RangeSliderView new];
+            view.delegate = self;
+
+            self.contentView = (UIView *)view;
+        }
+
+        return self;
+    }
+
+    - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+    {
+        const auto &oldViewProps = *std::static_pointer_cast<const RangeSliderViewProps>(_props);
+        const auto &newViewProps = *std::static_pointer_cast<const RangeSliderViewProps>(props);
+
+        RangeSliderView *view = (RangeSliderView *)self.contentView;
+
+        if (oldViewProps.activeColor != newViewProps.activeColor) {
+            [view setActiveColor:RCTUIColorFromSharedColor(newViewProps.activeColor)];
+        }
+        
+        if (oldViewProps.inactiveColor != newViewProps.inactiveColor) {
+            [view setInactiveColor:RCTUIColorFromSharedColor(newViewProps.inactiveColor)];
+        }
+
+        if (oldViewProps.step != newViewProps.step) {
+            [view setStep:newViewProps.step];
+        }
+        
+        if (oldViewProps.minValue != newViewProps.minValue) {
+            [view setMinValue:newViewProps.minValue];
+        }
+        
+        if (oldViewProps.maxValue != newViewProps.maxValue) {
+            [view setMaxValue:newViewProps.maxValue];
+        }
+        
+        if (oldViewProps.leftKnobValue != newViewProps.leftKnobValue) {
+            [view setLeftKnobValue:newViewProps.leftKnobValue];
+        }
+        
+        if (oldViewProps.rightKnobValue != newViewProps.rightKnobValue) {
+            [view setRightKnobValue:newViewProps.rightKnobValue];
+        }
+
+        [super updateProps:props oldProps:oldProps];
+    }
+
+    - (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+    {
+        // That component does not accept child views
+    }
+
+    - (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+    {
+        // That component does not accept child views
+    }
+
+    - (void)sendOnRangeSliderViewValueChangeEventWithMinValue:(double)minValue maxValue:(double)maxValue
+    {
+        if (_eventEmitter != nil) {
+            std::dynamic_pointer_cast<const RangeSliderViewEventEmitter>(_eventEmitter)
+                ->onRangeSliderViewValueChange(
+                    RangeSliderViewEventEmitter::OnRangeSliderViewValueChange{
+                        .leftKnobValue = minValue,
+                        .rightKnobValue = maxValue
+                    });
+        }
+    }
+
+    - (void)sendOnRangeSliderViewBeginDragEvent
+    {
+        if (_eventEmitter != nil) {
+            std::dynamic_pointer_cast<const RangeSliderViewEventEmitter>(_eventEmitter)
+                ->onRangeSliderViewBeginDrag(
+                    RangeSliderViewEventEmitter::OnRangeSliderViewBeginDrag{});
+        }
+    }
+
+    - (void)sendOnRangeSliderViewEndDragEventWithMinValue:(double)minValue maxValue:(double)maxValue
+    {
+        if (_eventEmitter != nil) {
+            std::dynamic_pointer_cast<const RangeSliderViewEventEmitter>(_eventEmitter)
+                ->onRangeSliderViewEndDrag(
+                    RangeSliderViewEventEmitter::OnRangeSliderViewEndDrag{
+                        .leftKnobValue = minValue,
+                        .rightKnobValue = maxValue
+                    });
+        }
+    }
+
+    - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+    {
+        RCTRangeSliderViewHandleCommand(self, commandName, args);
+    }
+
+    - (void)setLeftKnobValueProgrammatically:(double)value
+    {
+        RangeSliderView *view = (RangeSliderView *)self.contentView;
+        [view setLeftKnobValue:value];
+    }
+
+    - (void)setRightKnobValueProgrammatically:(double)value
+    {
+        RangeSliderView *view = (RangeSliderView *)self.contentView;
+        [view setRightKnobValue:value];
+    }
+
+    + (ComponentDescriptorProvider)componentDescriptorProvider
+    {
+        return concreteComponentDescriptorProvider<RangeSliderViewComponentDescriptor>();
+    }
+
+    @end
+
+    Class<RCTComponentViewProtocol> RangeSliderViewCls(void)
+    {
+        return RangeSliderViewComponentView.class;
+    }
+    #endif
+</CompleteFile>
