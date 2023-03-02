@@ -104,12 +104,12 @@ We make the component extending code-generated protocol - this protocol has all 
 
 Next we implement all required methods and we create `RangeSliderViewCls` function.
 
-If you take a closer look, we override to methods related to the child components - `mountChildComponentView:index:` & `unmountChildComponentView:index:`.
+If you take a closer look, we override to methods related to the child components - `- mountChildComponentView:index:` & `- unmountChildComponentView:index:`.
 Those methods can be used to control how the child views should be added/removed in the Fabric component.
 In our case, we prevent adding/removal to be sure that our slider view does not have any child views.
 
-Another interesting thing takes place in `handleCommand:args:` method - it invokes `RCTRangeSliderViewHandleCommand` function.
-That function is code-generated as well as `RCTRangeSliderViewViewProtocol` protocol and is used to forward native commands calls, to dedicated methods (in our case: `setLeftKnobValueProgrammatically` & `setRightKnobValueProgrammatically`).
+Another interesting thing takes place in `- handleCommand:args:` method - it invokes `RCTRangeSliderViewHandleCommand` function.
+That function is code-generated as well as `RCTRangeSliderViewViewProtocol` protocol and is used to forward native commands calls, to dedicated methods (in our case: `- setLeftKnobValueProgrammatically` & `- setRightKnobValueProgrammatically`).
 
 OK - second part, let's start filling the boilerplate with our slider view:
 
@@ -201,7 +201,7 @@ What's going on here?
 - `RangeSliderView` is imported via `RangeSliderPackage-Swift.h` import
 - `RangeSliderViewDelegate` is implemented by the Fabric component
 - `RangeSliderView` is initialized and set as a `contentView`, its delegate is set to this Fabric component's instance
-- all props are handled in `updateProps:oldProps:`
+- all props are handled in `- updateProps:oldProps:`
 
 But that's still only half of the things - XCode is probably warning you that `RangeSliderViewDelegate` is not implemented - let's fix it!
 

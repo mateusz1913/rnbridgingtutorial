@@ -39,16 +39,8 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.SAVE_FILE, { isClassic: true });
   };
 
-  const navigateToSimpleEventModule = () => {
-    navigation.navigate(ROUTES.SIMPLE_EVENT_MODULE);
-  };
-
-  const navigateToSimpleLaunchNativeScreen = () => {
-    navigation.navigate(ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE);
-  };
-
-  const navigateToSimpleLaunchNativeScreenClassic = () => {
-    navigation.navigate(ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE, { isClassic: true });
+  const navigateToScreenOrientation = () => {
+    navigation.navigate(ROUTES.SCREEN_ORIENTATION);
   };
 
   const navigateToNativeList = () => {
@@ -92,13 +84,7 @@ export const HomeScreen: FC = () => {
             <Button onPress={navigateToRangeSliderClassic} title="Range slider (Classic)" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleEventModule} title="Simple event module (Modern & Classic)" />
-          </View>
-          <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleLaunchNativeScreen} title="Simple launch native screen module (Modern)" />
-          </View>
-          <View style={styles.navigateLink}>
-            <Button onPress={navigateToSimpleLaunchNativeScreenClassic} title="Simple launch native screen module (Classic)" />
+            <Button onPress={navigateToScreenOrientation} title="Screen orientation (Modern & Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToNativeList} title="Native List (Modern)" />

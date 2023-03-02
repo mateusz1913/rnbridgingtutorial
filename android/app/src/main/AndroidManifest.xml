@@ -22,14 +22,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.samplenativescreen.SampleNativeActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name="com.samplenativescreenclassic.SampleNativeClassicActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
     </application>
 </manifest>

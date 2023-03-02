@@ -9,8 +9,7 @@ import {
   NativeListScreen,
   RangeSliderScreen,
   SaveFileScreen,
-  SimpleEventModuleScreen,
-  SimpleLaunchNativeScreenModuleScreen,
+  ScreenOrientationScreen,
 } from '../screens';
 
 import { ROUTES } from './routes';
@@ -26,11 +25,7 @@ export const NavigationRootStack: FC = () => {
       <RootStack.Screen name={ROUTES.CONIC_GRADIENT} component={ConicGradientScreen} />
       <RootStack.Screen name={ROUTES.RANGE_SLIDER} component={RangeSliderScreen} />
       <RootStack.Screen name={ROUTES.SAVE_FILE} component={SaveFileScreen} />
-      <RootStack.Screen name={ROUTES.SIMPLE_EVENT_MODULE} component={SimpleEventModuleScreen} />
-      <RootStack.Screen
-        name={ROUTES.SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE}
-        component={SimpleLaunchNativeScreenModuleScreen}
-      />
+      <RootStack.Screen name={ROUTES.SCREEN_ORIENTATION} component={ScreenOrientationScreen} />
       <RootStack.Screen name={ROUTES.NATIVE_LIST} component={NativeListScreen} />
     </RootStack.Navigator>
   </NavigationContainer>;

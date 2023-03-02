@@ -48,5 +48,5 @@ Methods in the class are using `NSBundle` class, for the reference, check out Ap
 
 We will use main `NSBundle` instance to [retrieve some information about the app](https://developer.apple.com/documentation/foundation/nsbundle#1652578).
 
-In case of `getAppBundleId` method, we will use `bundleIdentifier` property, for other methods we use _generic_ `objectForInfoDictionaryKey:` method, where the argument is a key from `Info.plist`.
+In case of `- getAppBundleId` method, we will use `bundleIdentifier` property, for other methods we use _generic_ `- objectForInfoDictionaryKey:` method, where the argument is a key from `Info.plist`.
 For possible `Info.plist` keys, visit ["About Info.plist keys and values"](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html).

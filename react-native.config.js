@@ -14,6 +14,12 @@ module.exports = {
     'conic-gradient-package-classic': { // <--------- Add entry for "conic-gradient-package-classic"
       root: path.resolve(__dirname, './conic-gradient-package-classic'),
     },
+    'native-list-package': { // <--------- Add entry for "native-list-package"
+      root: path.resolve(__dirname, './native-list-package'),
+    },
+    'native-list-package-classic': { // <--------- Add entry for "native-list-package-classic"
+      root: path.resolve(__dirname, './native-list-package-classic'),
+    },
     'range-slider-package': { // <--------- Add entry for "range-slider-package"
       root: path.resolve(__dirname, './range-slider-package'),
     },
@@ -26,53 +32,11 @@ module.exports = {
     'save-file-picker-package-classic': { // <--------- Add entry for "save-file-picker-package-classic"
       root: path.resolve(__dirname, './save-file-picker-package-classic'),
     },
-    'sample-event-module': { // <--------- Add entry for "sample-event-module"
-      root: path.resolve(__dirname, './sample-event-module'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-event-module/android'),
-        },
-      },
+    'screen-orientation-package': { // <--------- Add entry for "screen-orientation-package"
+      root: path.resolve(__dirname, './screen-orientation-package'),
     },
-    'sample-event-module-classic': { // <--------- Add entry for "sample-event-module-classic"
-      root: path.resolve(__dirname, './sample-event-module-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-event-module-classic/android'),
-        },
-      },
-    },
-    'sample-native-screen': { // <--------- Add entry for "sample-native-screen"
-      root: path.resolve(__dirname, './sample-native-screen'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-screen/android'),
-        },
-      },
-    },
-    'sample-native-screen-classic': { // <--------- Add entry for "sample-native-screen-classic"
-      root: path.resolve(__dirname, './sample-native-screen-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-screen-classic/android'),
-        },
-      },
-    },
-    'sample-native-list': { // <--------- Add entry for "sample-native-list"
-      root: path.resolve(__dirname, './sample-native-list'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-list/android'),
-        },
-      },
-    },
-    'sample-native-list-classic': { // <--------- Add entry for "sample-native-list-classic"
-      root: path.resolve(__dirname, './sample-native-list-classic'),
-      platforms: {
-        android: {
-          sourceDir: path.resolve(__dirname, './sample-native-list-classic/android'),
-        },
-      },
+    'screen-orientation-package-classic': { // <--------- Add entry for "screen-orientation-package-classic"
+      root: path.resolve(__dirname, './screen-orientation-package-classic'),
     },
   },
 };

@@ -4,7 +4,6 @@ export const ROUTES = Object.freeze({
   CONIC_GRADIENT: 'ConicGradient',
   RANGE_SLIDER: 'RangeSlider',
   SAVE_FILE: 'SaveFile',
-  SIMPLE_EVENT_MODULE: 'SimpleEventModule',
-  SIMPLE_LAUNCH_NATIVE_SCREEN_MODULE: 'SimpleLaunchNativeScreenModule',
+  SCREEN_ORIENTATION: 'ScreenOrientation',
   NATIVE_LIST: 'NativeList',
 });

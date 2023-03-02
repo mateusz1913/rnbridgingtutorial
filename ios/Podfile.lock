@@ -107,6 +107,22 @@ PODS:
     - hermes-engine/Pre-built (= 0.71.0-rc.5)
   - hermes-engine/Pre-built (0.71.0-rc.5)
   - libevent (2.1.12)
+  - NativeListPackage (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
+  - NativeListPackageClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - OpenSSL-Universal (1.1.1100)
   - RangeSliderPackage (0.0.1):
     - RangeUISlider (~> 3.0)
@@ -802,50 +818,6 @@ PODS:
     - React-Codegen
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - SampleEventModule (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - SampleEventModuleClassic (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - SampleNativeList (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-RCTFabric
-    - ReactCommon/turbomodule/core
-  - SampleNativeListClassic (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-RCTFabric
-    - ReactCommon/turbomodule/core
-  - SampleNativeScreen (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - SampleNativeScreenClassic (0.0.1):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
   - SaveFilePickerPackage (0.0.1):
     - RCT-Folly
     - RCTRequired
@@ -854,6 +826,20 @@ PODS:
     - React-Core
     - ReactCommon/turbomodule/core
   - SaveFilePickerPackageClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - ScreenOrientationPackage (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - ScreenOrientationPackageClassic (0.0.1):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -898,6 +884,8 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - NativeListPackage (from `../native-list-package`)
+  - NativeListPackageClassic (from `../native-list-package-classic`)
   - OpenSSL-Universal (= 1.1.1100)
   - RangeSliderPackage (from `../range-slider-package`)
   - RangeSliderPackageClassic (from `../range-slider-package-classic`)
@@ -937,14 +925,10 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - SampleEventModule (from `../sample-event-module`)
-  - SampleEventModuleClassic (from `../sample-event-module-classic`)
-  - SampleNativeList (from `../sample-native-list`)
-  - SampleNativeListClassic (from `../sample-native-list-classic`)
-  - SampleNativeScreen (from `../sample-native-screen`)
-  - SampleNativeScreenClassic (from `../sample-native-screen-classic`)
   - SaveFilePickerPackage (from `../save-file-picker-package`)
   - SaveFilePickerPackageClassic (from `../save-file-picker-package-classic`)
+  - ScreenOrientationPackage (from `../screen-orientation-package`)
+  - ScreenOrientationPackageClassic (from `../screen-orientation-package-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -987,6 +971,10 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
+  NativeListPackage:
+    :path: "../native-list-package"
+  NativeListPackageClassic:
+    :path: "../native-list-package-classic"
   RangeSliderPackage:
     :path: "../range-slider-package"
   RangeSliderPackageClassic:
@@ -1057,22 +1045,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNScreens:
     :path: "../node_modules/react-native-screens"
-  SampleEventModule:
-    :path: "../sample-event-module"
-  SampleEventModuleClassic:
-    :path: "../sample-event-module-classic"
-  SampleNativeList:
-    :path: "../sample-native-list"
-  SampleNativeListClassic:
-    :path: "../sample-native-list-classic"
-  SampleNativeScreen:
-    :path: "../sample-native-screen"
-  SampleNativeScreenClassic:
-    :path: "../sample-native-screen-classic"
   SaveFilePickerPackage:
     :path: "../save-file-picker-package"
   SaveFilePickerPackageClassic:
     :path: "../save-file-picker-package-classic"
+  ScreenOrientationPackage:
+    :path: "../screen-orientation-package"
+  ScreenOrientationPackageClassic:
+    :path: "../screen-orientation-package-classic"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1099,6 +1079,8 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: a5d6597b0258a8a6fd737e4b40eeac47278610c4
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  NativeListPackage: 978d9f79f3da69cc25ed3a3e2715c5b5931167a9
+  NativeListPackageClassic: 22bd6d4b622fa0779d2f0ca63ffe5398ea98c3e8
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RangeSliderPackage: b35bcd58b72dc683bf3ea54cc6303654d25df3d8
   RangeSliderPackageClassic: 25fa2a4902d7243dec4c76064a0130d2f2c29588
@@ -1136,14 +1118,10 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 311feb67600774723fe10eb8801d3138cae9ad67
   ReactCommon: 03be76588338a27a88d103b35c3c44a3fd43d136
   RNScreens: a838934f2f0d915c8a756409d674a862b70b1677
-  SampleEventModule: 7069f3f8ff2a5f6a98d725db31b50ff1c36ba62e
-  SampleEventModuleClassic: 875860573053d82e5fe1d8e861c27dae852a1bad
-  SampleNativeList: df789ab91c8d864db074fbfc9c74513086c60d95
-  SampleNativeListClassic: 727c2a68624b1d23bd067e236521adf1eb750ad0
-  SampleNativeScreen: 1ba1cb3368991923bcde767f8752897e5a797321
-  SampleNativeScreenClassic: 966bee54456658d5d1a49868c613e744510a9fd5
   SaveFilePickerPackage: 843cdfbfb4e52740e9dfd5ff55152b6b4e1006b9
   SaveFilePickerPackageClassic: f3d8645212d871a53fb7f318aa732134697e1964
+  ScreenOrientationPackage: 711d8108aadb3676dabbc5bc6f6a69f69a994aa0
+  ScreenOrientationPackageClassic: 7ae7379a2d93cb00f6590d4055175e2f2ccc7205
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

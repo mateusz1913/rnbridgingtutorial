@@ -1,16 +1,16 @@
 import { useRoute } from '@react-navigation/native';
+import { NativeListView } from 'native-list-package';
+import { NativeListClassicView } from 'native-list-package-classic';
 import * as React from 'react';
 import { Button, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SampleNativeListView } from 'sample-native-list';
-import { SampleNativeListClassicView } from 'sample-native-list-classic';
 
 import type { NativeListRouteProp } from '../navigation';
 
 export const NativeListScreen: React.FC = () => {
   const route = useRoute<NativeListRouteProp>();
-  const ref = React.useRef<SampleNativeListView>(null);
-  const classicRef = React.useRef<SampleNativeListClassicView>(null);
+  const ref = React.useRef<NativeListView>(null);
+  const classicRef = React.useRef<NativeListClassicView>(null);
   const isClassic = !!route.params?.isClassic;
 
   const scrollToItem = React.useCallback(() => {
@@ -25,7 +25,7 @@ export const NativeListScreen: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Native list</Text>
       <Button onPress={scrollToItem} title="Scroll to 100th item" />
-      {isClassic ? <SampleNativeListClassicView
+      {isClassic ? <NativeListClassicView
         ref={classicRef}
         data={DATA.map((item) => ({ imageUrl: item.download_url, description: `Picture ${item.id}` }))}
         options={{
@@ -36,7 +36,7 @@ export const NativeListScreen: React.FC = () => {
           }),
         }}
         style={styles.list}
-      /> : <SampleNativeListView
+      /> : <NativeListView
         ref={ref}
         data={DATA.map((item) => ({ imageUrl: item.download_url, description: `Picture ${item.id}` }))}
         options={{

@@ -67,7 +67,7 @@ and we have to implement code-generated spec protocol for new architecture (code
 
 After that, inside implementation block we have `RCT_EXPORT_MODULE` macro invoked with `SaveFilePickerModule` argument. This basically registers the module with provided name on iOS side, so that it's accessible in the JS world.
 
-Also, for new architecture, it implements `getTurboModule:` method (from `RCTTurboModule` protocol).
+Also, for new architecture, it implements `- getTurboModule:` method (from `RCTTurboModule` protocol).
 If you won't implement that method, XCode will complain that the code-generated spec protocol methods are not implemented.
 
 Let's combine module-implementation with module class
@@ -126,11 +126,11 @@ We can use `AppInfoModuleImpl` ObjC class, because it's imported from `AppInfoMo
 
 We also declared private variables for callback and promise blocks, we will use them to communicate result back to the JS code.
 
-Next, we override static method `requiresMainQueueSetup`, which must be done whenever `init` method on the RN's wrapper class is overriden. 
+Next, we override static method `+ requiresMainQueueSetup`, which must be done whenever `- init` method on the RN's wrapper class is overriden. 
 
 As we will interact with the UIKit API, we will need to do it on the main queue.
 We could just wrap UIKit code in `dispatch_async(dispatch_get_main_queue(), ^{ ... });`,
-but there's also an option to specify the `methodQueue` getter.
+but there's also an option to specify the `- methodQueue` getter.
 It's used to describe on which queue this module calls should be run.
 So in our case, we will want to use the main queue - returning `dispatch_get_main_queue()` from the getter will do the job.
 

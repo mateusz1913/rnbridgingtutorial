@@ -41,7 +41,7 @@ Now, let's work on the view that will hold our slider:
 
 We declare our custom view that extends `UIView` and have some properties.
 The view will also have weak delegate property - the delegate protocol is declared above the view.
-Additionally, we do "forward declaration" for Swift elements we created before.
+Additionally, we do "forward declaration" for Swift elements we created before (check out Apple's Swift-ObjC interop [dedicated docs section](https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations)).
 
 #### `RangeSliderView.mm`
 
@@ -124,6 +124,6 @@ With the header file ready, let's go to implementation file:
 ```
 
 It may be a lot of code, but most of it is just about forwarding the properties to the swift wrapper class.
-The swift wrapper is created in the view's `initWithFrame:` initializer, where we also add the slider as a subview.
+The swift wrapper is created in the view's `- initWithFrame:` initializer, where we also add the slider as a subview.
 
 Good, now let's use this view inside view manager and Fabric component view.

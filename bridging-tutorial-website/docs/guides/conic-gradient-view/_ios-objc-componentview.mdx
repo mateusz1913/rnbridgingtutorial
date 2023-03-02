@@ -88,14 +88,14 @@ Next up we import `facebook::react` C++ namespace to not write it every time bef
 After that, we implement code-generated `RCTConicGradientViewViewProtocol` protocol.
 
 Inside the implementation block, you can find `@dynamic layer;` line. This will make the `layer` property be able to be implemented at runtime and not at compile time.
-And this will be done at runtime with `layerClass` getter that returns the class type for our layer (`CAGradientLayer` in that case).
+And this will be done at runtime with `+ layerClass` getter that returns the class type for our layer (`CAGradientLayer` in that case).
 For more reference about the gradient class, check out [dedicated docs section](https://developer.apple.com/documentation/quartzcore/cagradientlayer?language=objc).
 
 In the class initializer we are declaring default props used by the component as well as gradient-layer's properties.
 
 Each Fabric component needs to declare static `componentDescriptorProvider` and `RCTComponentViewProtocol` class type (here it's `ConicGradientViewCls`).
 
-When our Fabric component has its boilerplate, we can start with adding support for gradient props - let's add `updateProps:oldProps:` method:
+When our Fabric component has its boilerplate, we can start with adding support for gradient props - let's add `- updateProps:oldProps:` method:
 
 ```objc title="ios/ConicGradientViewComponentView.mm"
 //

@@ -41,7 +41,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 
 //
 
-@interface SampleNativeSliderViewComponentView () <RCTMyAwesomeViewViewProtocol>
+@interface MyAwesomeViewComponentView () <RCTMyAwesomeViewViewProtocol>
 @end
 
 //
@@ -57,7 +57,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 }
 ```
 
-To implement commands for iOS native component, it has to extend code-generated protocol and implement `handleCommand:args:` method, as well as method declared in JS spec (via code-generated protocol).
+To implement commands for iOS native component, it has to extend code-generated protocol and implement `- handleCommand:args:` method, as well as method declared in JS spec (via code-generated protocol).
 
 </TabItem>
 

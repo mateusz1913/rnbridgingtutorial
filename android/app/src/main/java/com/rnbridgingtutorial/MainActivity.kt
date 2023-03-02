@@ -6,8 +6,6 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import com.samplenativescreen.SampleNativeScreenModuleImpl
-import com.samplenativescreenclassic.SampleNativeScreenClassicModuleImpl
 import com.savefilepickerpackage.SaveFilePickerModuleImpl
 import com.savefilepickerpackageclassic.SaveFilePickerClassicModuleImpl
 
@@ -23,8 +21,6 @@ class MainActivity : ReactActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
-        SampleNativeScreenModuleImpl.registerActivityLauncher(this)
-        SampleNativeScreenClassicModuleImpl.registerActivityLauncher(this)
         SaveFilePickerModuleImpl.registerActivityLauncher(this)
         SaveFilePickerClassicModuleImpl.registerActivityLauncher(this)
         WindowCompat.setDecorFitsSystemWindows(this.window, false)
