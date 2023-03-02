@@ -1,4 +1,5 @@
 import CompleteFile from '../_complete-file.mdx';
+import ExportingObjCInfo from '../_exporting-objc-info.mdx';
 
 #### `RangeSliderView.swift`
 
@@ -36,6 +37,8 @@ public class RangeSliderView: UIView {
 
 We'll export 2 things to the ObjC world - our view and its delegate protocol.
 For now all view's properties have only some default values, but we will add some code later to forward them to the slider.
+
+<ExportingObjCInfo />
 
 Next step is to create the slider - will wrap the slider in the object class that will keep the slider and react to the slider's events.
 
@@ -96,24 +99,26 @@ For more about delegates and Delegate Pattern, see [Apple's docs](https://develo
 
 So now, let's try to combine them.
 
-```diff title="ios/RangeUISliderWrapper.swift"
+```swift title="ios/RangeUISliderWrapper.swift"
 //
 
 @objc(RangeSliderView)
 public class RangeSliderView: UIView  {
     //
     
-+   private var sliderObject = RangeUISliderObject()
-+
-+   public override init(frame: CGRect) {
-+       super.init(frame: frame)
-+       self.sliderObject.delegate = self.delegate
-+       self.addSubview(self.sliderObject.slider)
-+   }
-+
-+   required init?(coder: NSCoder) {
-+       fatalError("init(coder:) has not been implemented")
-+   }
+// highlight-start
+    private var sliderObject = RangeUISliderObject()
+
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.sliderObject.delegate = self.delegate
+        self.addSubview(self.sliderObject.slider)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+// highlight-end
 
     //
 }
@@ -125,17 +130,18 @@ The slider object is created in the view's `init(frame:)` initializer, where we 
 
 The only thing left is to forward all properties to the slider:
 
-```diff title="ios/RangeUISliderWrapper.swift"
+```swift title="ios/RangeUISliderWrapper.swift"
 //
 
 @objc(RangeSliderView)
 public class RangeSliderView: UIView  {
--   @objc public weak var delegate: RangeSliderViewDelegate? = nil
-+   @objc public weak var delegate: RangeSliderViewDelegate? = nil {
-+       didSet {
-+           sliderObject.delegate = delegate
-+       }
-+   }
+// highlight-start
+    @objc public weak var delegate: RangeSliderViewDelegate? = nil {
+        didSet {
+            sliderObject.delegate = delegate
+        }
+    }
+// highlight-end
     
     private var sliderObject = RangeUISliderObject()
 
@@ -149,62 +155,71 @@ public class RangeSliderView: UIView  {
         fatalError("init(coder:) has not been implemented")
     }
 
-+   override public var frame: CGRect {
-+       didSet {
-+           sliderObject.slider.frame = frame
-+       }
-+   }
+// highlight-start
+    override public var frame: CGRect {
+        didSet {
+            sliderObject.slider.frame = frame
+        }
+    }
+// highlight-end
 
--   @objc public var activeColor: UIColor = UIColor.systemBlue
-+   @objc public var activeColor: UIColor = UIColor.systemBlue {
-+       didSet {
-+           sliderObject.slider.rangeSelectedColor = activeColor
-+       }
-+   }
+// highlight-start
+    @objc public var activeColor: UIColor = UIColor.systemBlue {
+        didSet {
+            sliderObject.slider.rangeSelectedColor = activeColor
+        }
+    }
+// highlight-end
     
--   @objc public var inactiveColor: UIColor = UIColor.systemGray
-+   @objc public var inactiveColor: UIColor = UIColor.systemGray {
-+       didSet {
-+           sliderObject.slider.rangeNotSelectedColor = inactiveColor
-+       }
-+   }
+// highlight-start
+    @objc public var inactiveColor: UIColor = UIColor.systemGray {
+        didSet {
+            sliderObject.slider.rangeNotSelectedColor = inactiveColor
+        }
+    }
+// highlight-end
     
--   @objc public var minValue: Double = 0.0
-+   @objc public var minValue: Double = 0.0 {
-+       didSet {
-+           sliderObject.slider.scaleMinValue = minValue
-+       }
-+   }
+// highlight-start
+    @objc public var minValue: Double = 0.0 {
+        didSet {
+            sliderObject.slider.scaleMinValue = minValue
+        }
+    }
+// highlight-end
     
--   @objc public var maxValue: Double = 1.0
-+   @objc public var maxValue: Double = 1.0 {
-+       didSet {
-+           sliderObject.slider.scaleMaxValue = maxValue
-+       }
-+   }
+// highlight-start
+    @objc public var maxValue: Double = 1.0 {
+        didSet {
+            sliderObject.slider.scaleMaxValue = maxValue
+        }
+    }
+// highlight-end
     
--   @objc public var leftKnobValue: Double = 0.0
-+   @objc public var leftKnobValue: Double = 0.0 {
-+       didSet {
-+           sliderObject.slider.changeLeftKnob(value: leftKnobValue)
-+           sliderObject.slider.defaultValueLeftKnob = leftKnobValue
-+       }
-+   }
+// highlight-start
+    @objc public var leftKnobValue: Double = 0.0 {
+        didSet {
+            sliderObject.slider.changeLeftKnob(value: leftKnobValue)
+            sliderObject.slider.defaultValueLeftKnob = leftKnobValue
+        }
+    }
+// highlight-end
     
--   @objc public var rightKnobValue: Double = 1.0
-+   @objc public var rightKnobValue: Double = 1.0 {
-+       didSet {
-+           sliderObject.slider.changeRightKnob(value: rightKnobValue)
-+           sliderObject.slider.defaultValueRightKnob = rightKnobValue
-+       }
-+   }
+// highlight-start
+    @objc public var rightKnobValue: Double = 1.0 {
+        didSet {
+            sliderObject.slider.changeRightKnob(value: rightKnobValue)
+            sliderObject.slider.defaultValueRightKnob = rightKnobValue
+        }
+    }
+// highlight-end
 
--   @objc public var step: Int = 0
-+   @objc public var step: Int = 0 {
-+       didSet {
-+           sliderObject.slider.stepIncrement = CGFloat(step)
-+       }
-+   }
+// highlight-start
+    @objc public var step: Int = 0 {
+        didSet {
+            sliderObject.slider.stepIncrement = CGFloat(step)
+        }
+    }
+// highlight-end
 }
 ```
 

@@ -23,20 +23,20 @@ export const HomeScreen: FC = () => {
     navigation.navigate(ROUTES.CONIC_GRADIENT, { isClassic: true });
   };
 
-  const navigateToRangeDatePicker = () => {
-    navigation.navigate(ROUTES.RANGE_DATEPICKER);
-  };
-
-  const navigateToRangeDatePickerClassic = () => {
-    navigation.navigate(ROUTES.RANGE_DATEPICKER, { isClassic: true });
-  };
-
   const navigateToRangeSlider = () => {
     navigation.navigate(ROUTES.RANGE_SLIDER);
   };
 
   const navigateToRangeSliderClassic = () => {
     navigation.navigate(ROUTES.RANGE_SLIDER, { isClassic: true });
+  };
+
+  const navigateToSaveFilePicker = () => {
+    navigation.navigate(ROUTES.SAVE_FILE);
+  };
+
+  const navigateToSaveFilePickerClassic = () => {
+    navigation.navigate(ROUTES.SAVE_FILE, { isClassic: true });
   };
 
   const navigateToSimpleEventModule = () => {
@@ -80,10 +80,10 @@ export const HomeScreen: FC = () => {
             <Button onPress={navigateToConicGradientClassic} title="Conic gradient (Classic)" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToRangeDatePicker} title="Range datepicker" />
+            <Button onPress={navigateToSaveFilePicker} title="Save file" />
           </View>
           <View style={styles.navigateLink}>
-            <Button onPress={navigateToRangeDatePickerClassic} title="Range datepicker (Classic)" />
+            <Button onPress={navigateToSaveFilePickerClassic} title="Save file (Classic)" />
           </View>
           <View style={styles.navigateLink}>
             <Button onPress={navigateToRangeSlider} title="Range slider" />

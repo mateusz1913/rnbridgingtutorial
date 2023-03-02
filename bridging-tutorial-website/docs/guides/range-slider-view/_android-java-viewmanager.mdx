@@ -245,10 +245,10 @@ public class RangeSliderViewManager extends ViewGroupManager<RangeSliderView> im
 
 To handle the events, we can override `addEventEmitters` method on the view manager class.
 In that method, we can register listener where we'll dispatch events based on received values.
-Dispatching events is available thanks to `UIManagerHelper.getEventDispatcherForReactTag` method - it needs context and the id (react tag) of the view
+Dispatching events is available thanks to `UIManagerHelper.getEventDispatcherForReactTag` method - it needs context and the id (react tag) of the view.
 And each dispatched event gets at least 2 arguments - `surfaceId` (obtained with `UIManagerHelper.getSurfaceId`) and id of the view.
 
-However, to dispatch events we need to also register their names, so that we can read them in the JS code.
+However, to dispatch events we need to also register their names, so that we can consume them in the JS code.
 This is done in `getExportedCustomDirectEventTypeConstants` method that we can override on the view manager class.
 
 <CompleteFile
@@ -622,3 +622,5 @@ This is done in `getExportedCustomDirectEventTypeConstants` method that we can o
         }
     }
 </OldArchAndroidViewManagerFile>
+
+Let's finalize it by exporting the view manager in the `TurboReactPackage` instance.

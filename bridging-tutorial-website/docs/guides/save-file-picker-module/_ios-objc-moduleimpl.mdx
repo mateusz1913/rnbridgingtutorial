@@ -1,0 +1,121 @@
+#### `SaveFilePickerModuleImpl.h`
+
+Let's start by creating a module-implementation that will be used by our module:
+
+```objc title="ios/SaveFilePickerModuleImpl.h"
+#import <UIKit/UIKit.h>
+
+@protocol SaveFilePickerModuleDelegate
+
+- (void)onCancel;
+- (void)onError:(NSError *)error;
+- (void)onSuccess;
+
+@end
+
+@interface SaveFilePickerModuleImpl : NSObject
+
+@property (nonatomic, weak) id<SaveFilePickerModuleDelegate> delegate;
+
+- (void)saveFileWithFilename:(NSString *)filename;
+
+@end
+```
+
+Here, we declare `SaveFilePickerModuleImpl` class together with `SaveFilePickerModuleDelegate` protocol.
+
+The class will have weak delegate property and one method.
+
+For saving file functionality we will use [`UIDocumentPickerViewController`](https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller?language=objc),
+more specifically its [`initForOpeningContentTypes:asCopy:`](https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller/3566733-initforopeningcontenttypes?language=objc) initializer.
+
+And to consume the result from the picker, the module-implementation class needs to implement [`UIDocumentPickerDelegate`](https://developer.apple.com/documentation/uikit/uidocumentpickerdelegate?language=objc).
+
+#### `SaveFilePickerModuleImpl.mm`
+
+```swift title="ios/SaveFilePickerModuleImpl.mm"
+#import "SaveFilePickerModuleImpl.h"
+
+#import <React/RCTUtils.h>
+
+@interface SaveFilePickerModuleImpl () <UIDocumentPickerDelegate>
+@end
+
+/**
+ * Native module's shared implementation
+ */
+@implementation SaveFilePickerModuleImpl
+
+static NSString *INVALID_PATH_ERROR_MESSAGE = @"Invalid path";
+static NSString *NO_VIEW_CONTROLLER_ERROR_MESSAGE = @"No viewcontroller";
+
+- (void)saveFileWithFilename:(NSString *)filename
+{
+    NSArray<NSString *> *filenameComponents = [filename componentsSeparatedByString:@"."];
+    NSURL *url = [[NSBundle mainBundle] URLForResource:filenameComponents[0] withExtension:filenameComponents[1]];
+    if (url == nil) {
+        [self.delegate onError:[NSError errorWithDomain:@"SaveFilePickerModuleImpl"
+                                                   code:1234
+                                               userInfo:@{ NSLocalizedDescriptionKey: INVALID_PATH_ERROR_MESSAGE }]];
+        return;
+    }
+
+    UIViewController *_Nullable presentedViewController = RCTPresentedViewController();
+    if (presentedViewController == nil) {
+        [self.delegate onError:[NSError errorWithDomain:@"SaveFilePickerModuleImpl"
+                                                   code:1234
+                                               userInfo:@{ NSLocalizedDescriptionKey: NO_VIEW_CONTROLLER_ERROR_MESSAGE }]];
+        return;
+    }
+    
+    UIDocumentPickerViewController *documentPicker = [self createDocumentPickerWithUrl:url];
+    documentPicker.delegate = self;
+    [presentedViewController presentViewController:documentPicker animated:YES completion:nil];
+}
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
+{
+    [self.delegate onSuccess];
+    controller.delegate = nil;
+}
+
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller
+{
+    [self.delegate onCancel];
+    controller.delegate = nil;
+}
+
+- (UIDocumentPickerViewController *)createDocumentPickerWithUrl:(NSURL *)url
+{
+    if (@available(iOS 14.0, *)) {
+        return [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:true];
+    }
+    return [[UIDocumentPickerViewController alloc] initWithURL:url inMode:UIDocumentPickerModeExportToService];
+}
+
+@end
+```
+
+First take a look at the `UIDocumentPickerDelegate` implementation - we are implementing two methods (`documentPicker:didPickDocumentsAtURLs:` & `documentPickerWasCancelled:`),
+one is returning the urls where the file was saved and the other is called when user cancelled the picker.
+In those methods, we have to call `SaveFilePickerModuleDelegate` delegate to communicate success or cancellation.
+When it's done, the picker's delegate `controller.delegate` needs to be cleared.
+
+Now we can start implementing `saveFileWithFilename` method.
+We begin with getting the URL for the file from assets based on the `filename` argument.
+If it cannot be obtained, we have to early-return and communicate to the delegate, that there's no such file with that path.
+
+Next step is to take currently presented view controller - will use it to modally display the file picker.
+As with the url, we also have to do error handling for the case when there's no presented view controller (~0.001% chance, but we should still do it).
+
+Finally, we create the picker and present it modally. To create the picker we are using `createDocumentPicker` helper.
+It's because the initializer we want to use is available from iOS 14, but our package declares support down to iOS 13.
+To handle it, we are using availability check (`if (@available)`) to use new initilaizer for iOS 14+ and fall back to old initializer for iOS 13.
+
+:::tip
+
+For more on availability API, you can visit Apple [dedicated docs's section](https://developer.apple.com/documentation/swift/marking-api-availability-in-objective-c#Check-Availability).
+
+:::
+
+When the picker is initialized, we have to set its delegate property to this module instance and present it.

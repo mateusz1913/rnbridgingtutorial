@@ -1,6 +1,6 @@
 #### `AppInfoModuleImpl.java`
 
-Open the `android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java` and paste following content:
+Let's start by creating a module-implementation that will be used by our module:
 
 ```java title="android/src/main/java/com/appinfopackage/AppInfoModuleImpl.java"
 package com.appinfopackage;
@@ -64,8 +64,6 @@ public class AppInfoModuleImpl {
     }
 }
 ```
-
-The purpose of creating separate class, instead of using `AppInfoModule` directly, is to separate RN's wrapper classes from the actual native implementation as much as possible.
 
 `AppInfoModuleImpl` declares 3 methods, each of them returns string value. It also declares static `NAME` constant which will be used in RN's module wrapper.
 

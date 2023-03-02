@@ -1,9 +1,9 @@
-#### `AppInfoModulePackage.java`
+#### `AppInfoTurboPackage.java`
 
 The last thing we need to do is to export `AppInfoModule` in the `TurboReactPackage` instance.
-Let's go to `AppInfoModulePackage.java` and add our new module.
+Let's go to `AppInfoTurboPackage.java` and add our new module.
 
-```java title="android/src/main/java/com/appinfopackage/AppInfoModulePackage.java"
+```java title="android/src/main/java/com/appinfopackage/AppInfoTurboPackage.java"
 package com.appinfopackage;
 
 import androidx.annotation.Nullable;
@@ -19,7 +19,7 @@ import com.facebook.react.turbomodule.core.interfaces.TurboModule;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppInfoModulePackage extends TurboReactPackage {
+public class AppInfoTurboPackage extends TurboReactPackage {
     // highlight-start
     /**
      * Initialize and export modules based on the name of the required module
@@ -76,5 +76,5 @@ public class AppInfoModulePackage extends TurboReactPackage {
 }
 ```
 
-To export the module, we need to return it from `getModule` method inside `AppInfoModulePackage`, if it's requested
+To export the module, we need to return it from `getModule` method inside `AppInfoTurboPackage`, if it's requested
 (the method takes name as a parameter and makes decision which module should be served).

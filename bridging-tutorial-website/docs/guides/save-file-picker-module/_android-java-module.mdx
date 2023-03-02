@@ -1,0 +1,597 @@
+import CompleteFile from '../_complete-file.mdx';
+import OldArchAndroidModuleFile from '../_old-arch-android-module-file.mdx';
+
+#### `SaveFilePickerModule.java`
+
+Now, let's move to the module that will manage function calls from the JS world:
+
+```java title="android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java"
+package com.savefilepickerpackage
+
+import android.net.Uri;
+
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.module.annotations.ReactModule;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = SaveFilePickerModule.NAME)
+public class SaveFilePickerModule extends NativeSaveFilePickerModuleSpec {
+    public static final String NAME = SaveFilePickerModuleImpl.NAME;
+
+    // Use shared module implementation and forward react application context
+    private final SaveFilePickerModuleImpl moduleImpl;
+
+    public SaveFilePickerModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.moduleImpl = new SaveFilePickerModuleImpl(reactContext);
+    }
+
+    // Return the name of the module - it should match the name provided in JS specification
+    @Override
+    public String getName() {
+        return SaveFilePickerModuleImpl.NAME;
+    }
+
+    // Exported methods must be annotated with @ReactMethod decorator
+    @ReactMethod
+    public void saveFileWithCallback(String filename, Callback callback) {
+        //
+    }
+
+    @ReactMethod
+    public void saveFileWithPromise(String filename, Promise promise) {
+        //
+    }
+}
+```
+
+`SaveFilePickerModule` class extends codegenerated spec class.
+`ReactApplicationContext` instance is used as the only `SaveFilePickerModule` constructor parameter.
+Additionally, `SaveFilePickerModule` is annotated with `ReactModule` decorator.
+Static constant `NAME` value matches the value declared in JS specification.
+
+For now, we start by adding empty implementations for methods declared in codegenerated spec class.
+
+Now, let's add private variables for callback/promise blocks - we'll need to save them, once the exported methods are invoked and use, once there's result from the file activity picker.
+
+```java title="android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java"
+//
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = SaveFilePickerModule.NAME)
+public class SaveFilePickerModule extends NativeSaveFilePickerModuleSpec {
+    //
+    
+    // Use shared module implementation and forward react application context
+    private final SaveFilePickerModuleImpl moduleImpl;
+
+// highlight-start
+    private @Nullable Callback callbackBlock = null;
+    private @Nullable Promise promiseBlock = null;
+    private String sourceFilename = "";
+// highlight-end
+
+//
+}
+```
+
+Next step is to implement listener object that will use callback/promise blocks to communicate the result to the JS code.
+We will do it inside constructor:
+
+```java title="android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java"
+//
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = SaveFilePickerModule.NAME)
+public class SaveFilePickerModule extends NativeSaveFilePickerModuleSpec {
+    //
+
+    private @Nullable Callback callbackBlock = null;
+    private @Nullable Promise promiseBlock = null;
+    private String sourceFilename = "";
+
+// highlight-start
+    public SaveFilePickerModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.moduleImpl = new SaveFilePickerModuleImpl(reactContext);
+        SaveFilePickerModuleImpl.listener = new SaveFilePickerModuleImpl.SaveFilePickerListener() {
+            @Override
+            public void onSuccess(@Nullable Uri uri) {
+                try {
+                    InputStream sourceInputStream = reactContext
+                        .getApplicationContext()
+                        .getAssets()
+                        .open(sourceFilename);
+                    if (uri != null) {
+                        OutputStream outputStream = reactContext
+                            .getContentResolver()
+                            .openOutputStream(uri);
+                        byte[] buffer = new byte[8 * 1024];
+                        int bytes = sourceInputStream.read(buffer);
+                        while (bytes >= 0) {
+                            outputStream.write(buffer, 0, bytes);
+                            bytes = sourceInputStream.read(buffer);
+                        }
+                        outputStream.close();
+                    }
+                    sourceInputStream.close();
+                } catch (Exception ignored) {}
+
+                Callback callback = callbackBlock;
+                Promise promise = promiseBlock;
+
+                if (callback != null) {
+                    WritableMap payload = Arguments.createMap();
+                    payload.putBoolean("success", true);
+                    payload.putBoolean("cancelled", false);
+                    callback.invoke(payload);
+                } else if (promise != null) {
+                    promise.resolve(true);
+                }
+
+                callbackBlock = null;
+                promiseBlock = null;
+                sourceFilename = "";
+            }
+
+            @Override
+            public void onCancel() {
+                Callback callback = callbackBlock;
+                Promise promise = promiseBlock;
+
+                if (callback != null) {
+                    WritableMap payload = Arguments.createMap();
+                    payload.putBoolean("success", false);
+                    payload.putBoolean("cancelled", true);
+                    callback.invoke(payload);
+                } else if (promise != null) {
+                    promise.resolve(false);
+                }
+
+                callbackBlock = null;
+                promiseBlock = null;
+                sourceFilename = "";
+            }
+
+            @Override
+            public void onError(Exception error) {
+                Callback callback = callbackBlock;
+                Promise promise = promiseBlock;
+
+                if (callback != null) {
+                    WritableMap payload = Arguments.createMap();
+                    WritableMap errorMap = Arguments.createMap();
+                    errorMap.putInt("code", 1234);
+                    errorMap.putString("message", error.getMessage());
+                    payload.putMap("error", errorMap);
+                    payload.putBoolean("success", false);
+                    payload.putBoolean("cancelled", false);
+                    callback.invoke(payload);
+                } else if (promise != null) {
+                    promise.reject("1234", error.getMessage());
+                }
+
+                callbackBlock = null;
+                promiseBlock = null;
+                sourceFilename = "";
+            }
+        };
+    }
+// highlight-end
+
+//
+}
+```
+
+For the promise block, we just resolve with boolean value or reject with an error.
+For callback block, we want to create an object argument - to do that, let's use `Arguments.createMap` utility helper.
+
+The important thing and the main difference between Android & iOS implementation is that the Android's save file picker is actually only _creating_ a new empty file instead of copying the source file like on iOS.
+That means, we have to manually copy the content of the requested file into the new location.
+In our case, we are doing it in the listener's `onSuccess` function:
+
+```java title="android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java"
+@Override
+public void onSuccess(@Nullable Uri uri) {
+    try {
+        InputStream sourceInputStream = reactContext
+            .getApplicationContext()
+            .getAssets()
+            .open(sourceFilename);
+        if (uri != null) {
+            OutputStream outputStream = reactContext
+                .getContentResolver()
+                .openOutputStream(uri);
+            byte[] buffer = new byte[8 * 1024];
+            int bytes = sourceInputStream.read(buffer);
+            while (bytes >= 0) {
+                outputStream.write(buffer, 0, bytes);
+                bytes = sourceInputStream.read(buffer);
+            }
+            outputStream.close();
+        }
+        sourceInputStream.close();
+    } catch (Exception ignored) {}
+
+    //
+}
+```
+
+That code takes specified file from application's assets directory, opens the file under the provided `uri` and copies the content of the source file to the target file.
+
+Last part is to use module-implementation class inside exported methods:
+
+```java title="android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java"
+//
+
+/**
+ * Declare Java class for new arch native module implementation
+ *
+ * Each turbo module extends codegenerated spec class
+ *
+ * Class should be annotated with @ReactModule decorator
+ */
+@ReactModule(name = SaveFilePickerModule.NAME)
+public class SaveFilePickerModule extends NativeSaveFilePickerModuleSpec {
+//
+
+    // Return the name of the module - it should match the name provided in JS specification
+    @Override
+    public String getName() {
+        return SaveFilePickerModuleImpl.NAME;
+    }
+
+// highlight-start
+    // Exported methods are overriden - based on the spec class
+    @Override
+    public void saveFileWithCallback(String filename, Callback callback) {
+        callbackBlock = callback;
+        sourceFilename = filename;
+        moduleImpl.saveFile(filename);
+    }
+
+    @Override
+    public void saveFileWithPromise(String filename, Promise promise) {
+        promiseBlock = promise;
+        sourceFilename = filename;
+        moduleImpl.saveFile(filename);
+    }
+// highlight-end
+}
+```
+
+In the methods body, we save the callback/promise arguments and we use module-implementation `saveFile` method to launch file activity picker.
+
+<CompleteFile
+  filename="SaveFilePickerModule.java"
+  language="java"
+>
+
+    package com.savefilepickerpackage;
+
+    import android.net.Uri;
+
+    import androidx.annotation.Nullable;
+
+    import com.facebook.react.bridge.Arguments;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.Callback;
+    import com.facebook.react.bridge.Promise;
+    import com.facebook.react.bridge.WritableMap;
+    import com.facebook.react.module.annotations.ReactModule;
+
+    import java.io.IOException;
+    import java.io.InputStream;
+    import java.io.OutputStream;
+
+    /**
+     * Declare Java class for new arch native module implementation
+     *
+     * Each turbo module extends codegenerated spec class
+     *
+     * Class should be annotated with @ReactModule decorator
+     */
+    @ReactModule(name = SaveFilePickerModule.NAME)
+    public class SaveFilePickerModule extends NativeSaveFilePickerModuleSpec {
+        public static final String NAME = SaveFilePickerModuleImpl.NAME;
+
+        // Use shared module implementation and forward react application context
+        private final SaveFilePickerModuleImpl moduleImpl;
+
+        private @Nullable Callback callbackBlock = null;
+        private @Nullable Promise promiseBlock = null;
+        private String sourceFilename = "";
+
+        public SaveFilePickerModule(ReactApplicationContext reactContext) {
+            super(reactContext);
+            this.moduleImpl = new SaveFilePickerModuleImpl(reactContext);
+            SaveFilePickerModuleImpl.listener = new SaveFilePickerModuleImpl.SaveFilePickerListener() {
+                @Override
+                public void onSuccess(@Nullable Uri uri) {
+                    try {
+                        InputStream sourceInputStream = reactContext
+                            .getApplicationContext()
+                            .getAssets()
+                            .open(sourceFilename);
+                        if (uri != null) {
+                            OutputStream outputStream = reactContext
+                                .getContentResolver()
+                                .openOutputStream(uri);
+                            byte[] buffer = new byte[8 * 1024];
+                            int bytes = sourceInputStream.read(buffer);
+                            while (bytes >= 0) {
+                                outputStream.write(buffer, 0, bytes);
+                                bytes = sourceInputStream.read(buffer);
+                            }
+                            outputStream.close();
+                        }
+                        sourceInputStream.close();
+                    } catch (Exception ignored) {}
+
+                    Callback callback = callbackBlock;
+                    Promise promise = promiseBlock;
+
+                    if (callback != null) {
+                        WritableMap payload = Arguments.createMap();
+                        payload.putBoolean("success", true);
+                        payload.putBoolean("cancelled", false);
+                        callback.invoke(payload);
+                    } else if (promise != null) {
+                        promise.resolve(true);
+                    }
+
+                    callbackBlock = null;
+                    promiseBlock = null;
+                    sourceFilename = "";
+                }
+
+                @Override
+                public void onCancel() {
+                    Callback callback = callbackBlock;
+                    Promise promise = promiseBlock;
+
+                    if (callback != null) {
+                        WritableMap payload = Arguments.createMap();
+                        payload.putBoolean("success", false);
+                        payload.putBoolean("cancelled", true);
+                        callback.invoke(payload);
+                    } else if (promise != null) {
+                        promise.resolve(false);
+                    }
+
+                    callbackBlock = null;
+                    promiseBlock = null;
+                    sourceFilename = "";
+                }
+
+                @Override
+                public void onError(Exception error) {
+                    Callback callback = callbackBlock;
+                    Promise promise = promiseBlock;
+
+                    if (callback != null) {
+                        WritableMap payload = Arguments.createMap();
+                        WritableMap errorMap = Arguments.createMap();
+                        errorMap.putInt("code", 1234);
+                        errorMap.putString("message", error.getMessage());
+                        payload.putMap("error", errorMap);
+                        payload.putBoolean("success", false);
+                        payload.putBoolean("cancelled", false);
+                        callback.invoke(payload);
+                    } else if (promise != null) {
+                        promise.reject("1234", error.getMessage());
+                    }
+
+                    callbackBlock = null;
+                    promiseBlock = null;
+                    sourceFilename = "";
+                }
+            };
+        }
+
+        // Return the name of the module - it should match the name provided in JS specification
+        @Override
+        public String getName() {
+            return SaveFilePickerModuleImpl.NAME;
+        }
+
+        // Exported methods are overriden - based on the spec class
+
+        @Override
+        public void saveFileWithCallback(String filename, Callback callback) {
+            callbackBlock = callback;
+            sourceFilename = filename;
+            moduleImpl.saveFile(filename);
+        }
+
+        @Override
+        public void saveFileWithPromise(String filename, Promise promise) {
+            promiseBlock = promise;
+            sourceFilename = filename;
+            moduleImpl.saveFile(filename);
+        }
+    }
+</CompleteFile>
+
+<OldArchAndroidModuleFile
+  filename="android/src/oldarch/java/com/savefilepickerpackage/SaveFilePickerModule.java"
+  language="java"
+>
+
+    package com.savefilepickerpackage;
+
+    import android.net.Uri;
+
+    import androidx.annotation.Nullable;
+
+    import com.facebook.react.bridge.Arguments;
+    import com.facebook.react.bridge.ReactApplicationContext;
+    import com.facebook.react.bridge.ReactContextBaseJavaModule;
+    import com.facebook.react.bridge.ReactMethod;
+    import com.facebook.react.bridge.Callback;
+    import com.facebook.react.bridge.Promise;
+    import com.facebook.react.bridge.WritableMap;
+    import com.facebook.react.module.annotations.ReactModule;
+
+    import java.io.IOException;
+    import java.io.InputStream;
+    import java.io.OutputStream;
+
+    /**
+     * Declare Java class for old arch native module implementation
+     *
+     * Each native module extends ReactContextBaseJavaModule class
+     *
+     * Class should be annotated with @ReactModule decorator
+     */
+    @ReactModule(name = SaveFilePickerModule.NAME)
+    public class SaveFilePickerModule extends ReactContextBaseJavaModule {
+        public static final String NAME = SaveFilePickerModuleImpl.NAME;
+
+        // Use shared module implementation and forward react application context
+        private final SaveFilePickerModuleImpl moduleImpl;
+
+        private @Nullable Callback callbackBlock = null;
+        private @Nullable Promise promiseBlock = null;
+        private String sourceFilename = "";
+
+        public SaveFilePickerModule(ReactApplicationContext reactContext) {
+            super(reactContext);
+            this.moduleImpl = new SaveFilePickerModuleImpl(reactContext);
+            SaveFilePickerModuleImpl.listener = new SaveFilePickerModuleImpl.SaveFilePickerListener() {
+                @Override
+                public void onSuccess(@Nullable Uri uri) {
+                    try {
+                        InputStream sourceInputStream = reactContext
+                            .getApplicationContext()
+                            .getAssets()
+                            .open(sourceFilename);
+                        if (uri != null) {
+                            OutputStream outputStream = reactContext
+                                .getContentResolver()
+                                .openOutputStream(uri);
+                            byte[] buffer = new byte[8 * 1024];
+                            int bytes = sourceInputStream.read(buffer);
+                            while (bytes >= 0) {
+                                outputStream.write(buffer, 0, bytes);
+                                bytes = sourceInputStream.read(buffer);
+                            }
+                            outputStream.close();
+                        }
+                        sourceInputStream.close();
+                    } catch (Exception ignored) {}
+
+                    Callback callback = callbackBlock;
+                    Promise promise = promiseBlock;
+
+                    if (callback != null) {
+                        WritableMap payload = Arguments.createMap();
+                        payload.putBoolean("success", true);
+                        payload.putBoolean("cancelled", false);
+                        callback.invoke(payload);
+                    } else if (promise != null) {
+                        promise.resolve(true);
+                    }
+
+                    callbackBlock = null;
+                    promiseBlock = null;
+                    sourceFilename = "";
+                }
+
+                @Override
+                public void onCancel() {
+                    Callback callback = callbackBlock;
+                    Promise promise = promiseBlock;
+
+                    if (callback != null) {
+                        WritableMap payload = Arguments.createMap();
+                        payload.putBoolean("success", false);
+                        payload.putBoolean("cancelled", true);
+                        callback.invoke(payload);
+                    } else if (promise != null) {
+                        promise.resolve(false);
+                    }
+
+                    callbackBlock = null;
+                    promiseBlock = null;
+                    sourceFilename = "";
+                }
+
+                @Override
+                public void onError(Exception error) {
+                    Callback callback = callbackBlock;
+                    Promise promise = promiseBlock;
+
+                    if (callback != null) {
+                        WritableMap payload = Arguments.createMap();
+                        WritableMap errorMap = Arguments.createMap();
+                        errorMap.putInt("code", 1234);
+                        errorMap.putString("message", error.getMessage());
+                        payload.putMap("error", errorMap);
+                        payload.putBoolean("success", false);
+                        payload.putBoolean("cancelled", false);
+                        callback.invoke(payload);
+                    } else if (promise != null) {
+                        promise.reject("1234", error.getMessage());
+                    }
+
+                    callbackBlock = null;
+                    promiseBlock = null;
+                    sourceFilename = "";
+                }
+            };
+        }
+
+        // Return the name of the module - it should match the name provided in JS specification
+        @Override
+        public String getName() {
+            return SaveFilePickerModuleImpl.NAME;
+        }
+
+        // Exported methods must be annotated with @ReactMethod decorator
+
+        @ReactMethod
+        public void saveFileWithCallback(String filename, Callback callback) {
+            callbackBlock = callback;
+            sourceFilename = filename;
+            moduleImpl.doJobWithCallback(callback);
+        }
+
+        @ReactMethod
+        public void saveFileWithPromise(String filename, Promise promise) {
+            promiseBlock = promise;
+            sourceFilename = filename;
+            moduleImpl.doJobWithPromise(promise);
+        }
+    }
+</OldArchAndroidModuleFile>
+
+Let's finalize it by exporting the module in the `TurboReactPackage` instance.

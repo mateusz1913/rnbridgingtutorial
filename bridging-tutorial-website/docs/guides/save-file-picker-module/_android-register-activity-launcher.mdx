@@ -1,0 +1,73 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+#### Register activity launcher
+
+We have completed the implementation of the Android part.
+However, there's one specific manual step that we need to do for this kind of module and that is registering the activity launcher inside the app's main activity.
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin title="android/app/src/main/java/com/rnbridgingtutorial/MainActivity.kt"
+// highlight-start
+import com.savefilepickerpackage.SaveFilePickerModuleImpl // add this import
+// highlight-end
+
+class MainActivity : ReactActivity() {
+
+    /**
+     * Returns the name of the main component registered from JavaScript. This is used to schedule
+     * rendering of the component.
+     */
+    override fun getMainComponentName(): String {
+        return "rnbridgingtutorial"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+// highlight-start
+        SaveFilePickerModuleImpl.registerActivityLauncher(this) // add this line
+// highlight-end
+    }
+
+    //
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java title="android/app/src/main/java/com/rnbridgingtutorial/MainActivity.java"
+// highlight-start
+import com.savefilepickerpackage.SaveFilePickerModuleImpl; // add this import
+// highlight-end
+
+public class MainActivity extends ReactActivity {
+
+    /**
+     * Returns the name of the main component registered from JavaScript. This is used to schedule
+     * rendering of the component.
+     */
+    @Override
+    public String getMainComponentName() {
+        return "rnbridgingtutorial";
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+// highlight-start
+        SaveFilePickerModuleImpl.registerActivityLauncher(this); // add this line
+// highlight-end
+    }
+
+    //
+}
+```
+
+</TabItem>
+</Tabs>
+
+In our test Android app, inside `MainActivity` class we are registering the activity launcher.
+Without that, our module wouldn't be able to launch another activities.

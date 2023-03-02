@@ -32,9 +32,6 @@ PODS:
     - React-RCTFabric
     - ReactCommon/turbomodule/core
   - DoubleConversion (1.1.6)
-  - Fastis (2.2.0):
-    - JTAppleCalendar (~> 8.0.0)
-    - PrettyCards (~> 1.0.0)
   - FBLazyVector (0.71.1)
   - FBReactNativeSpec (0.71.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -109,26 +106,8 @@ PODS:
   - hermes-engine (0.71.0-rc.5):
     - hermes-engine/Pre-built (= 0.71.0-rc.5)
   - hermes-engine/Pre-built (0.71.0-rc.5)
-  - JTAppleCalendar (8.0.4)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
-  - PrettyCards (1.0.5)
-  - RangeDatePickerPackage (0.0.1):
-    - Fastis (~> 2.0)
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - RangeDatePickerPackageClassic (0.0.1):
-    - Fastis (~> 2.0)
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
   - RangeSliderPackage (0.0.1):
     - RangeUISlider (~> 3.0)
     - RCT-Folly
@@ -867,6 +846,20 @@ PODS:
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
+  - SaveFilePickerPackage (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - SaveFilePickerPackageClassic (0.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -906,8 +899,6 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - OpenSSL-Universal (= 1.1.1100)
-  - RangeDatePickerPackage (from `../range-datepicker-package`)
-  - RangeDatePickerPackageClassic (from `../range-datepicker-package-classic`)
   - RangeSliderPackage (from `../range-slider-package`)
   - RangeSliderPackageClassic (from `../range-slider-package-classic`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -952,12 +943,13 @@ DEPENDENCIES:
   - SampleNativeListClassic (from `../sample-native-list-classic`)
   - SampleNativeScreen (from `../sample-native-screen`)
   - SampleNativeScreenClassic (from `../sample-native-screen-classic`)
+  - SaveFilePickerPackage (from `../save-file-picker-package`)
+  - SaveFilePickerPackageClassic (from `../save-file-picker-package-classic`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
-    - Fastis
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -968,10 +960,8 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
-    - JTAppleCalendar
     - libevent
     - OpenSSL-Universal
-    - PrettyCards
     - RangeUISlider
     - SocketRocket
     - YogaKit
@@ -997,10 +987,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
-  RangeDatePickerPackage:
-    :path: "../range-datepicker-package"
-  RangeDatePickerPackageClassic:
-    :path: "../range-datepicker-package-classic"
   RangeSliderPackage:
     :path: "../range-slider-package"
   RangeSliderPackageClassic:
@@ -1083,6 +1069,10 @@ EXTERNAL SOURCES:
     :path: "../sample-native-screen"
   SampleNativeScreenClassic:
     :path: "../sample-native-screen-classic"
+  SaveFilePickerPackage:
+    :path: "../save-file-picker-package"
+  SaveFilePickerPackageClassic:
+    :path: "../save-file-picker-package-classic"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1094,7 +1084,6 @@ SPEC CHECKSUMS:
   ConicGradientPackage: a6fb356446b4cdfd69325ae6e8c46982eae8cba2
   ConicGradientPackageClassic: 2245c3f981761a6f1808a3fcc5d099227cc7356b
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  Fastis: 54b693d0602243f924f4dfb92d4ed0fb8216bf8e
   FBLazyVector: ad72713385db5289b19f1ead07e8e4aa26dcb01d
   FBReactNativeSpec: 06fc2a521838dc240b499699d43467b071c66908
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
@@ -1109,12 +1098,8 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: a5d6597b0258a8a6fd737e4b40eeac47278610c4
-  JTAppleCalendar: f95b02c64f56d6f938fbf6582a04dcab9d709ebd
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  PrettyCards: 2b078f2396a42f7f0c4d6624b875149dcb49d3ed
-  RangeDatePickerPackage: 9be3e520391806f4d8948a19c71909aee66b0d14
-  RangeDatePickerPackageClassic: 185bb6ad41a0b777436dc93d378f8747c3da08a0
   RangeSliderPackage: b35bcd58b72dc683bf3ea54cc6303654d25df3d8
   RangeSliderPackageClassic: 25fa2a4902d7243dec4c76064a0130d2f2c29588
   RangeUISlider: bb1a82942ef5b6315bd8bf1c12a6b953f0ed02e8
@@ -1157,6 +1142,8 @@ SPEC CHECKSUMS:
   SampleNativeListClassic: 727c2a68624b1d23bd067e236521adf1eb750ad0
   SampleNativeScreen: 1ba1cb3368991923bcde767f8752897e5a797321
   SampleNativeScreenClassic: 966bee54456658d5d1a49868c613e744510a9fd5
+  SaveFilePickerPackage: 843cdfbfb4e52740e9dfd5ff55152b6b4e1006b9
+  SaveFilePickerPackageClassic: f3d8645212d871a53fb7f318aa732134697e1964
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

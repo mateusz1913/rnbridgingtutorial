@@ -1,6 +1,8 @@
+import ExportingObjCInfo from '../_exporting-objc-info.mdx';
+
 #### `AppInfoModuleImpl.swift`
 
-Make module-implementation class `AppInfoModuleImpl.swift`
+Let's start by creating a module-implementation that will be used by our module:
 
 ```swift title="ios/AppInfoModuleImpl.swift"
 import Foundation
@@ -21,14 +23,9 @@ public class AppInfoModuleImpl : NSObject {
 }
 ```
 
-The purpose of creating separate class, instead of using `AppInfoModule` directly is to separate RN's wrapper classes from the actual native implementation as much as possible.
+Here, we declare `AppInfoModuleImpl` class, which has 3 synchronous methods.
 
-Here, we declare `AppInfoModuleImpl` class, which has 3 synchronous methods. To make things accessible to ObjC world, we have to do 4 things:
-
-- make class extending `NSObject`
-- mark class and its methods (at least those methods that are meant to be exposed) as public
-- mark class with `@objc(exported-objc-name)` decorator
-- mark exposed methods with `@objc` decorator
+<ExportingObjCInfo />
 
 Methods in the class are using `Bundle` class, for the reference, check out Apple's [dedicated docs section](https://developer.apple.com/documentation/foundation/bundle).
 

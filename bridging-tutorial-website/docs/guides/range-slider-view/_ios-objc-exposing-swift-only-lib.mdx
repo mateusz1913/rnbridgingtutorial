@@ -1,4 +1,5 @@
 import CompleteFile from '../_complete-file.mdx';
+import ExportingObjCInfo from '../_exporting-objc-info.mdx';
 
 #### Exposing Swift only library to ObjC
 
@@ -98,16 +99,20 @@ public class RangeUISliderWrapper: NSObject {
 In the ObjC wrapper class we declare  all the properties and methods that we want to expose to ObjC code.
 Additionally, we declare delegate protocol that will be also available to implement in ObjC receiver.
 
+<ExportingObjCInfo />
+
 So now, let's try to combine them.
 
 In `RangeUISliderObject` class let's declare `RangeUISliderWrapperDelegate` weak property, we will use to forward slider events to ObjC receiver.
 
-```diff title="ios/RangeUISliderWrapper.swift"
+```swift title="ios/RangeUISliderWrapper.swift"
 import RangeUISlider
 import UIKit
 
 class RangeUISliderObject {
-+   public weak var delegate: RangeUISliderWrapperDelegate? = nil
+// highlight-start
+    public weak var delegate: RangeUISliderWrapperDelegate? = nil
+// highlight-end
 
     //
 }
@@ -115,39 +120,47 @@ class RangeUISliderObject {
 
 Next, let's use that delegate property to properly implement `RangeUISliderDelegate`:
 
-```diff title="ios/RangeUISliderWrapper.swift"
+```swift title="ios/RangeUISliderWrapper.swift"
 import RangeUISlider
 import UIKit
 
 extension RangeUISliderObject: RangeUISliderDelegate {
     public func rangeIsChanging(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
-+       self.delegate?.sendOnRangeSliderViewValueChangeEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+// highlight-start
+        self.delegate?.sendOnRangeSliderViewValueChangeEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+// highlight-end
     }
     
     public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
-+       self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+// highlight-start
+        self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+// highlight-end
     }
     
     public func rangeChangeStarted() {
-+       self.delegate?.sendOnRangeSliderViewBeginDragEvent()
+// highlight-start
+        self.delegate?.sendOnRangeSliderViewBeginDragEvent()
+// highlight-end
     }
 }
 ```
 
 Now in `RangeUISliderWrapper` we have to initialize instance of `RangeUISliderObject`:
 
-```diff title="ios/RangeUISliderWrapper.swift"
+```swift title="ios/RangeUISliderWrapper.swift"
 @objc(RangeUISliderWrapper)
 public class RangeUISliderWrapper: NSObject {
     //
+
+// highlight-start    
+    private var sliderObject = RangeUISliderObject()
     
-+   private var sliderObject = RangeUISliderObject()
-+   
-+   @objc public var slider: UIView {
-+       get {
-+           return sliderObject.slider
-+       }
-+   }
+    @objc public var slider: UIView {
+        get {
+            return sliderObject.slider
+        }
+    }
+// highlight-end
 
     //
 }
@@ -155,15 +168,16 @@ public class RangeUISliderWrapper: NSObject {
 
 Cool! Finally we can wrap everything by forwarding events from slider and forwarding props to slider. Let's add following lines:
 
-```diff title="ios/RangeUISliderWrapper.swift"
+```swift title="ios/RangeUISliderWrapper.swift"
 @objc(RangeUISliderWrapper)
 public class RangeUISliderWrapper: NSObject {
--   @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil
-+   @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil {
-+       didSet {
-+           sliderObject.delegate = delegate
-+       }
-+   }
+// highlight-start
+    @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil {
+        didSet {
+            sliderObject.delegate = delegate
+        }
+    }
+// highlight-end
     
     private var sliderObject = RangeUISliderObject()
     
@@ -174,60 +188,68 @@ public class RangeUISliderWrapper: NSObject {
     }
     
     @objc public func setSliderFrame(_ frame: CGRect) {
--       //
-+       sliderObject.slider.frame = frame
+// highlight-start
+        sliderObject.slider.frame = frame
+// highlight-end
     }
     
--   @objc public var activeColor: UIColor = UIColor.systemBlue
-+   @objc public var activeColor: UIColor = UIColor.systemBlue {
-+       didSet {
-+           sliderObject.slider.rangeSelectedColor = activeColor
-+       }
-+   }
+// highlight-start
+    @objc public var activeColor: UIColor = UIColor.systemBlue {
+        didSet {
+            sliderObject.slider.rangeSelectedColor = activeColor
+        }
+    }
+// highlight-end
     
--   @objc public var inactiveColor: UIColor = UIColor.systemGray
-+   @objc public var inactiveColor: UIColor = UIColor.systemGray {
-+       didSet {
-+           sliderObject.slider.rangeNotSelectedColor = inactiveColor
-+       }
-+   }
+// highlight-start
+    @objc public var inactiveColor: UIColor = UIColor.systemGray {
+        didSet {
+            sliderObject.slider.rangeNotSelectedColor = inactiveColor
+        }
+    }
+// highlight-end
     
--   @objc public var minValue: Double = 0.0
-+   @objc public var minValue: Double = 0.0 {
-+       didSet {
-+           sliderObject.slider.scaleMinValue = minValue
-+       }
-+   }
+// highlight-start
+    @objc public var minValue: Double = 0.0 {
+        didSet {
+            sliderObject.slider.scaleMinValue = minValue
+        }
+    }
+// highlight-end
     
--   @objc public var maxValue: Double = 1.0
-+   @objc public var maxValue: Double = 1.0 {
-+       didSet {
-+           sliderObject.slider.scaleMaxValue = maxValue
-+       }
-+   }
+// highlight-start
+    @objc public var maxValue: Double = 1.0 {
+        didSet {
+            sliderObject.slider.scaleMaxValue = maxValue
+        }
+    }
+// highlight-end
     
--   @objc public var leftKnobValue: Double = 0.0
-+   @objc public var leftKnobValue: Double = 0.0 {
-+       didSet {
-+           sliderObject.slider.changeLeftKnob(value: leftKnobValue)
-+           sliderObject.slider.defaultValueLeftKnob = leftKnobValue
-+       }
-+   }
+// highlight-start
+    @objc public var leftKnobValue: Double = 0.0 {
+        didSet {
+            sliderObject.slider.changeLeftKnob(value: leftKnobValue)
+            sliderObject.slider.defaultValueLeftKnob = leftKnobValue
+        }
+    }
+// highlight-end
     
--   @objc public var rightKnobValue: Double = 1.0
-+   @objc public var rightKnobValue: Double = 1.0 {
-+       didSet {
-+           sliderObject.slider.changeRightKnob(value: rightKnobValue)
-+           sliderObject.slider.defaultValueRightKnob = rightKnobValue
-+       }
-+   }
+// highlight-start
+    @objc public var rightKnobValue: Double = 1.0 {
+        didSet {
+            sliderObject.slider.changeRightKnob(value: rightKnobValue)
+            sliderObject.slider.defaultValueRightKnob = rightKnobValue
+        }
+    }
+// highlight-end
 
--   @objc public var step: Int = 0
-+   @objc public var step: Int = 0 {
-+       didSet {
-+           sliderObject.slider.stepIncrement = CGFloat(step)
-+       }
-+   }
+// highlight-start
+    @objc public var step: Int = 0 {
+        didSet {
+            sliderObject.slider.stepIncrement = CGFloat(step)
+        }
+    }
+// highlight-end
 }
 ```
 

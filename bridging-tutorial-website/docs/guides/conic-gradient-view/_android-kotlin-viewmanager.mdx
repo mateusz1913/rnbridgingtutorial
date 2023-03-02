@@ -1,6 +1,8 @@
+import OldArchAndroidViewManagerFile from '../_old-arch-android-viewmanager-file.mdx';
+
 #### `ConicGradientViewManager.kt`
 
-We are starting with the view manager class for our conic gradient view, paste the following code in `android/src/newarch/java/com/conicgradientpackage/ConicGradientViewManager.kt`
+Paste the following code in `android/src/newarch/java/com/conicgradientpackage/ConicGradientViewManager.kt`
 
 ```kotlin title="android/src/newarch/java/com/conicgradientpackage/ConicGradientViewManager.kt"
 package com.conicgradientpackage
@@ -59,18 +61,14 @@ class ConicGradientViewManager : ReactViewManager(), ConicGradientViewManagerInt
 
 Let's see what's happening here:
 
-- we declare `package com.conicgradientpackage` at the top of the file - this "links" content of the file with our package
-- we import bunch of classes and interfaces
 - we declare the view manager class that extends `ReactViewManager` and implement code-generated spec interface
 - we override required methods: `getName`, `getDelegate` & `createViewInstance`
 - we override props setters based on JS spec
 
-<details>
-  <summary>Old architecture view manager</summary>
-  <div>
-    The implementation of old architecture view manager won't be visible in Android Studio when you have new architecture enabled.
-    If you want, you can open <code>android/src/oldarch/java/com/conicgradientpackage/ConicGradientViewManager.kt</code> at other text editor and paste following content:
-    <br /><br />
+<OldArchAndroidViewManagerFile
+  filename="android/src/oldarch/java/com/conicgradientpackage/ConicGradientViewManager.kt"
+  language="kotlin"
+>
 
     package com.conicgradientpackage
 
@@ -113,7 +111,6 @@ Let's see what's happening here:
             view.setCenterPoint(centerPoint)
         }
     }
-  </div>
-</details>
+</OldArchAndroidViewManagerFile>
 
-For now, Android Studio will display bunch of errors about unknown `ConicGradientView` class - let's create it!
+Let's finalize it by exporting the view manager in the `TurboReactPackage` instance.

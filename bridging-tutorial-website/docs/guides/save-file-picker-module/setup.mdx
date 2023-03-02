@@ -1,0 +1,80 @@
+---
+sidebar_label: Module boilerplate
+sidebar_position: 2
+title: Module boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import LinkPackage from '../_link-package.mdx';
+
+### Create package structure
+
+<Tabs groupId="package_structure">
+<TabItem value="auto" label="Automatic generation">
+
+COMING SOON
+
+</TabItem>
+<TabItem value="manual" label="Manual walkthrough">
+
+#### Package boilerplate
+
+Start by [generating package boilerplate](../package-boilerplate) - use `save-file-picker-package` as the package name
+
+#### Source files stubs
+
+Finally, let's create stubs for source files. For JS, create following empty files:
+
+- `src/index.ts`
+- `src/NativeSaveFilePickerModule.ts`
+
+For iOS implementation, create:
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+- `ios/SaveFilePickerModule.h`
+- `ios/SaveFilePickerModule.mm`
+- `ios/SaveFilePickerModuleImpl.swift`
+- `ios/SaveFilePickerPackage-Bridging-Header.h`
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+- `ios/SaveFilePickerModule.h`
+- `ios/SaveFilePickerModule.mm`
+- `ios/SaveFilePickerModuleImpl.h`
+- `ios/SaveFilePickerModuleImpl.mm`
+
+</TabItem>
+</Tabs>
+
+For Android implementation, create:
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+- `android/src/main/java/com/savefilepickerpackage/SaveFilePickerModuleImpl.kt`
+- `android/src/main/java/com/savefilepickerpackage/SaveFilePickerTurboPackage.kt`
+- `android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.kt`
+- `android/src/oldarch/java/com/savefilepickerpackage/SaveFilePickerModule.kt`
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+- `android/src/main/java/com/savefilepickerpackage/SaveFilePickerModuleImpl.java`
+- `android/src/main/java/com/savefilepickerpackage/SaveFilePickerTurboPackage.java`
+- `android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java`
+- `android/src/oldarch/java/com/savefilepickerpackage/SaveFilePickerModule.java`
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Link the package with the app
+
+<LinkPackage package="save-file-picker-package" />

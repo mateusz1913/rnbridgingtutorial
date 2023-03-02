@@ -1,0 +1,80 @@
+#### `SaveFilePickerTurboPackage.java`
+
+The last thing we need to do is to export `SaveFilePickerModule` in the `TurboReactPackage` instance.
+Let's go to `SaveFilePickerTurboPackage.java` and add our new module.
+
+```java title="android/src/main/java/com/savefilepickerpackage/SaveFilePickerTurboPackage.java"
+package com.savefilepickerpackage;
+
+import androidx.annotation.Nullable;
+
+import com.facebook.react.TurboReactPackage;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
+import com.facebook.react.turbomodule.core.interfaces.TurboModule;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class SaveFilePickerTurboPackage extends TurboReactPackage {
+    // highlight-start
+    /**
+     * Initialize and export modules based on the name of the required module
+     */
+    @Override
+    @Nullable
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+        if (name.equals(SaveFilePickerModule.NAME)) {
+            return new SaveFilePickerModule(reactContext);
+        }
+        return null;
+    }
+    // highlight-end
+
+    /**
+     * Declare info about exported modules
+     */
+    @Override
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        /**
+         * Here declare the array of exported modules
+         */
+        Class<? extends NativeModule>[] moduleList = new Class[] {
+            SaveFilePickerModule.class
+        };
+        final Map<String, ReactModuleInfo> reactModuleInfoMap = new HashMap<>();
+        /**
+         * And here just iterate on that array and produce the info provider instance
+         */
+        for (Class<? extends NativeModule> moduleClass : moduleList) {
+            ReactModule reactModule = moduleClass.getAnnotation(ReactModule.class);
+
+            reactModuleInfoMap.put(
+                reactModule.name(),
+                new ReactModuleInfo(
+                    reactModule.name(),
+                    moduleClass.getName(),
+                    true,
+                    reactModule.needsEagerInit(),
+                    reactModule.hasConstants(),
+                    reactModule.isCxxModule(),
+                    TurboModule.class.isAssignableFrom(moduleClass)
+                )
+            );
+        }
+
+        return new ReactModuleInfoProvider() {
+            @Override
+            public Map<String, ReactModuleInfo> getReactModuleInfos() {
+                return reactModuleInfoMap;
+            }
+        };
+    }
+}
+```
+
+To export the module, we need to return it from `getModule` method inside `SaveFilePickerTurboPackage`, if it's requested
+(the method takes name as a parameter and makes decision which module should be served).

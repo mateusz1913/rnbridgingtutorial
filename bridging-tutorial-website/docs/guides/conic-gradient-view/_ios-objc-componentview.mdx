@@ -97,7 +97,7 @@ Each Fabric component needs to declare static `componentDescriptorProvider` and 
 
 When our Fabric component has its boilerplate, we can start with adding support for gradient props - let's add `updateProps:oldProps:` method:
 
-```diff title="ios/ConicGradientViewComponentView.mm"
+```objc title="ios/ConicGradientViewComponentView.mm"
 //
 
 @implementation ConicGradientViewComponentView
@@ -105,33 +105,33 @@ When our Fabric component has its boilerplate, we can start with adding support 
 //
 
 // highlight-start
-+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
-+{
-+    const auto &oldViewProps = *std::static_pointer_cast<const ConicGradientViewProps>(_props);
-+    const auto &newViewProps = *std::static_pointer_cast<const ConicGradientViewProps>(props);
-+
-+    if (oldViewProps.colors != newViewProps.colors) {
-+        auto colors = RCTConvertVecToArray(newViewProps.colors, ^id(SharedColor item){
-+            return (id)RCTUIColorFromSharedColor(item).CGColor;
-+        });
-+        self.layer.colors = colors;
-+    }
-+
-+    if (oldViewProps.locations != newViewProps.locations) {
-+        auto locations = RCTConvertVecToArray(newViewProps.locations, ^id(double item){
-+            return @(item);
-+        });
-+        self.layer.locations = locations;
-+    }
-+
-+    if (oldViewProps.centerPoint.x != newViewProps.centerPoint.x || oldViewProps.centerPoint.y != newViewProps.centerPoint.y) {
-+        auto centerPoint = CGPointMake(newViewProps.centerPoint.x, newViewProps.centerPoint.y);
-+        self.layer.startPoint = centerPoint;
-+        self.layer.endPoint = CGPointMake(1, centerPoint.y);
-+    }
-+
-+    [super updateProps:props oldProps:oldProps];
-+}
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const ConicGradientViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const ConicGradientViewProps>(props);
+
+    if (oldViewProps.colors != newViewProps.colors) {
+        auto colors = RCTConvertVecToArray(newViewProps.colors, ^id(SharedColor item){
+            return (id)RCTUIColorFromSharedColor(item).CGColor;
+        });
+        self.layer.colors = colors;
+    }
+
+    if (oldViewProps.locations != newViewProps.locations) {
+        auto locations = RCTConvertVecToArray(newViewProps.locations, ^id(double item){
+            return @(item);
+        });
+        self.layer.locations = locations;
+    }
+
+    if (oldViewProps.centerPoint.x != newViewProps.centerPoint.x || oldViewProps.centerPoint.y != newViewProps.centerPoint.y) {
+        auto centerPoint = CGPointMake(newViewProps.centerPoint.x, newViewProps.centerPoint.y);
+        self.layer.startPoint = centerPoint;
+        self.layer.endPoint = CGPointMake(1, centerPoint.y);
+    }
+
+    [super updateProps:props oldProps:oldProps];
+}
 // highlight-end
 
 //

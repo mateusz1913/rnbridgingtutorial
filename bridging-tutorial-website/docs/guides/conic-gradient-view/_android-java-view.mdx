@@ -1,5 +1,7 @@
 #### `ConicGradientView.java`
 
+Let's start by declaring the custom view that will extend `ReactViewGroup` (the android class that backs `<View />` implementation):
+
 ```java title="android/src/newarch/java/com/conicgradientpackage/ConicGradientView.java"
 package com.conicgradientpackage;
 
@@ -58,38 +60,43 @@ public class ConicGradientView extends ReactViewGroup {
 }
 ```
 
-Here we declare our view that extends `ReactViewGroup` class (it's backing the RN's `<View />` implementation).
 In `setColors`, `setLocations`, `setCenterPoint` we save and parse the values received from props.
-And as usual, we create static `NAME` with the name based on JS specification.
+And we create static `NAME` with the name based on JS specification.
 
 Looks good, but it doesn't do anything with gradient rendering - let's add it:
 
-```diff title="android/src/main/java/com/conicgradientpackage/ConicGradientView.java"
+```java title="android/src/main/java/com/conicgradientpackage/ConicGradientView.java"
 class ConicGradientView(private val reactContext: ReactContext) : ReactViewGroup(reactContext) {
     private final ReactContext reactContext;
 
-+   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-+   private final Path mPath = new Path();
-+   private final RectF mRect = new RectF();
+// highlight-start
+    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Path mPath = new Path();
+    private final RectF mRect = new RectF();
+// highlight-end
     private int[] mColors = {Color.TRANSPARENT, Color.TRANSPARENT};
     private float[] mLocations = {0f, 0f};
     private Double mCenterPointX = 0.5;
     private Double mCenterPointY = 0.5;
-+   private int mWidth = 0;
-+   private int mHeight = 0;
+// highlight-start
+    private int mWidth = 0;
+    private int mHeight = 0;
+// highlight-end
 
     public static final String NAME = "ConicGradientView";
     
     public ConicGradientView(ReactContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-+
-+       /**
-+        * This will invoke internal `getOrCreateReactViewBackground` method
-+        * to initialize ReactViewBackgroundDrawable for this view,
-+        * if ReactViewBackgroundDrawable, then view will not draw the gradient
-+        */
-+       this.setBorderRadius(0f);
+// highlight-start
+ 
+        /**
+         * This will invoke internal `getOrCreateReactViewBackground` method
+         * to initialize ReactViewBackgroundDrawable for this view,
+         * if ReactViewBackgroundDrawable, then view will not draw the gradient
+         */
+        this.setBorderRadius(0f);
+// highlight-end
     }
 
     public void setColors(ReadableArray colors) {
@@ -101,7 +108,9 @@ class ConicGradientView(private val reactContext: ReactContext) : ReactViewGroup
                 mColors[i] = colors.getInt(i);
             }
         }
-+       prepareGradient();
+// highlight-start
+        prepareGradient();
+// highlight-end
     }
 
     public void setLocations(ReadableArray locations) {
@@ -109,7 +118,9 @@ class ConicGradientView(private val reactContext: ReactContext) : ReactViewGroup
         for (int i = 0; i < locations.size(); i++) {
             mLocations[i] = (float)locations.getDouble(i);
         }
-+       prepareGradient();
+// highlight-start
+        prepareGradient();
+// highlight-end
     }
 
     public void setCenterPoint(ReadableMap centerPoint) {
@@ -121,49 +132,53 @@ class ConicGradientView(private val reactContext: ReactContext) : ReactViewGroup
         if (centerPoint.hasKey("y") && !centerPoint.isNull("y")) {
             mCenterPointY = centerPoint.getDouble("y");
         }
-+       prepareGradient();
+// highlight-start
+        prepareGradient();
+// highlight-end
     }
-+
-+   @Override
-+   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-+       super.onSizeChanged(w, h, oldw, oldh);
-+       mWidth = w;
-+       mHeight = h;
-+       preparePath();
-+       prepareGradient();
-+   }
-+
-+   @Override
-+   protected void dispatchDraw(Canvas canvas) {
-+       if (canvas != null) {
-+           canvas.drawPath(mPath, mPaint);
-+       }
-+       super.dispatchDraw(canvas);
-+   }
-+
-+   private void preparePath() {
-+       mPath.reset();
-+       mRect.set(
-+               0f,
-+               0f,
-+               (float) mWidth,
-+               (float) mHeight
-+       );
-+       mPath.addRect(mRect, Path.Direction.CW);
-+   }
-+
-+   private void prepareGradient() {
-+       if (mColors.length != mLocations.length) {
-+           return;
-+       }
-+       mPaint.setShader(new SweepGradient(
-+               (float) (mCenterPointX * mWidth),
-+               (float) (mCenterPointY * mHeight),
-+               mColors,
-+               mLocations
-+       ));
-+       invalidate();
-+   }
+
+// highlight-start
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+        mHeight = h;
+        preparePath();
+        prepareGradient();
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        if (canvas != null) {
+            canvas.drawPath(mPath, mPaint);
+        }
+        super.dispatchDraw(canvas);
+    }
+
+    private void preparePath() {
+        mPath.reset();
+        mRect.set(
+                0f,
+                0f,
+                (float) mWidth,
+                (float) mHeight
+        );
+        mPath.addRect(mRect, Path.Direction.CW);
+    }
+
+    private void prepareGradient() {
+        if (mColors.length != mLocations.length) {
+            return;
+        }
+        mPaint.setShader(new SweepGradient(
+                (float) (mCenterPointX * mWidth),
+                (float) (mCenterPointY * mHeight),
+                mColors,
+                mLocations
+        ));
+        invalidate();
+    }
+// highlight-end
 }
 ```
 
@@ -171,12 +186,10 @@ Displaying the gradient is just a bit more difficult than on iOS - first we need
 we can do it thanks to [`View#onSizeChanged` method](https://developer.android.com/reference/android/view/View#onSizeChanged(int,%20int,%20int,%20int)).
 
 After that we create helper private methods (`preparePath`, `prepareGradient`) that prepare the path and shader for our gradient background.
-Whenever each "input" value changes we are recomputing the gradient and invalidate the view (tell it that it needs to be redrawn).
+Whenever each "input" value changes we are recomputing the gradient and invalidating the view (telling it that it needs to be redrawn).
 
 The actual gradient drawing takes place in [`View#dispatchDraw` method](https://developer.android.com/reference/android/view/View#dispatchDraw(android.graphics.Canvas)).
-It gives view's canvas that we can use to draw the background.
+It provides canvas argument that we can use to draw the background.
 
 You may have noticed, that we also have the `setBorderRadius` invoked in constructor.
-It's a workaround for `ReactViewGroup` based classes, without it, the gradient wouldn't be displayed at all, if you wouldn't set some color/border props on the JS side.
-
-Let's finalize it by exporting the view manager in the `TurboReactPackage` instance.
+It's a workaround for `ReactViewGroup` based classes. Without it, the gradient wouldn't be displayed at all, if you wouldn't set some color/border props on the JS side.

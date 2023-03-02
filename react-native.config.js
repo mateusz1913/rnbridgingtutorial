@@ -14,17 +14,17 @@ module.exports = {
     'conic-gradient-package-classic': { // <--------- Add entry for "conic-gradient-package-classic"
       root: path.resolve(__dirname, './conic-gradient-package-classic'),
     },
-    'range-datepicker-package': { // <--------- Add entry for "range-datepicker-package"
-      root: path.resolve(__dirname, './range-datepicker-package'),
-    },
-    'range-datepicker-package-classic': { // <--------- Add entry for "range-datepicker-package-classic"
-      root: path.resolve(__dirname, './range-datepicker-package-classic'),
-    },
     'range-slider-package': { // <--------- Add entry for "range-slider-package"
       root: path.resolve(__dirname, './range-slider-package'),
     },
     'range-slider-package-classic': { // <--------- Add entry for "range-slider-package-classic"
       root: path.resolve(__dirname, './range-slider-package-classic'),
+    },
+    'save-file-picker-package': { // <--------- Add entry for "save-file-picker-package"
+      root: path.resolve(__dirname, './save-file-picker-package'),
+    },
+    'save-file-picker-package-classic': { // <--------- Add entry for "save-file-picker-package-classic"
+      root: path.resolve(__dirname, './save-file-picker-package-classic'),
     },
     'sample-event-module': { // <--------- Add entry for "sample-event-module"
       root: path.resolve(__dirname, './sample-event-module'),
