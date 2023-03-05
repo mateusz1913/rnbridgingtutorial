@@ -1,1 +1,0 @@
-export { RangeSliderClassicView } from './RangeSliderClassicView';

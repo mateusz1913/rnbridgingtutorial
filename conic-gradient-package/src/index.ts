@@ -1,1 +1,0 @@
-export { ConicGradientView } from './ConicGradientView';
