@@ -39,8 +39,8 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
     constants = facebook::react::typedConstants<JS::NativeMyAwesomeModule::Constants::Builder>({
         .ALONSO = @"You always have to leave the space!",
         .HAMILTON = @"Dream the impossible!",
-        .LATIFI = @"GOAT"
-        .VERSTAPPEN = @"Radio ChECk"
+        .LATIFI = @"I don't know what happened there... I'm fine"
+        .VERSTAPPEN = @"Don't forget to sanitise!"
     });
 
     return constants;
@@ -58,8 +58,8 @@ override fun getTypedExportedConstants(): MutableMap<String, Any> {
     return mutableMapOf(
         "ALONSO" to "You always have to leave the space!",
         "HAMILTON" to "Dream the impossible!",
-        "LATIFI" to "GOAT",
-        "VERSTAPPEN" to "Radio ChECk"
+        "LATIFI" to "I don't know what happened there... I'm fine",
+        "VERSTAPPEN" to "Don't forget to sanitise!"
     )
 }
 ```
@@ -78,8 +78,8 @@ protected Map<String, Object> getTypedExportedConstants() {
     final Map<String, Object> map = new HashMap<>();
     map.put("ALONSO", "You always have to leave the space!");
     map.put("HAMILTON", "Dream the impossible!");
-    map.put("LATIFI", "GOAT");
-    map.put("VERSTAPPEN", "Radio ChECk");
+    map.put("LATIFI", "I don't know what happened there... I'm fine");
+    map.put("VERSTAPPEN", "Don't forget to sanitise!");
     return map;
 }
 ```

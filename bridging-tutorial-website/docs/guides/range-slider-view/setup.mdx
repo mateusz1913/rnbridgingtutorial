@@ -8,6 +8,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 import LinkPackage from '../_link-package.mdx';
+import PackageStructureBoilerplate from '../_package-structure-boilerplate.mdx';
 
 ### Create package structure
 
@@ -21,7 +22,13 @@ COMING SOON
 
 #### Package boilerplate
 
-Start by [generating package boilerplate](../package-boilerplate) - use `range-slider-package` as the package name
+<PackageStructureBoilerplate
+  isFabricComponent={true}
+  packageName="range-slider-package"
+  packageNameUpperCamelCase="RangeSliderPackage"
+  packageNameLowercase="rangesliderpackage"
+  packageNameUpperCase="RANGE_SLIDER_PACKAGE"
+/>
 
 #### Source files stubs
 

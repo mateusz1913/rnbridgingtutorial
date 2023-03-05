@@ -6,24 +6,15 @@ const lightCodeTheme = require('prism-react-renderer/themes/github');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Bridging Tutorial',
+  tagline: 'Learn how to use any platform API in React Native app',
   favicon: 'img/favicon.ico',
-
-  // Set the production url of your site here
-  url: 'https://your-docusaurus-test-site.com',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
-
+  url: 'https://mateusz1913.github.io',
+  baseUrl: '/rnbridgingtutorial/',
+  organizationName: 'mateusz1913',
+  projectName: 'rnbridgingtutorial',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
@@ -31,7 +22,6 @@ const config = {
     defaultLocale: 'en',
     locales: [ 'en' ],
   },
-
   presets: [
     [
       'classic',
@@ -39,10 +29,8 @@ const config = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/mateusz1913/rnbridgingtutorial/tree/main/docs',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -50,27 +38,36 @@ const config = {
       },
     ],
   ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     {
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'Bridging Tutorial',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Bridging Tutorial logo',
+          src: 'img/icon.svg',
         },
         items: [
           {
             type: 'doc',
             docId: 'getting-started',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Getting Started',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            type: 'doc',
+            docId: 'module-reference/module-intro',
+            position: 'left',
+            label: 'Module Reference',
+          },
+          {
+            type: 'doc',
+            docId: 'view-reference/view-intro',
+            position: 'left',
+            label: 'View Reference',
+          },
+          {
+            href: 'https://github.com/mateusz1913/rnbridgingtutorial',
             label: 'GitHub',
             position: 'right',
           },
@@ -83,25 +80,8 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
+                label: 'Getting Started',
                 to: '/docs/getting-started',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
               },
             ],
           },
@@ -110,12 +90,12 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/mateusz1913/rnbridgingtutorial',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Mateusz Mędrek. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

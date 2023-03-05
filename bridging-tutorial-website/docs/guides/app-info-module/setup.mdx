@@ -8,6 +8,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 import LinkPackage from '../_link-package.mdx';
+import PackageStructureBoilerplate from '../_package-structure-boilerplate.mdx';
 
 ### Create package structure
 
@@ -21,7 +22,13 @@ COMING SOON
 
 #### Package boilerplate
 
-Start by [generating package boilerplate](../package-boilerplate) - use `app-info-package` as the package name
+<PackageStructureBoilerplate
+  isFabricComponent={false}
+  packageName="app-info-package"
+  packageNameUpperCamelCase="AppInfoPackage"
+  packageNameLowercase="appinfopackage"
+  packageNameUpperCase="APP_INFO_PACKAGE"
+/>
 
 #### Source files stubs
 
