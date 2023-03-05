@@ -4,12 +4,12 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "docs/**"
+      - "bridging-tutorial-website/**"
       - ".github/workflows/build-docs.yml"
   push:
     branches: [main]
     paths:
-      - "docs/**"
+      - "bridging-tutorial-website/**"
       - ".github/workflows/build-docs.yml"
 
 jobs:
