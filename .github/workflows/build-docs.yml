@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Test Build
+      - name: Build website
         run: |
           yarn bridging-tutorial-website/ install --immutable
           yarn bridging-tutorial-website/ build
@@ -64,7 +64,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Release to GitHub Pages
+      - name: Release website to GitHub Pages
         env:
           USE_SSH: true
           GIT_USER: git
