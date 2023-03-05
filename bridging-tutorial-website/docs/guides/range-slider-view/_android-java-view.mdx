@@ -54,7 +54,7 @@ public class RangeSliderView extends FrameLayout {
                     }
                     mLastLeftKnobValue = newLeftKnobValue;
                     mLastRightKnobValue = newRightKnobValue;
-                    //
+                    // ...
                 }
         );
         this.addView(this.slider, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -62,15 +62,15 @@ public class RangeSliderView extends FrameLayout {
 }
 ```
 
-Our custom view extends `FrameLayout` class, it declares static `NAME` constant that equals to the value we put in JS specification, it also declares `RangeSlider` instance with some default configuration.
+Our custom view extends `FrameLayout` class, it declares static `NAME` constant, that's value matches the one from JS specification, it also declares `RangeSlider` instance with some default configuration.
 
 As a next step, let's forward props to the slider:
 
 ```java title="android/src/main/java/com/rangesliderpackage/RangeSliderView.java"
-//
+// ...
 
 public class RangeSliderView extends FrameLayout {
-    //
+    // ...
 
 // highlight-start
     public void setActiveColor(@Nullable Integer activeColor) {
@@ -140,7 +140,7 @@ public class RangeSliderView extends FrameLayout {
         void onRangeSliderViewValueChange(double leftKnobValue, double rightKnobValue);
     }
 
-    //
+    // ...
 }
 ```
 
@@ -203,7 +203,7 @@ public class RangeSliderView extends FrameLayout {
     }
 // highlight-end
 
-    //
+    // ...
 
 // highlight-start
     private void sendOnRangeSliderViewValueChangeEvent(double leftKnobValue, double rightKnobValue) {

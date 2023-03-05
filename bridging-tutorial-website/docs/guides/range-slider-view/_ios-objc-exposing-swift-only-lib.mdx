@@ -1,11 +1,11 @@
 import CompleteFile from '../_complete-file.mdx';
 import ExportingObjCInfo from '../_exporting-objc-info.mdx';
 
-#### Exposing Swift only library to ObjC
+#### Exposing Swift only library to Objective-C
 
-Sometimes you may have to use some Swift-only libraries and sooner or later, you'll have to use them in ObjC code.
+Sometimes you may have to use some Swift-only libraries and sooner or later, you'll have to use them in Objective-C code.
 
-In our case, we need to somehow use our slider library in ObjC view code.
+In our case, we need to somehow use our slider library in Objective-C view code.
 To do that we will create small Swift wrapper class that will expose functionality we need.
 
 Let's start by creating our slider with some default configuration:
@@ -62,7 +62,7 @@ For more about delegates and Delegate Pattern, see [Apple's docs](https://develo
 
 :::
 
-Now it's the time to implement the ObjC wrapper class - add the following code at the bottom of the file:
+Now it's the time to implement the Swift-Objective-C wrapper class - add the following code at the bottom of the file:
 
 ```swift title="ios/RangeUISliderWrapper.swift"
 @objc(RangeUISliderWrapperDelegate)
@@ -96,14 +96,14 @@ public class RangeUISliderWrapper: NSObject {
 }
 ```
 
-In the ObjC wrapper class we declare  all the properties and methods that we want to expose to ObjC code.
-Additionally, we declare delegate protocol that will be also available to implement in ObjC receiver.
+In the Swift-Objective-C wrapper class we declare  all the properties and methods that we want to expose to Objective-C code.
+Additionally, we declare delegate protocol that will be also available to implement in Objective-C receiver.
 
 <ExportingObjCInfo />
 
 So now, let's try to combine them.
 
-In `RangeUISliderObject` class let's declare `RangeUISliderWrapperDelegate` weak property, we will use to forward slider events to ObjC receiver.
+In `RangeUISliderObject` class let's declare `RangeUISliderWrapperDelegate` weak property, we will use to forward slider events to Objective-C receiver.
 
 ```swift title="ios/RangeUISliderWrapper.swift"
 import RangeUISlider
@@ -114,7 +114,7 @@ class RangeUISliderObject {
     public weak var delegate: RangeUISliderWrapperDelegate? = nil
 // highlight-end
 
-    //
+    // ...
 }
 ```
 
@@ -150,7 +150,7 @@ Now in `RangeUISliderWrapper` we have to initialize instance of `RangeUISliderOb
 ```swift title="ios/RangeUISliderWrapper.swift"
 @objc(RangeUISliderWrapper)
 public class RangeUISliderWrapper: NSObject {
-    //
+    // ...
 
 // highlight-start    
     private var sliderObject = RangeUISliderObject()
@@ -162,7 +162,7 @@ public class RangeUISliderWrapper: NSObject {
     }
 // highlight-end
 
-    //
+    // ...
 }
 ```
 
@@ -263,7 +263,7 @@ Visit [Swift's docs](https://docs.swift.org/swift-book/documentation/the-swift-p
 :::
 
 
-Awesome! We have exposed Swift-only library and we can proceed with the rest of ObjC code.
+Awesome! We have exposed Swift-only library and we can proceed with the rest of Objective-C code.
 
 <CompleteFile
   filename="RangeUISliderWrapper.swift"

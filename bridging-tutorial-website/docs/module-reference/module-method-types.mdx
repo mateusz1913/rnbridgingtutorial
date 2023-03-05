@@ -18,7 +18,7 @@ Void methods can take multiple amount of arguments and does not return any value
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myAwesomeVoidMethod(): void
@@ -34,13 +34,13 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 ```objc title="ios/NativeMyAwesomeModule.mm"
 RCT_EXPORT_METHOD(myAwesomeVoidMethod)
 {
-    //
+    // ...
 }
 
 RCT_EXPORT_METHOD(myAwesomeVoidMethodWithArguments:(NSNumber *) numArg 
                                             objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomeVoidMethodWithArgumentsObjArg &) objArg)
 {
-    //
+    // ...
 }
 ```
 
@@ -53,14 +53,14 @@ RCT_EXPORT_METHOD(myAwesomeVoidMethodWithArguments:(NSNumber *) numArg
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
 import com.facebook.react.bridge.ReadableMap
 
-//
+// ...
 
 override fun myAwesomeVoidMethod() {
-    //
+    // ...
 }
 
 override fun myAwesomeVoidMethodWithArguments(numArg: Double, objArg: ReadableMap) {
-    //
+    // ...
 }
 ```
 
@@ -70,16 +70,16 @@ override fun myAwesomeVoidMethodWithArguments(numArg: Double, objArg: ReadableMa
 ```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
 import com.facebook.react.bridge.ReadableMap;
 
-//
+// ...
 
 @Override
 public void myAwesomeVoidMethod() {
-    //
+    // ...
 }
 
 @Override
 public void myAwesomeVoidMethodWithArguments(double numArg, ReadableMap objArg) {
-    //
+    // ...
 }
 ```
 
@@ -100,7 +100,7 @@ Sync methods can take multiple amount of arguments and synchronously return the 
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myAwesomeSyncMethod(): number
@@ -116,14 +116,14 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 ```objc title="ios/NativeMyAwesomeModule.mm"
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethod)
 {
-    //
+    // ...
     return 42;
 }
 
 RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethodWithArguments:(NSNumber *) numArg 
                                                                       objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomeSyncMethodWithArgumentsObjArg &) objArg)
 {
-    //
+    // ...
     return 42;
 }
 ```
@@ -137,15 +137,15 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethodWithArguments:(NS
 ```kotlin title="android/src/main/newarch/NativeMyAwesomeModule.kt"
 import com.facebook.react.bridge.ReadableMap
 
-//
+// ...
 
 override fun myAwesomeSyncMethod(): Double {
-    //
+    // ...
     return 42
 }
 
 override fun myAwesomeSyncMethodWithArguments(numArg: Double, objArg: ReadableMap): Double {
-    //
+    // ...
     return 42
 }
 ```
@@ -156,17 +156,17 @@ override fun myAwesomeSyncMethodWithArguments(numArg: Double, objArg: ReadableMa
 ```java title="android/src/main/newarch/NativeMyAwesomeModule.java"
 import com.facebook.react.bridge.ReadableMap;
 
-//
+// ...
 
 @Override
 public double myAwesomeSyncMethod() {
-    //
+    // ...
     return 42;
 }
 
 @Override
 public double myAwesomeSyncMethodWithArguments(double numArg, ReadableMap objArg) {
-    //
+    // ...
     return 42;
 }
 ```
@@ -188,7 +188,7 @@ Promise methods can take multiple amount of arguments and asynchronously return 
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myAwesomePromiseMethod(): Promise<boolean>
@@ -205,7 +205,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 RCT_EXPORT_METHOD(myAwesomePromiseMethod:(RCTPromiseResolveBlock) resolve
                                   reject:(RCTPromiseRejectBlock) reject)
 {
-    //
+    // ...
     resolve(@(YES));
 }
 
@@ -214,7 +214,7 @@ RCT_EXPORT_METHOD(myAwesomePromiseMethodWithArguments:(NSNumber *) numArg
                                               resolve:(RCTPromiseResolveBlock) resolve
                                                reject:(RCTPromiseRejectBlock) reject)
 {
-    //
+    // ...
     resolve(@(YES));
 }
 ```
@@ -229,15 +229,15 @@ RCT_EXPORT_METHOD(myAwesomePromiseMethodWithArguments:(NSNumber *) numArg
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 
-//
+// ...
 
 override fun myAwesomePromiseMethod(promise: Promise) {
-    //
+    // ...
     promise.resolve(true)
 }
 
 override fun myAwesomePromiseMethodWithArguments(numArg: Double, objArg: ReadableMap, promise: Promise) {
-    //
+    // ...
     promise.resolve(true)
 }
 ```
@@ -249,17 +249,17 @@ override fun myAwesomePromiseMethodWithArguments(numArg: Double, objArg: Readabl
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 
-//
+// ...
 
 @Override
 public void myAwesomePromiseMethod(Promise promise) {
-    //
+    // ...
     promise.resolve(true);
 }
 
 @Override
 public void myAwesomePromiseMethodWithArguments(double numArg, ReadableMap objArg, Promise promise) {
-    //
+    // ...
     promise.resolve(true);
 }
 ```
@@ -281,7 +281,7 @@ Callback methods can take multiple amount of arguments and take callback argumen
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myAwesomeCallbackMethod(myResultCallback: () => void): void
@@ -297,7 +297,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 ```objc title="ios/NativeMyAwesomeModule.mm"
 RCT_EXPORT_METHOD(myAwesomeCallbackMethod:(RCTResponseSenderBlock) myResultCallback)
 {
-    //
+    // ...
     myResultCallback(@[nil]);
 }
 
@@ -305,7 +305,7 @@ RCT_EXPORT_METHOD(myAwesomeCallbackMethodWithArguments:(NSNumber *) numArg
                                                 objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomePromiseMethodWithArgumentsObjArg &) objArg
                                       myResultCallback:(RCTResponseSenderBlock) myResultCallback)
 {
-    //
+    // ...
     myResultCallback(@[nil]);
 }
 ```
@@ -320,15 +320,15 @@ RCT_EXPORT_METHOD(myAwesomeCallbackMethodWithArguments:(NSNumber *) numArg
 import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.ReadableMap
 
-//
+// ...
 
 override fun myAwesomeCallbackMethod(myResultCallback: Callback) {
-    //
+    // ...
     callback.invoke(null)
 }
 
 override fun myAwesomeCallbackMethodWithArguments(numArg: Double, objArg: ReadableMap, myResultCallback: Callback) {
-    //
+    // ...
     callback.invoke(null)
 }
 ```
@@ -340,17 +340,17 @@ override fun myAwesomeCallbackMethodWithArguments(numArg: Double, objArg: Readab
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
 
-//
+// ...
 
 @Override
 public void myAwesomeCallbackMethod(Callback myResultCallback) {
-    //
+    // ...
     callback.invoke(null);
 }
 
 @Override
 public void myAwesomeCallbackMethodWithArguments(double numArg, ReadableMap objArg, Callback myResultCallback) {
-    //
+    // ...
     callback.invoke(null);
 }
 ```

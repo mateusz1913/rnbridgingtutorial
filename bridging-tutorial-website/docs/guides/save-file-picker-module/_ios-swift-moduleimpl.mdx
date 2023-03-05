@@ -2,7 +2,7 @@ import ExportingObjCInfo from '../_exporting-objc-info.mdx';
 
 #### `SaveFilePickerModuleImpl.swift`
 
-Let's start by creating a module-implementation that will be used by our module:
+Let's start by creating a Swift implementation that will directly call iOS save file picker APIs:
 
 ```swift title="ios/SaveFilePickerModuleImpl.swift"
 import UIKit
@@ -39,7 +39,7 @@ The class will have weak delegate property and one method. For error handling, w
 For saving file functionality we will use [`UIDocumentPickerViewController`](https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller),
 more specifically its [`init(forOpeningContentTypes:asCopy:)`](https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller/3566733-init) initializer.
 
-And to consume the result from the picker, the module-implementation class needs to implement [`UIDocumentPickerDelegate`](https://developer.apple.com/documentation/uikit/uidocumentpickerdelegate).
+And to consume the result from the picker, the Swift class needs to implement [`UIDocumentPickerDelegate`](https://developer.apple.com/documentation/uikit/uidocumentpickerdelegate).
 
 ```swift title="ios/SaveFilePickerModuleImpl.swift"
 /**

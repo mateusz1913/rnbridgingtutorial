@@ -16,7 +16,7 @@ import TabItem from '@theme/TabItem';
 import type { HostComponent, ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   enabled: boolean
@@ -32,7 +32,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 ```objc title="ios/MyAwesomeViewComponentView.mm"
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -40,11 +40,11 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
     const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
 
     if (oldViewProps.enabled != newViewProps.enabled) {
-        //
+        // ...
     }
 
     if (oldViewProps.checked != newViewProps.checked) {
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -64,16 +64,16 @@ RCT_EXPORT_VIEW_PROPERTY(checked, NSNumber)
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "enabled")
 override fun setEnabled(view: MyAwesomeView, enabled: Boolean) {
-    //
+    // ...
 }
 
 @ReactProp(name = "checked")
 override fun setChecked(view: MyAwesomeView, checked: Boolean?) {
-    //
+    // ...
 }
 ```
 
@@ -85,18 +85,18 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "enabled")
 public void setEnabled(MyAwesomeView view, boolean enabled) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "checked")
 public void setChecked(MyAwesomeView view, @Nullable Boolean checked) {
-    //
+    // ...
 }
 ```
 
@@ -120,7 +120,7 @@ import type {
 } from 'react-native/Libraries/Types/CodegenTypes';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   precision: Double
@@ -140,7 +140,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 ```objc title="ios/MyAwesomeViewComponentView.mm"
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -148,27 +148,27 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
     const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
 
     if (oldViewProps.precision != newViewProps.precision) {
-        //
+        // ...
     }
 
     if (oldViewProps.optionalPrecision != newViewProps.optionalPrecision) {
-        //
+        // ...
     }
 
     if (oldViewProps.price != newViewProps.price) {
-        //
+        // ...
     }
 
     if (oldViewProps.discount != newViewProps.discount) {
-        //
+        // ...
     }
 
     if (oldViewProps.count != newViewProps.count) {
-        //
+        // ...
     }
 
     if (oldViewProps.optionalCount != newViewProps.optionalCount) {
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -192,36 +192,36 @@ RCT_EXPORT_VIEW_PROPERTY(optionalCount, NSNumber)
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "precision")
 override fun setPrecision(view: MyAwesomeView, precision: Double) {
-    //
+    // ...
 }
 
 @ReactProp(name = "optionalPrecision")
 override fun setOptionalPrecision(view: MyAwesomeView, optionalPrecision: Double?) {
-    //
+    // ...
 }
 
 @ReactProp(name = "price")
 override fun setPrice(view: MyAwesomeView, price: Float) {
-    //
+    // ...
 }
 
 @ReactProp(name = "discount")
 override fun setDiscount(view: MyAwesomeView, discount: Float?) {
-    //
+    // ...
 }
 
 @ReactProp(name = "count")
 override fun setCount(view: MyAwesomeView, count: Int) {
-    //
+    // ...
 }
 
 @ReactProp(name = "optionalCount")
 override fun setOptionalCount(view: MyAwesomeView, optionalCount: Int?) {
-    //
+    // ...
 }
 ```
 
@@ -233,42 +233,42 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "precision")
 public void setPrecision(MyAwesomeView view, double precision) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "optionalPrecision")
 public void setOptionalPrecision(MyAwesomeView view, @Nullable Double optionalPrecision) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "price")
 public void setPrice(MyAwesomeView view, float price) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "discount")
 public void setDiscount(MyAwesomeView view, @Nullable Float discount) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "count")
 public void setCount(MyAwesomeView view, int count) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "optionalCount")
 public void setOptionalCount(MyAwesomeView view, @Nullable Integer optionalCount) {
-    //
+    // ...
 }
 ```
 
@@ -287,7 +287,7 @@ public void setOptionalCount(MyAwesomeView view, @Nullable Integer optionalCount
 import type { HostComponent, ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   name: string
@@ -303,7 +303,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 ```objc title="ios/MyAwesomeViewComponentView.mm"
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -311,11 +311,11 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
     const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
 
     if (oldViewProps.name != newViewProps.name) {
-        //
+        // ...
     }
 
     if (oldViewProps.label != newViewProps.label) {
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -335,16 +335,16 @@ RCT_EXPORT_VIEW_PROPERTY(label, NSString)
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "name")
 override fun setName(view: MyAwesomeView, name: String) {
-    //
+    // ...
 }
 
 @ReactProp(name = "label")
 override fun setLabel(view: MyAwesomeView, label: String?) {
-    //
+    // ...
 }
 ```
 
@@ -356,18 +356,18 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "name")
 public void setName(MyAwesomeView view, String name) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "label")
 public void setLabel(MyAwesomeView view, @Nullable String label) {
-    //
+    // ...
 }
 ```
 
@@ -386,7 +386,7 @@ public void setLabel(MyAwesomeView view, @Nullable String label) {
 import type { HostComponent, ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   data: ReadonlyArray<number>
@@ -405,7 +405,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -417,7 +417,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
             return @(item);
         });
 
-        //
+        // ...
     }
 
     auto optionalDataComparator = [](const facebook::react::MyAwesomeViewOptionalDataStruct &left, const facebook::react::MyAwesomeViewOptionalDataStruct &right) {
@@ -430,7 +430,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
             return @{ @"title": title, @"description": description };
         });
 
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -451,16 +451,16 @@ RCT_EXPORT_VIEW_PROPERTY(optionalData, NSArray)
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "data")
 override fun setData(view: MyAwesomeView, data: ReadableArray) {
-    //
+    // ...
 }
 
 @ReactProp(name = "optionalData")
 fun setOptionalData(view: MyAwesomeView, optionalData: ReadableArray?) {
-    //
+    // ...
 }
 ```
 
@@ -473,18 +473,18 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "data")
 public void setData(MyAwesomeView view, ReadableArray data) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "optionalData")
 public void setOptionalData(MyAwesomeView view, @Nullable ReadableArray optionalData) {
-    //
+    // ...
 }
 ```
 
@@ -503,7 +503,7 @@ public void setOptionalData(MyAwesomeView view, @Nullable ReadableArray optional
 import type { HostComponent, ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   enabled: boolean
@@ -521,7 +521,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -532,13 +532,13 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
         BOOL *flag = newViewProps.config.flag;
         NSString *option = RCTNSStringFromString(newViewProps.config.option);
 
-        //
+        // ...
     }
 
     if (oldViewProps.optionalConfig != newViewProps.optionalConfig) {
         NSNumber *count = @(newViewProps.optionalConfig.count);
 
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -559,16 +559,16 @@ RCT_EXPORT_VIEW_PROPERTY(optionalConfig, NSDictionary)
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "config")
 override fun setConfig(view: MyAwesomeView, config: ReadableMap) {
-    //
+    // ...
 }
 
 @ReactProp(name = "optionalConfig")
 override fun setOptionalConfig(view: MyAwesomeView, optionalConfig: ReadableMap?) {
-    //
+    // ...
 }
 ```
 
@@ -581,18 +581,18 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "config")
 public void setConfig(MyAwesomeView view, ReadableMap config) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "optionalConfig")
 public void setOptionalConfig(MyAwesomeView view, @Nullable ReadableMap optionalConfig) {
-    //
+    // ...
 }
 ```
 
@@ -611,7 +611,7 @@ public void setOptionalConfig(MyAwesomeView view, @Nullable ReadableMap optional
 import type { ColorValue, HostComponent, ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   tintColor: ColorValue
@@ -629,7 +629,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -639,13 +639,13 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
     if (oldViewProps.tintColor != newViewProps.tintColor) {
         UIColor *tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
 
-        //
+        // ...
     }
 
     if (oldViewProps.optionalColor != newViewProps.optionalColor) {
         UIColor *optionalColor = RCTUIColorFromSharedColor(newViewProps.optionalColor);
 
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -665,16 +665,16 @@ RCT_EXPORT_VIEW_PROPERTY(optionalColor, UIColor)
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "tintColor")
 override fun setTintColor(view: MyAwesomeView, tintColor: Int?) {
-    //
+    // ...
 }
 
 @ReactProp(name = "optionalColor")
 override fun setOptionalColor(view: MyAwesomeView, optionalColor: Int?) {
-    //
+    // ...
 }
 ```
 
@@ -686,18 +686,18 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "tintColor")
 public void setTintColor(MyAwesomeView view, @Nullable Integer tintColor) {
-    //
+    // ...
 }
 
 @Override
 @ReactProp(name = "optionalColor")
 public void setOptionalColor(MyAwesomeView view, @Nullable Integer optionalColor) {
-    //
+    // ...
 }
 ```
 
@@ -720,7 +720,7 @@ import type {
 } from 'react-native/Libraries/Types/CodegenTypes';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   onAwesomeBubblingEvent?: BubblingEventHandler<Readonly<{ arg: string }>>
@@ -736,7 +736,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 ```objc title="ios/MyAwesomeViewComponentView.mm"
 #import <react/renderer/components/MyAwesomeView/EventEmitters.h>
 
-//
+// ...
 
 - (void)handleBubblingEvent:(NSString *)payload
 {
@@ -776,7 +776,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.Event
 
-//
+// ...
 
 class OnAwesomeBubblingEvent(
     surfaceId: Int,
@@ -805,7 +805,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.Event
 
-//
+// ...
 
 class OnAwesomeDirectEvent(
     surfaceId: Int,
@@ -834,7 +834,7 @@ import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 
-//
+// ...
 
 override fun addEventEmitters(reactContext: ThemedReactContext, view: MyAwesomeView) {
     super.addEventEmitters(reactContext, view)
@@ -888,7 +888,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.Event;
 
-//
+// ...
 
 public class OnAwesomeBubblingEvent extends Event<OnAwesomeBubblingEvent> {
     private final String payload;
@@ -927,7 +927,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.Event;
 
-//
+// ...
 
 public class OnAwesomeDirectEvent extends Event<OnAwesomeDirectEvent> {
     private final String payload;
@@ -967,7 +967,7 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 
 import java.util.Map;
 
-//
+// ...
 
 @Override
 protected void addEventEmitters(ThemedReactContext reactContext, MyAwesomeView view) {
@@ -1038,7 +1038,7 @@ import type { HostComponent, ViewProps } from 'react-native';
 import type { WithDefault } from 'react-native/Libraries/Types/CodegenTypes';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
-//
+// ...
 
 export interface MyAwesomeViewProps extends ViewProps {
   interval?: WithDefault<'slow' | 'normal' | 'fast', 'normal'>
@@ -1053,7 +1053,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 ```objc title="ios/MyAwesomeViewComponentView.mm"
 #import <react/renderer/components/MyAwesomeView/Props.h>
 
-//
+// ...
 
 - (void)updateProps:(facebook::react::Props::Shared const &)props oldProps:(facebook::react::Props::Shared const &)oldProps
 {
@@ -1061,7 +1061,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
     const auto &newViewProps = *std::static_pointer_cast<const facebook::react::MyAwesomeViewProps>(props);
 
     if (oldViewProps.interval != newViewProps.interval) {
-        //
+        // ...
     }
 
     [super updateProps:props oldProps:oldProps];
@@ -1080,11 +1080,11 @@ RCT_EXPORT_VIEW_PROPERTY(interval, NSString)
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/MyAwesomeViewManager.kt"
 import com.facebook.react.uimanager.annotations.ReactProp
 
-//
+// ...
 
 @ReactProp(name = "interval")
 override fun setInterval(view: MyAwesomeView, interval: String?) {
-    //
+    // ...
 }
 ```
 
@@ -1096,12 +1096,12 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-//
+// ...
 
 @Override
 @ReactProp(name = "interval")
 public void setInterval(MyAwesomeView view, @Nullable String interval) {
-    //
+    // ...
 }
 ```
 

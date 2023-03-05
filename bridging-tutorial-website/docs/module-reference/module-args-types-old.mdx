@@ -24,7 +24,7 @@ import CodegenForOldArchInfo from '../_codegen-for-old-arch-info.mdx';
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myMethod(enabled: boolean, checked?: boolean): void
@@ -41,7 +41,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 RCT_EXPORT_METHOD(myMethod:(BOOL) enabled
                    checked:(NSNumber *) checked)
 {
-    //
+    // ...
 }
 ```
 
@@ -54,11 +54,11 @@ RCT_EXPORT_METHOD(myMethod:(BOOL) enabled
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
 import com.facebook.react.bridge.ReactMethod
 
-//
+// ...
 
 @ReactMethod
 fun myMethod(enabled: Boolean, checked: Boolean?) {
-    //
+    // ...
 }
 ```
 
@@ -70,11 +70,11 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactMethod;
 
-//
+// ...
 
 @ReactMethod
 public void myMethod(boolean enabled, @Nullable Boolean checked) {
-    //
+    // ...
 }
 ```
 
@@ -93,7 +93,7 @@ public void myMethod(boolean enabled, @Nullable Boolean checked) {
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myMethod(count: number, optionalCount?: number): void
@@ -110,7 +110,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 RCT_EXPORT_METHOD(myMethod:(double) count
              optionalCount:(NSNumber *) optionalCount)
 {
-    //
+    // ...
 }
 ```
 
@@ -123,11 +123,11 @@ RCT_EXPORT_METHOD(myMethod:(double) count
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
 import com.facebook.react.bridge.ReactMethod
 
-//
+// ...
 
 @ReactMethod
 fun myMethod(count: Double, optionalCount: Double?) {
-    //
+    // ...
 }
 ```
 
@@ -139,11 +139,11 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactMethod;
 
-//
+// ...
 
 @ReactMethod
 public void myMethod(double count, @Nullable Double optionalCount) {
-    //
+    // ...
 }
 ```
 
@@ -162,7 +162,7 @@ public void myMethod(double count, @Nullable Double optionalCount) {
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myMethod(name: string, label?: number): void
@@ -179,7 +179,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 RCT_EXPORT_METHOD(myMethod:(NSString *) name
                      label:(NSString * _Nullable) label)
 {
-    //
+    // ...
 }
 ```
 
@@ -192,11 +192,11 @@ RCT_EXPORT_METHOD(myMethod:(NSString *) name
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
 import com.facebook.react.bridge.ReactMethod
 
-//
+// ...
 
 @ReactMethod
 fun myMethod(name: String, label: String?) {
-    //
+    // ...
 }
 ```
 
@@ -208,11 +208,11 @@ import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactMethod;
 
-//
+// ...
 
 @ReactMethod
 public void myMethod(String name, @Nullable String label) {
-    //
+    // ...
 }
 ```
 
@@ -231,7 +231,7 @@ public void myMethod(String name, @Nullable String label) {
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myMethod(data: number[], optionalData?: string[]): void
@@ -248,7 +248,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 RCT_EXPORT_METHOD(myMethod:(NSArray *) data
               optionalData:(NSArray * _Nullable) optionalData)
 {
-    //
+    // ...
 }
 ```
 
@@ -262,11 +262,11 @@ RCT_EXPORT_METHOD(myMethod:(NSArray *) data
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 
-//
+// ...
 
 @ReactMethod
 fun myMethod(data: ReadableArray, optionalData: ReadableArray?) {
-    //
+    // ...
 }
 ```
 
@@ -279,11 +279,11 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 
-//
+// ...
 
 @ReactMethod
 public void myMethod(ReadableArray data, @Nullable ReadableArray optionalData) {
-    //
+    // ...
 }
 ```
 
@@ -302,7 +302,7 @@ public void myMethod(ReadableArray data, @Nullable ReadableArray optionalData) {
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   myMethod(config: { flag: boolean, option: string }, optionalConfig?: { count: number }): void
@@ -319,7 +319,7 @@ export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
 RCT_EXPORT_METHOD(myMethod:(NSDictionary *) config
             optionalConfig:(NSDictionary *) optionalConfig)
 {
-    //
+    // ...
 }
 ```
 
@@ -333,11 +333,11 @@ RCT_EXPORT_METHOD(myMethod:(NSDictionary *) config
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 
-//
+// ...
 
 @ReactMethod
 fun myMethod(config: ReadableMap, optionalConfig: ReadableMap?) {
-    //
+    // ...
 }
 ```
 
@@ -350,11 +350,11 @@ import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 
-//
+// ...
 
 @ReactMethod
 public void myMethod(ReadableMap config, @Nullable ReadableMap optionalConfig) {
-    //
+    // ...
 }
 ```
 

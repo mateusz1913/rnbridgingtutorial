@@ -35,7 +35,7 @@ public class RangeSliderView: UIView {
 }
 ```
 
-We'll export 2 things to the ObjC world - our view and its delegate protocol.
+We'll export 2 things to the Objective-C world - our view and its delegate protocol.
 For now all view's properties have only some default values, but we will add some code later to forward them to the slider.
 
 <ExportingObjCInfo />
@@ -100,11 +100,11 @@ For more about delegates and Delegate Pattern, see [Apple's docs](https://develo
 So now, let's try to combine them.
 
 ```swift title="ios/RangeUISliderWrapper.swift"
-//
+// ...
 
 @objc(RangeSliderView)
 public class RangeSliderView: UIView  {
-    //
+    // ...
     
 // highlight-start
     private var sliderObject = RangeUISliderObject()
@@ -120,7 +120,7 @@ public class RangeSliderView: UIView  {
     }
 // highlight-end
 
-    //
+    // ...
 }
 ```
 
@@ -131,7 +131,7 @@ The slider object is created in the view's `init(frame:)` initializer, where we 
 The only thing left is to forward all properties to the slider:
 
 ```swift title="ios/RangeUISliderWrapper.swift"
-//
+// ...
 
 @objc(RangeSliderView)
 public class RangeSliderView: UIView  {
