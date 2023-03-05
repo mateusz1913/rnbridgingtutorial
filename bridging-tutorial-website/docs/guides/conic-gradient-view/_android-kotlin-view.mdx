@@ -172,12 +172,12 @@ class ConicGradientView(private val reactContext: ReactContext) : ReactViewGroup
 ```
 
 Displaying the gradient is just a bit more difficult than on iOS - first we need to grab the width and height of the view,
-we can do it thanks to [`View#onSizeChanged` method](https://developer.android.com/reference/kotlin/android/view/View#onSizeChanged(kotlin.Int,%20kotlin.Int,%20kotlin.Int,%20kotlin.Int)).
+we can do it thanks to [`View#onSizeChanged`](https://developer.android.com/reference/kotlin/android/view/View#onSizeChanged(kotlin.Int,%20kotlin.Int,%20kotlin.Int,%20kotlin.Int)) method.
 
 After that we create helper private methods (`preparePath`, `prepareGradient`) that prepare the path and shader for our gradient background.
 Whenever each "input" value changes we are recomputing the gradient and invalidating the view (telling it that it needs to be redrawn).
 
-The actual gradient drawing takes place in [`View#dispatchDraw` method](https://developer.android.com/reference/kotlin/android/view/View#dispatchDraw(android.graphics.Canvas)).
+The actual gradient drawing takes place in [`View#dispatchDraw`](https://developer.android.com/reference/kotlin/android/view/View#dispatchDraw(android.graphics.Canvas)) method.
 It provides canvas argument that we can use to draw the background.
 
 You may have noticed, that we also have the `setBorderRadius` invoked in `init` function.

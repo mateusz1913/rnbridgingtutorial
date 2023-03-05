@@ -41,12 +41,12 @@ class AppInfoModule(
 }
 ```
 
-`AppInfoModule` class extends codegenerated spec class.
-`ReactApplicationContext` instance is used as the only `AppInfoModule` constructor parameter.
+Here we declare the `AppInfoModule` class.
+It extends codegenerated spec class and takes `ReactApplicationContext` instance as constructor parameter.
 Additionally, `AppInfoModule` is annotated with `ReactModule` decorator.
-Static constant `NAME` value matches the value declared in JS specification.
+Static constant `NAME` matches the value declared in JS specification.
 
-To implement codegenerated spec class, we are using module-implementation methods.
+To implement codegenerated spec class, we are using methods from `AppInfoModuleImpl` class.
 
 <OldArchAndroidModuleFile
   filename="android/src/oldarch/java/com/appinfopackage/AppInfoModule.kt"

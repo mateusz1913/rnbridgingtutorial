@@ -1,0 +1,155 @@
+import CodeBlock from '@theme/CodeBlock';
+
+<h4>
+<code>{props.packageClass}.{props.language === 'java' ? 'java' : 'kt'}</code>
+</h4>
+
+<p>
+The last thing we need to do is to export <code>{props.moduleClass}</code> in the <code>TurboReactPackage</code> instance.
+Let's go to <code>{props.packageClass}.{props.language === 'java' ? 'java' : 'kt'}</code> and add our new module.
+</p>
+
+<CodeBlock language={props.language} title={`android/src/main/java/com/${props.namespace}/${props.packageClass}.${props.language === 'java' ? 'java' : 'kt'}`}>
+  {props.language === 'java' ? `package com.${props.namespace};\n
+import androidx.annotation.Nullable;\n
+import com.facebook.react.TurboReactPackage;
+import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
+import com.facebook.react.turbomodule.core.interfaces.TurboModule;\n
+import java.util.HashMap;
+import java.util.Map;\n
+public class ${props.packageClass} extends TurboReactPackage {
+    /**
+     * Initialize and export modules based on the name of the required module
+     */
+    @Override
+    @Nullable
+    public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+        ${props.moduleClass ? `// highlight-start
+        if (name.equals(${props.moduleClass}.NAME)) {
+            return new ${props.moduleClass}(reactContext);
+        }
+        return null;
+// highlight-end` : `return null;`}
+    }\n
+    /**
+     * Declare info about exported modules
+     */
+    @Override
+    public ReactModuleInfoProvider getReactModuleInfoProvider() {
+        /**
+         * Here declare the array of exported modules
+         */
+        Class<? extends NativeModule>[] moduleList = new Class[] {${props.moduleClass ? `\n// highlight-start
+            ${props.moduleClass}.class
+            // highlight-end` : ``}
+        };
+        final Map<String, ReactModuleInfo> reactModuleInfoMap = new HashMap<>();
+        /**
+         * And here just iterate on that array and produce the info provider instance
+         */
+        for (Class<? extends NativeModule> moduleClass : moduleList) {
+            ReactModule reactModule = moduleClass.getAnnotation(ReactModule.class);\n
+            reactModuleInfoMap.put(
+                reactModule.name(),
+                new ReactModuleInfo(
+                    reactModule.name(),
+                    moduleClass.getName(),
+                    true,
+                    reactModule.needsEagerInit(),
+                    reactModule.hasConstants(),
+                    reactModule.isCxxModule(),
+                    TurboModule.class.isAssignableFrom(moduleClass)
+                )
+            );
+        }\n
+        return new ReactModuleInfoProvider() {
+            @Override
+            public Map<String, ReactModuleInfo> getReactModuleInfos() {
+                return reactModuleInfoMap;
+            }
+        };
+    }${props.viewManagerClass ? `\n\n// highlight-start
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        /**
+        * Here declare the list of exported native components
+        */
+        return Arrays.<ViewManager>asList(new ${props.viewManagerClass}());
+    }
+    // highlight-end` : ``}
+}` : `package com.${props.namespace}\n
+import com.facebook.react.TurboReactPackage
+import com.facebook.react.bridge.NativeModule
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.module.model.ReactModuleInfo
+import com.facebook.react.module.model.ReactModuleInfoProvider
+import com.facebook.react.turbomodule.core.interfaces.TurboModule\n
+class ${props.packageClass} : TurboReactPackage() {
+    /**
+     * Initialize and export modules based on the name of the required module
+     */
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
+        ${props.moduleClass ? `// highlight-start
+        return when (name) {
+            ${props.moduleClass}.NAME -> ${props.moduleClass}(reactContext)
+            else -> null
+        }
+        // highlight-end` : `return null;`}
+    }\n
+    /**
+     * Declare info about exported modules
+     */
+    override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
+        /**
+         * Here declare the array of exported modules
+         */
+        val moduleList: Array<Class<out NativeModule?>> = arrayOf(${props.moduleClass ? `\n// highlight-start
+            ${props.moduleClass}::class.java
+            // highlight-end` : ``}
+        )
+        val reactModuleInfoMap: MutableMap<String, ReactModuleInfo> = HashMap()
+        /**
+         * And here just iterate on that array and produce the info provider instance
+         */
+        for (moduleClass in moduleList) {
+            val reactModule = moduleClass.getAnnotation(ReactModule::class.java) ?: continue
+            reactModuleInfoMap[reactModule.name] =
+                ReactModuleInfo(
+                    reactModule.name,
+                    moduleClass.name,
+                    true,
+                    reactModule.needsEagerInit,
+                    reactModule.hasConstants,
+                    reactModule.isCxxModule,
+                    TurboModule::class.java.isAssignableFrom(moduleClass)
+                )
+        }
+        return ReactModuleInfoProvider { reactModuleInfoMap }
+    }${props.viewManagerClass ? `\n\n// highlight-start
+    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+        /**
+        * Here declare the list of exported native components
+        */
+        return listOf(${props.viewManagerClass}())
+    }
+    // highlight-end` : ``}
+}`}
+</CodeBlock>
+
+<div>
+  {props.moduleClass ? <div>
+    <p>To export the module, as the first step, we need to return it from <code>getModule</code> method inside <code>{props.packageClass}</code>,
+    if it's requested (the method takes name as a parameter and makes decision which module should be served).</p>
+    <p>The second step is to implement <code>getReactModuleInfoProvider</code> method, where the module is injected to the info provider instance.</p>
+  </div> : props.viewManagerClass ? <p>
+    Here the most important bit is <code>createViewManagers</code> method, which returns collection of view manager classes.
+    Because our package exports only a single view, we register one-element list, with <code>{props.viewManagerClass}</code> class.
+  </p> : null}
+</div>
+
+

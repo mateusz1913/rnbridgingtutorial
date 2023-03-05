@@ -39,12 +39,12 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 ```objc title="ios/MyAwesomeViewComponentView.mm"
 #import <react/renderer/components/MyAwesomeView/RCTComponentViewHelpers.h>
 
-//
+// ...
 
 @interface MyAwesomeViewComponentView () <RCTMyAwesomeViewViewProtocol>
 @end
 
-//
+// ...
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
 {
@@ -53,7 +53,7 @@ export default codegenNativeComponent<MyAwesomeViewProps>('MyAwesomeView') as Ho
 
 - (void)doAwesomeJob:(double)arg
 {
-    //
+    // ...
 }
 ```
 
@@ -74,7 +74,7 @@ import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.viewmanagers.MyAwesomeViewManagerDelegate
 import com.facebook.react.viewmanagers.MyAwesomeViewManagerInterface
 
-//
+// ...
 
 @ReactModule(name = MyAwesomeView.NAME)
 class MyAwesomeViewManager : ViewGroupManager<MyAwesomeView>(), MyAwesomeViewManagerInterface<MyAwesomeView> {
@@ -87,10 +87,10 @@ class MyAwesomeViewManager : ViewGroupManager<MyAwesomeView>(), MyAwesomeViewMan
     }
 
     override fun doAwesomeJob(view: MyAwesomeView, arg: Double) {
-        //
+        // ...
     }
 
-    //
+    // ...
 }
 ```
 
@@ -105,7 +105,7 @@ import com.facebook.react.uimanager.ViewManagerDelegate;
 import com.facebook.react.viewmanagers.MyAwesomeViewManagerDelegate;
 import com.facebook.react.viewmanagers.MyAwesomeViewManagerInterface;
 
-//
+// ...
 
 @ReactModule(name = MyAwesomeView.NAME)
 public class MyAwesomeViewManager extends ViewGroupManager<MyAwesomeView> implements MyAwesomeViewManagerInterface<MyAwesomeView> {
@@ -123,10 +123,10 @@ public class MyAwesomeViewManager extends ViewGroupManager<MyAwesomeView> implem
 
     @Override
     public void doAwesomeJob(MyAwesomeView view, double arg) {
-        //
+        // ...
     }
 
-    //
+    // ...
 }
 ```
 

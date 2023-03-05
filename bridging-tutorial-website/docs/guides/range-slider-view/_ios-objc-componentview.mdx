@@ -114,7 +114,7 @@ That function is code-generated as well as `RCTRangeSliderViewViewProtocol` prot
 OK - second part, let's start filling the boilerplate with our slider view:
 
 ```objc title="ios/RangeSliderViewComponentView.mm"
-//
+// ...
 
 // highlight-start
 #import "RangeSliderView.h"
@@ -189,11 +189,11 @@ using namespace facebook::react;
     [super updateProps:props oldProps:oldProps];
 }
 
-//
+// ...
 
 @end
 
-//
+// ...
 ```
 
 What's going on here?
@@ -206,11 +206,11 @@ What's going on here?
 But that's still only half of the things - XCode is probably warning you that `RangeSliderViewDelegate` is not implemented - let's fix it!
 
 ```objc title="ios/RangeSliderViewComponentView.mm"
-//
+// ...
 
 @implementation RangeSliderViewComponentView
 
-//
+// ...
 
 // highlight-start
 - (void)sendOnRangeSliderViewValueChangeEventWithMinValue:(double)minValue maxValue:(double)maxValue
@@ -266,11 +266,11 @@ But that's still only half of the things - XCode is probably warning you that `R
 }
 // highlight-end
 
-//
+// ...
 
 @end
 
-//
+// ...
 ```
 
 So now all warnings should be cleared - delegate methods are implemented and we also handled native commands.

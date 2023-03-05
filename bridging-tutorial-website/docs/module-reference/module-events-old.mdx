@@ -23,7 +23,7 @@ To make it possible for the module to emit events, JS spec needs to declare 2 me
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-//
+// ...
 
 export interface Spec extends TurboModule {
   addListener(eventName: string): void
@@ -100,7 +100,7 @@ It takes event name and an object payload (NSDictionary type), which will be sen
 ```kotlin title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.kt"
 import com.facebook.react.bridge.ReactMethod
 
-//
+// ...
 
 @ReactMethod
 fun addListener(eventName: String?) = Unit
@@ -114,7 +114,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
-//
+// ...
 
 fun onSomeNativeEvent(someNativeValue: String) {
     val reactContext: ReactContext = getReactContextFromTheModule()
@@ -132,7 +132,7 @@ fun onSomeNativeEvent(someNativeValue: String) {
 ```java title="android/src/main/newarch/com/myawesomeapp/NativeMyAwesomeModule.java"
 import com.facebook.react.bridge.ReactMethod;
 
-//
+// ...
 
 @ReactMethod
 public void addListener(String eventName) {}
@@ -147,7 +147,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-//
+// ...
 
 private void onSomeNativeEvent(String someNativeValue) {
     ReactContext reactContext = getReactContextFromTheModule();
@@ -183,7 +183,7 @@ import { MyAwesomeModule } from 'my-awesome-module';
 
 const moduleEventEmitter = new NativeEventEmitter(Platform.OS === 'ios' ? MyAwesomeModule : undefined);
 
-//
+// ...
 
 useEffect(() => {
   const subscription = moduleEventEmitter.addListener('decentEvent', ({ value }: { value: string }) => {

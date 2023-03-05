@@ -84,25 +84,25 @@ Class<RCTComponentViewProtocol> ConicGradientViewCls(void)
 ```
 
 Here we start with a bunch of imports for conversion helpers and code-generated spec classes.
-Next up we import `facebook::react` C++ namespace to not write it every time before C++ classes which belong to that namespace.
+Next up, we import `facebook::react` C++ namespace to not write it every time before C++ classes which belong to that namespace.
 After that, we implement code-generated `RCTConicGradientViewViewProtocol` protocol.
 
 Inside the implementation block, you can find `@dynamic layer;` line. This will make the `layer` property be able to be implemented at runtime and not at compile time.
 And this will be done at runtime with `+ layerClass` getter that returns the class type for our layer (`CAGradientLayer` in that case).
-For more reference about the gradient class, check out [dedicated docs section](https://developer.apple.com/documentation/quartzcore/cagradientlayer?language=objc).
+For more reference about the gradient class, check out [`CAGradientLayer` docs section](https://developer.apple.com/documentation/quartzcore/cagradientlayer?language=objc).
 
-In the class initializer we are declaring default props used by the component as well as gradient-layer's properties.
+In the class `- initWithFrame:` initializer we are declaring default props used by the component as well as gradient-layer's properties.
 
 Each Fabric component needs to declare static `componentDescriptorProvider` and `RCTComponentViewProtocol` class type (here it's `ConicGradientViewCls`).
 
 When our Fabric component has its boilerplate, we can start with adding support for gradient props - let's add `- updateProps:oldProps:` method:
 
 ```objc title="ios/ConicGradientViewComponentView.mm"
-//
+// ...
 
 @implementation ConicGradientViewComponentView
 
-//
+// ...
 
 // highlight-start
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
@@ -134,13 +134,13 @@ When our Fabric component has its boilerplate, we can start with adding support 
 }
 // highlight-end
 
-//
+// ...
 
 @end
 
-//
+// ...
 ```
 
 The newly added method is responsible for comparing new and old props and updating our component's gradient layer if needed.
-For first two props, we are using `RCTConvertVecToArray` helper to map C++ array to ObjC array.
-Additionally, C++ SharedColor type is mapped here to ObjC `UIColor` thanks to `RCTUIColorFromSharedColor` helper.
+For first two props, we are using `RCTConvertVecToArray` helper to map C++ array to Objective-C array.
+Additionally, C++ SharedColor type is mapped here to Objective-C `UIColor` thanks to `RCTUIColorFromSharedColor` helper.

@@ -26,7 +26,7 @@ Now, let's move to the module that will manage function calls from the JS world:
 @end
 ```
 
-`AppInfoModule` class extends base `NSObject` class (each class in ObjC needs to extend `NSObject`) and implements `RCTBridgeModule` protocol (each RN iOS module needs to implement `RCTBridgeModule` protocol).
+`AppInfoModule` class extends base `NSObject` class (each class in Objective-C needs to extend `NSObject`) and implements `RCTBridgeModule` protocol (each RN iOS module needs to implement `RCTBridgeModule` protocol).
 
 Additionally, to use Swift `AppInfoModuleImpl` class, we must do "forward-declaration" (check out Apple's Swift-ObjC interop [dedicated docs section](https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations)).
 
@@ -88,10 +88,10 @@ After that, inside implementation block we have `RCT_EXPORT_MODULE` macro invoke
 Also, for new architecture, it implements `- getTurboModule:` method (from `RCTTurboModule` protocol).
 If you won't implement that method, XCode will complain that the code-generated spec protocol methods are not implemented.
 
-Let's combine module-implementation with module class
+Let's use `AppInfoModuleImpl` class
 
 ```objc title="ios/AppInfoModule.mm"
-//
+// ...
 
 // highlight-start
 /**
@@ -125,19 +125,19 @@ RCT_EXPORT_MODULE(AppInfoModule)
 }
 // highlight-end
 
-//
+// ...
 
 @end
 ```
 
 First, we declare private variable on `AppInfoModule` which will be initialized in the `- init` method. We can use `AppInfoModuleImpl` Swift class, because it's imported from `AppInfoPackage-Swift.h`.
 
-Next, we override static method `+ requiresMainQueueSetup`, which must be done whenever `- init` method on the RN's wrapper class is overriden. 
+Next, we override static method `+ requiresMainQueueSetup`, which must be done whenever `- init` method on the module class is overriden. 
 
-Finally, we can register exported methods with `RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD` macro and return value from module-implementation class:
+Finally, we can register exported methods with `RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD` macro and return value from `AppInfoModuleImpl` class:
 
 ```objc title="ios/AppInfoModule.mm"
-//
+// ...
 
 /**
  * Declare the ObjC implementation for that native module class
@@ -164,7 +164,7 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(NSString *, getAppVersion)
 }
 // highlight-end
 
-//
+// ...
 
 @end
 ```
