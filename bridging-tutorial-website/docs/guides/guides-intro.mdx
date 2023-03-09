@@ -4,10 +4,22 @@ sidebar_position: 1
 title: Introduction
 ---
 
-Following guides will showcase how to bring multiple platform experiences to React Native application, from querying basic application information, through simple UI elements and interactions with the device, ending with complex layouts.
+Following guides will showcase how to bring multiple platform features to React Native application, from querying basic application information, through simple UI elements and interactions with the device, ending with complex layouts.
 
 Each guide is written in a way, that lets you consume them separately, without knowledge from the previous one, so you can just jump to any that you're interested in.
 
 However, if you're total beginner in that topic, it's recommended to go in an order these are listed.
 
 For more reference on how to "translate" features like methods, events, view props, etc. defined in JS code to the platform-specific code, visit [module's reference](../module-reference/module-intro) and [view's reference](../view-reference/view-intro) sections.
+
+#### TODO
+
+- guide on XCFramework integration
+- "Drag & Drop" (with multi-window mode) guide
+
+#### TODO, but not sure if will be handled
+
+- guide on native components with custom shadow nodes and/or image props (at the moment no documentation, requires C++ knowledge, rarely used in OSS packages, you can check [`react-native-progress-view`](https://github.com/react-native-progress-view/progress-view) as an example)
+- guide on JSI/C++ modules (at the moment no documentation, requires C++ knowledge, you can check awesome [tutorial](https://ospfranco.notion.site/JSI-Module-Quick-Guide-5b00c96aa5b5440d93a5558956b420e4) about JSI by [Oscar Franco](https://twitter.com/ospfranco))
+- guide on macOS native modules/views (macOS fork of React Native is constantly 1-2 versions behind, in theory the only difference between iOS and macOS modules is using AppKit instead of UIKit, so not sure if it makes sense to create separate guide)
+- guide on Windows native modules/views (at the moment little or no documentation, requires C++ & WinRT knowledge)

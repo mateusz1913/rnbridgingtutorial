@@ -1,0 +1,42 @@
+---
+sidebar_label: Motivation
+sidebar_position: 1
+hide_title: true
+---
+
+## Why do I need to know, how to work with native code in React Native app?
+
+There are several advantages of having a skill (or at least basic knowledge) in terms of native mobile development.
+React Native is great abstractions that lets many JS developers write a mobile app which:
+- uses platform UI elements
+- is at the same time managed with JS code on both platforms
+- can benefit from the JS ecosystem
+- can benefit from features unavailable for natively written apps (e.g. codepush)
+
+However, both Android and iOS have a rich palette of UI elements and platform APIs, while React Native as a core offers only minimal set of primitives like text fields, scroll views, modals, etc.
+So sooner or later you'll need to somehow bring those missing parts to your app.
+Some of those can be integrated via 3rd party packages - this has an advantage of using battle-tested logic with an easy interface.
+The disadvantage is that you lose control over that specific chunk of application's code - if the 3rd party lib doesn't support customization of some platform API,
+unless you fork, you cannot customize that thing from JS code (while from native code, it would be easy-peasy job).
+And there are APIs and SDKs that don't have any React Native package - will the client or the user care that you cannot implement some functionality, because nobody else bridged those SDKs before? Ofc not.
+
+The skill of being able to expose any platform element to the React Native JS layer makes huge impact on you as a developer:
+- You're not constrained with a single mindset of leveraging all responsiblity on 3rd party packages, even with the cost of producing non-optimal application
+- You're far ahead on each RN programming interview, because you'll not be surprised/confused with any "did you bridge some native API?" question
+- That knowledge can help you when working with Android & iOS devs (at the end, not every RN project is a greenfield app 😉)
+
+## But why even bother with all those weird Javas & Objective-Cs, when I can use Expo?
+
+[Expo](https://docs.expo.dev) is a great framework, no doubt! Not only it simplifies the coding stage, but it also handles the deployment part.
+It has a rich set of libraries for some common features (e.g. filesystem, audio/video, system web-browser, etc.).
+
+However
+
+It's still an abstraction over the platform you develop on. It won't magically make arbitrary native code available in the JS codebase.
+**That native code still have to be bridged.**
+
+Luckily, Expo folks did tremendous job by creating [Expo Modules](https://docs.expo.dev/modules/overview).
+It's oriented around modern native languages (Swift & Kotlin), with nice DSL and without big boilerplate, lets you focus on the most important thing - exposing platform code, to the React Native app.
+
+So if you use Expo, you should check [Expo Modules' official tutorial](https://docs.expo.dev/modules/get-started/).
+You can also stay here and check following guides to learn some RN + native insights which will give you better overview and you'll appreciate Expo & Expo Modules even more!
