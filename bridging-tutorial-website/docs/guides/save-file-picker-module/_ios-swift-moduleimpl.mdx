@@ -110,7 +110,8 @@ In those methods, we have to call `SaveFilePickerModuleDelegate` delegate to com
 When it's done, the picker's delegate `controller.delegate` needs to be cleared.
 
 Now we can start implementing `saveFileWithFilename` method.
-We begin with getting the URL for the file from assets based on the `filename` argument.
+We begin with getting the URL for the file from local assets based on the `filename` argument.
+To do that, we use [`url(forResource:withExtension:)`](https://developer.apple.com/documentation/foundation/bundle/1411540-url) on main bundle instance.
 If it cannot be obtained, we have to early-return and communicate to the delegate, that there's no such file with that path.
 To construct the Error struct we are using custom enum `SaveFilePickerError` defined at the bottom of the file.
 
@@ -120,7 +121,7 @@ For more on custom errors in Swift, you may visit [this article](https://www.adv
 
 :::
 
-Next step is to take currently presented view controller - will use it to modally display the file picker.
+Next step is to take currently presented view controller (`RCTPresentedViewController`, that was added to bridging header, is used to grab it) - will use it to modally display the file picker.
 As with the url, we also have to do error handling for the case when there's no presented view controller (~0.001% chance, but we should still do it).
 
 Finally, we create the picker and present it modally. To create the picker we are using `createDocumentPicker` helper.
