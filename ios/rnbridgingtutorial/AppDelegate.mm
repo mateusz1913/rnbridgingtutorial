@@ -2,8 +2,6 @@
 
 #import <React/RCTBundleURLProvider.h>
 
-#import <React/RCTConversions.h>
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

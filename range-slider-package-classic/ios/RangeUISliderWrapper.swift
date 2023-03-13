@@ -20,6 +20,8 @@ class RangeUISliderObject {
         return rangeSlider
     }()
     
+    private var isDragging: Bool = false
+    
     init() {
         self.slider.delegate = self
     }
@@ -31,10 +33,15 @@ extension RangeUISliderObject: RangeUISliderDelegate {
     }
     
     public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+        if !isDragging {
+            return
+        }
         self.delegate?.sendOnRangeSliderClassicViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+        self.isDragging = false
     }
     
     public func rangeChangeStarted() {
+        self.isDragging = true
         self.delegate?.sendOnRangeSliderClassicViewBeginDragEvent()
     }
 }
@@ -60,10 +67,6 @@ public class RangeUISliderWrapper: NSObject {
         get {
             return sliderObject.slider
         }
-    }
-    
-    @objc public func setSliderFrame(_ frame: CGRect) {
-        sliderObject.slider.frame = frame
     }
     
     @objc public var activeColor: UIColor = UIColor.systemBlue {

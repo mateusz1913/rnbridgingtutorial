@@ -38,8 +38,6 @@
         return;
     }
 
-    [collectionView setFrame:self.view.frame];
-
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)collectionView.collectionViewLayout;
     if (layout == nil) {
         return;
@@ -62,6 +60,14 @@
 
         collectionView = newCollectionView;
         [self.view addSubview:collectionView];
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [collectionView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [collectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [collectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
     }
 }
 

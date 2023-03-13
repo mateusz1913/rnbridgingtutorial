@@ -70,12 +70,20 @@ class RangeSliderView(private val reactContext: ReactContext) : FrameLayout(reac
         if (leftKnobValue.isNaN()) {
             return
         }
+        if (slider.values.count() < 2) {
+            slider.values = listOf(leftKnobValue.toFloat(), leftKnobValue.toFloat() + 1)
+            return
+        }
         val rightKnobValue = slider.values[1]
         slider.values = listOf(leftKnobValue.toFloat(), rightKnobValue)
     }
 
     fun setRightKnobValue(rightKnobValue: Double) {
         if (rightKnobValue.isNaN()) {
+            return
+        }
+        if (slider.values.isEmpty()) {
+            slider.values = listOf(rightKnobValue.toFloat() - 1, rightKnobValue.toFloat())
             return
         }
         val leftKnobValue = slider.values[0]

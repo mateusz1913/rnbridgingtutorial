@@ -93,12 +93,20 @@ public class RangeSliderClassicView extends FrameLayout {
         if (Double.isNaN(leftKnobValue)) {
             return;
         }
+        if (slider.getValues().size() < 2) {
+            slider.setValues((float) leftKnobValue, (float) leftKnobValue + 1);
+            return;
+        }
         float rightKnobValue = slider.getValues().get(1);
         slider.setValues((float) leftKnobValue, rightKnobValue);
     }
 
     public void setRightKnobValue(double rightKnobValue) {
         if (Double.isNaN(rightKnobValue)) {
+            return;
+        }
+        if (slider.getValues().size() < 1) {
+            slider.setValues((float) rightKnobValue - 1, (float) rightKnobValue);
             return;
         }
         float leftKnobValue = slider.getValues().get(0);

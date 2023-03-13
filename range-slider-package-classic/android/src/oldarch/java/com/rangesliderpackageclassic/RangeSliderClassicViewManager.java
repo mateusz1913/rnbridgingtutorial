@@ -26,12 +26,12 @@ public class RangeSliderClassicViewManager extends ViewGroupManager<RangeSliderC
 
         switch (commandId) {
             case "setLeftKnobValueProgrammatically":
-                final double value = args.getDouble(0);
-                setLeftKnobValueProgrammatically(root, value);
+                final double leftKnobValue = args.getDouble(0);
+                setLeftKnobValueProgrammatically(root, leftKnobValue);
                 break;
             case "setRightKnobValueProgrammatically":
-                final double value = args.getDouble(0);
-                setRightKnobValueProgrammatically(root, value);
+                final double rightKnobValue = args.getDouble(0);
+                setRightKnobValueProgrammatically(root, rightKnobValue);
                 break;
         }
     }
@@ -137,7 +137,7 @@ public class RangeSliderClassicViewManager extends ViewGroupManager<RangeSliderC
                     dispatcher.dispatchEvent(
                         new OnRangeSliderClassicViewBeginDragEvent(
                             UIManagerHelper.getSurfaceId(reactContext),
-                            view.getId(),
+                            view.getId()
                         )
                     );
                 }
@@ -165,9 +165,9 @@ public class RangeSliderClassicViewManager extends ViewGroupManager<RangeSliderC
     public Map getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.of(
             OnRangeSliderClassicViewValueChangeEvent.NAME,
-            MapBuilder.of("registrationName", OnRangeSliderClassicViewValueChangeEvent.EVENT_PROP_NAME)
+            MapBuilder.of("registrationName", OnRangeSliderClassicViewValueChangeEvent.EVENT_PROP_NAME),
             OnRangeSliderClassicViewBeginDragEvent.NAME,
-            MapBuilder.of("registrationName", OnRangeSliderClassicViewBeginDragEvent.EVENT_PROP_NAME)
+            MapBuilder.of("registrationName", OnRangeSliderClassicViewBeginDragEvent.EVENT_PROP_NAME),
             OnRangeSliderClassicViewEndDragEvent.NAME,
             MapBuilder.of("registrationName", OnRangeSliderClassicViewEndDragEvent.EVENT_PROP_NAME)
         );

@@ -20,8 +20,8 @@ import com.facebook.react.uimanager.annotations.ReactPropGroup;
 
 @ReactModule(name = AndroidNativeListClassicViewFragment.NAME)
 public class AndroidNativeListClassicViewManager extends SimpleViewManager<FragmentContainerView> {
-    private var mHeight: Int = 0;
-    private var mWidth: Int = 0;
+    private int mHeight = 0;
+    private int mWidth = 0;
   
     @Override
     public String getName() {
@@ -183,19 +183,19 @@ public class AndroidNativeListClassicViewManager extends SimpleViewManager<Fragm
         view.layout(0, 0, width, height);
     }
 
-    private AndroidNativeListClassicViewFragment findFragment(fragmentManager: FragmentManager, view: View) {
+    private AndroidNativeListClassicViewFragment findFragment(FragmentManager fragmentManager, View view) {
         return (AndroidNativeListClassicViewFragment)fragmentManager.findFragmentByTag(getFragmentTag(view));
     }
 
     @Nullable
     private FragmentManager getFragmentManager(View view) {
-        final ThemedReactContext reactContext = view.getContext();
+        final ThemedReactContext reactContext = (ThemedReactContext) view.getContext();
 
         if (reactContext == null) {
             return null;
         }
 
-        final FragmentActivity activity = reactContext.getCurrentActivity();
+        final FragmentActivity activity = (FragmentActivity) reactContext.getCurrentActivity();
     
         if (activity == null) {
             return null;

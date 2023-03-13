@@ -8,7 +8,9 @@
 @end
 #endif
 
-@implementation RangeSliderViewManager
+@implementation RangeSliderViewManager {
+    RangeSliderView *sliderView;
+}
 
 RCT_EXPORT_MODULE(RangeSliderView)
 
@@ -25,44 +27,44 @@ RCT_EXPORT_VIEW_PROPERTY(onRangeSliderViewValueChange, RCTDirectEventBlock)
 
 #if RCT_NEW_ARCH_ENABLED
 #else
-RCT_EXPORT_METHOD(setLeftKnobValueProgrammatically:(nonnull NSNumber*) reactTag, value:(NSInteger) value) {
+RCT_EXPORT_METHOD(setLeftKnobValueProgrammatically:(nonnull NSNumber*) reactTag value:(NSInteger) value) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-        RangeSliderView *view = viewRegistry[reactTag];
+        UIView *view = viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:[RangeSliderView class]]) {
             return;
         }
-        [view setLeftKnobValue:value];
+        [(RangeSliderView *)view setLeftKnobValue:value];
     }];
 }
 
-RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag, value:(NSInteger) value) {
+RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag value:(NSInteger) value) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-        RangeSliderView *view = viewRegistry[reactTag];
+        UIView *view = viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:[RangeSliderView class]]) {
             return;
         }
-        [view setRightKnobValue:value];
+        [(RangeSliderView *) view setRightKnobValue:value];
     }];
 }
 
 - (void)sendOnRangeSliderViewValueChangeEventWithMinValue:(double)minValue maxValue:(double)maxValue
 {
-    if (_onRangeSliderViewValueChange) {
-        _onRangeSliderViewValueChange(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
+    if (sliderView.onRangeSliderViewValueChange) {
+        sliderView.onRangeSliderViewValueChange(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
     }
 }
 
 - (void)sendOnRangeSliderViewBeginDragEvent
 {
-    if (_onRangeSliderViewBeginDrag) {
-        _onRangeSliderViewBeginDrag(nil);
+    if (sliderView.onRangeSliderViewBeginDrag) {
+        sliderView.onRangeSliderViewBeginDrag(nil);
     }
 }
 
 - (void)sendOnRangeSliderViewEndDragEventWithMinValue:(double)minValue maxValue:(double)maxValue
 {
-    if (_onRangeSliderViewEndDrag) {
-        _onRangeSliderViewEndDrag(@{ @"leftKnobValue": minValue, @"rightKnobValue": maxValue });
+    if (sliderView.onRangeSliderViewEndDrag) {
+        sliderView.onRangeSliderViewEndDrag(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
     }
 }
 
@@ -70,6 +72,7 @@ RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag
 {
     RangeSliderView *view = [RangeSliderView new];
     view.delegate = self;
+    sliderView = view;
     return view;
 }
 #endif

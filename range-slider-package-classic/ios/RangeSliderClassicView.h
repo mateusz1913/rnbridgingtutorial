@@ -30,5 +30,8 @@
 @property (nonatomic) double leftKnobValue;
 @property (nonatomic) double rightKnobValue;
 @property (nonatomic) NSInteger step;
+@property (nonatomic, copy) void (^ _Nullable onRangeSliderClassicViewBeginDrag)(NSDictionary * _Nullable);
+@property (nonatomic, copy) void (^ _Nullable onRangeSliderClassicViewEndDrag)(NSDictionary * _Nullable);
+@property (nonatomic, copy) void (^ _Nullable onRangeSliderClassicViewValueChange)(NSDictionary * _Nullable);
 
 @end

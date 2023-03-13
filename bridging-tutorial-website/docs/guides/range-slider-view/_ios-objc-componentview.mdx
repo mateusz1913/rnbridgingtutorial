@@ -104,7 +104,7 @@ We make the component extending code-generated protocol - this protocol has all 
 
 Next we implement all required methods and we create `RangeSliderViewCls` function.
 
-If you take a closer look, we override to methods related to the child components - `- mountChildComponentView:index:` & `- unmountChildComponentView:index:`.
+If you take a closer look, we override two methods related to the child components (`- mountChildComponentView:index:` and `- unmountChildComponentView:index:`).
 Those methods can be used to control how the child views should be added/removed in the Fabric component.
 In our case, we prevent adding/removal to be sure that our slider view does not have any child views.
 

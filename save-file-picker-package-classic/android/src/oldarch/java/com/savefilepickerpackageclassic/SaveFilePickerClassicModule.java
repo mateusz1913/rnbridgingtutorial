@@ -134,13 +134,13 @@ public class SaveFilePickerClassicModule extends ReactContextBaseJavaModule {
     public void saveFileWithCallback(String filename, Callback callback) {
         callbackBlock = callback;
         sourceFilename = filename;
-        moduleImpl.doJobWithCallback(callback);
+        moduleImpl.saveFile(filename);
     }
 
     @ReactMethod
     public void saveFileWithPromise(String filename, Promise promise) {
         promiseBlock = promise;
         sourceFilename = filename;
-        moduleImpl.doJobWithPromise(promise);
+        moduleImpl.saveFile(filename);
     }
 }

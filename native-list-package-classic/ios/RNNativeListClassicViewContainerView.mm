@@ -20,14 +20,6 @@
     }
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    if (self.viewController != nil) {
-        [self.viewController.view setFrame:self.frame];
-    }
-}
-
 - (void)removeFromSuperview
 {
     [self unmountViewController];
@@ -60,6 +52,15 @@
 
     [reactViewController addChildViewController:self.viewController];
     [self addSubview:self.viewController.view];
+    
+    self.viewController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.viewController.view.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [self.viewController.view.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [self.viewController.view.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [self.viewController.view.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+    ]];
+    
     [self.viewController didMoveToParentViewController:reactViewController];
 }
 

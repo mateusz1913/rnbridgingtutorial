@@ -474,12 +474,12 @@ This is done in `getExportedCustomDirectEventTypeConstants` method that we can o
 
             switch (commandId) {
                 case "setLeftKnobValueProgrammatically":
-                    final double value = args.getDouble(0);
-                    setLeftKnobValueProgrammatically(root, value);
+                    final double leftKnobValue = args.getDouble(0);
+                    setLeftKnobValueProgrammatically(root, leftKnobValue);
                     break;
                 case "setRightKnobValueProgrammatically":
-                    final double value = args.getDouble(0);
-                    setRightKnobValueProgrammatically(root, value);
+                    final double rightKnobValue = args.getDouble(0);
+                    setRightKnobValueProgrammatically(root, rightKnobValue);
                     break;
             }
         }
@@ -585,7 +585,7 @@ This is done in `getExportedCustomDirectEventTypeConstants` method that we can o
                         dispatcher.dispatchEvent(
                             new OnRangeSliderViewBeginDragEvent(
                                 UIManagerHelper.getSurfaceId(reactContext),
-                                view.getId(),
+                                view.getId()
                             )
                         );
                     }
@@ -613,9 +613,9 @@ This is done in `getExportedCustomDirectEventTypeConstants` method that we can o
         public Map getExportedCustomDirectEventTypeConstants() {
             return MapBuilder.of(
                 OnRangeSliderViewValueChangeEvent.NAME,
-                MapBuilder.of("registrationName", OnRangeSliderViewValueChangeEvent.EVENT_PROP_NAME)
+                MapBuilder.of("registrationName", OnRangeSliderViewValueChangeEvent.EVENT_PROP_NAME),
                 OnRangeSliderViewBeginDragEvent.NAME,
-                MapBuilder.of("registrationName", OnRangeSliderViewBeginDragEvent.EVENT_PROP_NAME)
+                MapBuilder.of("registrationName", OnRangeSliderViewBeginDragEvent.EVENT_PROP_NAME),
                 OnRangeSliderViewEndDragEvent.NAME,
                 MapBuilder.of("registrationName", OnRangeSliderViewEndDragEvent.EVENT_PROP_NAME)
             );

@@ -12,6 +12,14 @@
     if (self) {
         swiftWrapper = [RangeUISliderWrapper new];
         [self addSubview:swiftWrapper.slider];
+        
+        swiftWrapper.slider.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [swiftWrapper.slider.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [swiftWrapper.slider.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+            [swiftWrapper.slider.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+            [swiftWrapper.slider.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+        ]];
     }
     return self;
 }
@@ -20,12 +28,6 @@
 {
     _delegate = delegate;
     swiftWrapper.delegate = (id<RangeUISliderWrapperDelegate>) delegate;
-}
-
-- (void)setFrame:(CGRect)frame
-{
-    [super setFrame:frame];
-    [swiftWrapper setSliderFrame:frame];
 }
 
 - (void)setActiveColor:(UIColor *)activeColor

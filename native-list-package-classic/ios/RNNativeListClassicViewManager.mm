@@ -11,7 +11,12 @@ RCT_EXPORT_MODULE(RNNativeListClassicView)
 
 RCT_CUSTOM_VIEW_PROPERTY(data, NSArray, RNNativeListClassicViewContainerView)
 {
-    [view.viewController setData:[RCTConvert NSArray:json]];
+    NSArray<NSDictionary *> *array = [RCTConvert NSDictionaryArray:json];
+    NSMutableArray<ClassicDataItem *> *data = [NSMutableArray arrayWithCapacity:array.count];
+    for (int i = 0; i < array.count; i++) {
+        [data insertObject:[[ClassicDataItem alloc] initWithImageUrl:array[i][@"imageUrl"] itemDescription:array[i][@"description"]] atIndex:i];
+    }
+    [view.viewController setData:data];
 }
 RCT_CUSTOM_VIEW_PROPERTY(options, NSDictionary, RNNativeListClassicViewContainerView)
 {
@@ -24,13 +29,13 @@ RCT_CUSTOM_VIEW_PROPERTY(backgroundColor, UIColor, RNNativeListClassicViewContai
 
 #if RCT_NEW_ARCH_ENABLED
 #else
-RCT_EXPORT_METHOD(scrollToItem:(nonnull NSNumber*) reactTag, index:(NSInteger) index) {
+RCT_EXPORT_METHOD(scrollToItem:(nonnull NSNumber*) reactTag index:(NSInteger) index) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-        RNNativeListClassicViewContainerView *view = viewRegistry[reactTag];
+        UIView *view = viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:[RNNativeListClassicViewContainerView class]]) {
             return;
         }
-        [view.viewController scrollToItem:index];
+        [((RNNativeListClassicViewContainerView *) view).viewController scrollToItem:index];
     }];
 }
 
