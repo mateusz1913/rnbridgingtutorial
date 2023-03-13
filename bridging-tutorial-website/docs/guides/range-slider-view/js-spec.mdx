@@ -4,6 +4,8 @@ sidebar_position: 3
 title: JS specification
 ---
 
+import CodegenSpec from '../_codegen-spec.mdx';
+
 When all boilerplate is ready, let's navigate to `src/RangeSliderViewNativeComponent.ts`. To declare native component spec, let's paste following content:
 
 ```tsx title="src/RangeSliderViewNativeComponent.ts"
@@ -60,10 +62,7 @@ That interface is then used to type the object created with `codegenNativeComman
 
 Finally, we export default native component made with `codegenNativeComponent` function, where the `RangeSliderView` is used as the name of the component.
 
-You can run codegen to generate native classes and interfaces, and also check if specification is defined in correct way:
-
-- on iOS: `yarn codegen:ios`
-- on Android: `yarn codegen:android`
+<CodegenSpec />
 
 After that, go to `src/RangeSliderView.tsx` and paste following code:
 
@@ -107,3 +106,5 @@ After that, let's finalize JS part with exporting module from `index.ts`
 ```tsx title="src/index.ts"
 export { RangeSliderView } from './RangeSliderView';
 ```
+
+JS part finished! Let's jump to [iOS implementation](./ios-impl).

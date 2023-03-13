@@ -4,6 +4,8 @@ sidebar_position: 3
 title: JS specification
 ---
 
+import CodegenSpec from '../_codegen-spec.mdx';
+
 When all boilerplate is ready, let's navigate to `src/NativeAppInfoModule.ts`. To declare module spec, let's paste following content:
 
 ```tsx title="src/NativeAppInfoModule.ts"
@@ -23,13 +25,12 @@ This does 2 things:
 - declares module specification with 3 synchronous methods, each one returning string value
 - declares that module, should be available under `AppInfoModule` name
 
-You can run codegen to generate native classes and interfaces, and also check if specification is defined in correct way:
-
-- on iOS: `yarn codegen:ios`
-- on Android: `yarn codegen:android`
+<CodegenSpec />
 
 After that, let's finalize JS part with exporting module from `index.ts`
 
 ```tsx title="src/index.ts"
 export { default as AppInfoModule } from './NativeAppInfoModule';
 ```
+
+JS part finished! Let's jump to [iOS implementation](./ios-impl).

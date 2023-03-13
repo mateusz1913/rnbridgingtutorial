@@ -4,6 +4,8 @@ sidebar_position: 3
 title: JS specification
 ---
 
+import CodegenSpec from '../_codegen-spec.mdx';
+
 When all boilerplate is ready, let's navigate to `src/ConicGradientViewNativeComponent.ts`. To declare native component spec, let's paste following content:
 
 ```tsx title="src/ConicGradientViewNativeComponent.ts"
@@ -30,10 +32,7 @@ This does 2 things:
 - declares native component specification with 3 props
 - declares that native component, should be available under `ConicGradientView` name
 
-You can run codegen to generate native classes and interfaces, and also check if specification is defined in correct way:
-
-- on iOS: `yarn codegen:ios`
-- on Android: `yarn codegen:android`
+<CodegenSpec />
 
 After that, go to `src/ConicGradientView.tsx` and paste following code:
 
@@ -62,3 +61,5 @@ After that, let's finalize JS part with exporting module from `index.ts`
 ```tsx title="src/index.ts"
 export { ConicGradientView } from './ConicGradientView';
 ```
+
+JS part finished! Let's jump to [iOS implementation](./ios-impl).
