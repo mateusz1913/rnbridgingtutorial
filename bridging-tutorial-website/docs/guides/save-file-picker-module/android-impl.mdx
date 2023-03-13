@@ -10,6 +10,7 @@ import TabItem from '@theme/TabItem';
 import AndroidJavaImpl from './_android-java-impl.mdx'
 import AndroidKotlinImpl from './_android-kotlin-impl.mdx'
 import AndroidRegisterActivityLauncher from './_android-register-activity-launcher.mdx';
+import SimplifyWithFileFromAssetsInfo from './_simplify-with-file-from-assets-info.mdx';
 
 Let's use Android Studio for writing Android code. Launch Android Studio and open the project under `<your-project-dir>/android` path.
 When the project is opened, find `save-file-picker-package` inside project-tree
@@ -22,6 +23,8 @@ The `save-file-picker-package` contains 3 packages with the same name `com.savef
 - `SaveFilePickerTurboPackage` class stub file
 
 Let's start implementing!
+
+<SimplifyWithFileFromAssetsInfo />
 
 <Tabs groupId="android_lang">
 <TabItem value="kotlin" label="Kotlin">
@@ -40,4 +43,4 @@ Let's start implementing!
 
 You can check training repo for Kotlin implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/save-file-picker-package) and Java implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/save-file-picker-package-classic).
 
-That's Android part, now let's wrap things up and try to use save file picker module in action!
+That's Android part, now let's wrap things up and try to [use save file picker module](./usage) in action!

@@ -9,6 +9,7 @@ import TabItem from '@theme/TabItem';
 
 import IosObjCImpl from './_ios-objc-impl.mdx';
 import IosSwiftImpl from './_ios-swift-impl.mdx';
+import SimplifyWithFileFromAssetsInfo from './_simplify-with-file-from-assets-info.mdx';
 
 Let's use XCode, to write iOS code. Open XCode, by running this command from the root directory of your app:
 
@@ -17,6 +18,8 @@ xed ios
 ```
 
 When workspace is opened, locate `Pods` project and expand it. Search for `Development Pods` and find `SaveFilePickerPackage` inside. When it's expanded, it will show all files that we created under `save-file-package/ios` directory.
+
+<SimplifyWithFileFromAssetsInfo />
 
 <Tabs groupId="ios_lang">
 <TabItem value="swift" label="ObjC++ & Swift">
@@ -33,4 +36,4 @@ When workspace is opened, locate `Pods` project and expand it. Search for `Devel
 
 You can check training repo for Objective-C & Swift implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/save-file-picker-package) and Objective-C-only implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/save-file-picker-package-classic).
 
-That's iOS part, now let's go to Android!
+That's iOS part, now let's go to [Android](./android-impl)!

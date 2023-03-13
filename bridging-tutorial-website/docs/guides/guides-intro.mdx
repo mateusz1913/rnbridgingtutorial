@@ -12,14 +12,18 @@ However, if you're total beginner in that topic, it's recommended to go in an or
 
 For more reference on how to "translate" features like methods, events, view props, etc. defined in JS code to the platform-specific code, visit [module's reference](../module-reference/module-intro) and [view's reference](../view-reference/view-intro) sections.
 
-#### TODO
+Available guides:
 
-- guide on XCFramework integration
-- "Drag & Drop" (with multi-window mode) guide
+- [app info module](./app-info-module/intro) - a simple module with synchronous methods
 
-#### TODO, but not sure if will be handled
+- [conic gradient view](./conic-gradient-view/intro) - extended `<View />` with custom gradient background
 
-- guide on native components with custom shadow nodes and/or image props (at the moment no documentation, requires C++ knowledge, rarely used in OSS packages, you can check [`react-native-progress-view`](https://github.com/react-native-progress-view/progress-view) as an example)
-- guide on JSI/C++ modules (at the moment no documentation, requires C++ knowledge, you can check awesome [tutorial](https://ospfranco.notion.site/JSI-Module-Quick-Guide-5b00c96aa5b5440d93a5558956b420e4) about JSI by [Oscar Franco](https://twitter.com/ospfranco))
-- guide on macOS native modules/views (macOS fork of React Native is constantly 1-2 versions behind, in theory the only difference between iOS and macOS modules is using AppKit instead of UIKit, so not sure if it makes sense to create separate guide)
-- guide on Windows native modules/views (requires C++ & WinRT knowledge, there're already really solid sections about [Native Modules](https://microsoft.github.io/react-native-windows/docs/native-modules) and [Native Development](https://microsoft.github.io/react-native-windows/docs/native-code) in the official React Native Windows docs)
+- [save file picker module](./save-file-picker-module/intro) - a module that calls platform APIs and returns response via callback or promise method
+
+- [range slider view](./range-slider-view/intro) - a custom native component that wraps 3rd party native library
+
+- [AVAILABLE SOON] screen orientation module - a simple module that emits events based on data from platform APIs
+
+- [AVAILABLE SOON] native list view - Android's Fragment & iOS UIViewController integration
+
+If you have any idea on additional guides, share it on [Bridging Tutorial's Github](https://github.com/mateusz1913/rnbridgingtutorial/discussions).
