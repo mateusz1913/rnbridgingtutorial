@@ -47,7 +47,7 @@ public class ScreenOrientationClassicModule extends ReactContextBaseJavaModule {
     }
 
     @Override
-    protected Map<String, Object> getConstants() {
+    public Map<String, Object> getConstants() {
         final Map<String, Object> map = new HashMap<>();
         map.put(PORTRAIT, PORTRAIT);
         map.put(LANDSCAPE, LANDSCAPE);

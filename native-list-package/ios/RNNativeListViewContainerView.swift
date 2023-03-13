@@ -16,13 +16,6 @@ public class RNNativeListViewContainerView : UIView {
             }
         }
     }
-    
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        if let viewController = viewController {
-            viewController.view.frame = self.frame
-        }
-    }
 
     override public func removeFromSuperview() {
         unmountViewController()
@@ -52,6 +45,15 @@ public class RNNativeListViewContainerView : UIView {
 
         reactViewController.addChild(viewController)
         self.addSubview(viewController.view)
+        
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false;
+        NSLayoutConstraint.activate([
+            viewController.view.topAnchor.constraint(equalTo: self.topAnchor),
+            viewController.view.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            viewController.view.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            viewController.view.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+        
         viewController.didMove(toParent: reactViewController)
     }
 

@@ -36,8 +36,6 @@ public class RNNativeListViewViewController : UIViewController {
         guard let collectionView = self.collectionView else {
             return
         }
-
-        collectionView.frame = self.view.frame
         
         guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             return
@@ -59,6 +57,14 @@ public class RNNativeListViewViewController : UIViewController {
             
             self.collectionView = collectionView
             self.view.addSubview(collectionView)
+            
+            collectionView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+                collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+                collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+                collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            ])
         }
     }
     

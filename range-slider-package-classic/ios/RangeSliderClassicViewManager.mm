@@ -8,7 +8,9 @@
 @end
 #endif
 
-@implementation RangeSliderClassicViewManager
+@implementation RangeSliderClassicViewManager {
+    RangeSliderClassicView *sliderView;
+}
 
 RCT_EXPORT_MODULE(RangeSliderClassicView)
 
@@ -25,44 +27,44 @@ RCT_EXPORT_VIEW_PROPERTY(onRangeSliderClassicViewValueChange, RCTDirectEventBloc
 
 #if RCT_NEW_ARCH_ENABLED
 #else
-RCT_EXPORT_METHOD(setLeftKnobValueProgrammatically:(nonnull NSNumber*) reactTag, value:(NSInteger) value) {
+RCT_EXPORT_METHOD(setLeftKnobValueProgrammatically:(nonnull NSNumber*) reactTag value:(NSInteger) value) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-        RangeSliderClassicView *view = viewRegistry[reactTag];
+        UIView *view = viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:[RangeSliderClassicView class]]) {
             return;
         }
-        [view setLeftKnobValue:value];
+        [(RangeSliderClassicView *)view setLeftKnobValue:value];
     }];
 }
 
-RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag, value:(NSInteger) value) {
+RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag value:(NSInteger) value) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-        RangeSliderClassicView *view = viewRegistry[reactTag];
+        UIView *view = viewRegistry[reactTag];
         if (!view || ![view isKindOfClass:[RangeSliderClassicView class]]) {
             return;
         }
-        [view setRightKnobValue:value];
+        [(RangeSliderClassicView *) view setRightKnobValue:value];
     }];
 }
 
 - (void)sendOnRangeSliderClassicViewValueChangeEventWithMinValue:(double)minValue maxValue:(double)maxValue
 {
-    if (_onRangeSliderClassicViewValueChange) {
-        _onRangeSliderClassicViewValueChange(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
+    if (sliderView.onRangeSliderClassicViewValueChange) {
+        sliderView.onRangeSliderClassicViewValueChange(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
     }
 }
 
 - (void)sendOnRangeSliderClassicViewBeginDragEvent
 {
-    if (_onRangeSliderClassicViewBeginDrag) {
-        _onRangeSliderClassicViewBeginDrag(nil);
+    if (sliderView.onRangeSliderClassicViewBeginDrag) {
+        sliderView.onRangeSliderClassicViewBeginDrag(nil);
     }
 }
 
 - (void)sendOnRangeSliderClassicViewEndDragEventWithMinValue:(double)minValue maxValue:(double)maxValue
 {
-    if (_onRangeSliderClassicViewEndDrag) {
-        _onRangeSliderClassicViewEndDrag(@{ @"leftKnobValue": minValue, @"rightKnobValue": maxValue });
+    if (sliderView.onRangeSliderClassicViewEndDrag) {
+        sliderView.onRangeSliderClassicViewEndDrag(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
     }
 }
 
@@ -70,6 +72,7 @@ RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag
 {
     RangeSliderClassicView *view = [RangeSliderClassicView new];
     view.delegate = self;
+    sliderView = view;
     return view;
 }
 #endif

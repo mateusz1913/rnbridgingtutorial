@@ -49,7 +49,7 @@ class SaveFilePickerModule(
                 sourceFilename = ""
             }
 
-            override fun onError(error: Error) {
+            override fun onError(error: Exception) {
                 val callback = callbackBlock
                 val promise = promiseBlock
 

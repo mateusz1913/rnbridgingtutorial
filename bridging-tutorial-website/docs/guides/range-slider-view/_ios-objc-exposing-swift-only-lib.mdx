@@ -30,6 +30,8 @@ class RangeUISliderObject {
         rangeSlider.showKnobsLabels = true
         return rangeSlider
     }()
+
+    private var isDragging: Bool = false
     
     init() {
         self.slider.delegate = self
@@ -75,10 +77,6 @@ public protocol RangeUISliderWrapperDelegate: AnyObject {
 @objc(RangeUISliderWrapper)
 public class RangeUISliderWrapper: NSObject {
     @objc public weak var delegate: RangeUISliderWrapperDelegate? = nil
-    
-    @objc public func setSliderFrame(_ frame: CGRect) {
-        //
-    }
     
     @objc public var activeColor: UIColor = UIColor.systemBlue
     
@@ -133,17 +131,24 @@ extension RangeUISliderObject: RangeUISliderDelegate {
     
     public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
 // highlight-start
+        if !isDragging {
+            return
+        }
         self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+        self.isDragging = false
 // highlight-end
     }
     
     public func rangeChangeStarted() {
 // highlight-start
+        self.isDragging = true
         self.delegate?.sendOnRangeSliderViewBeginDragEvent()
 // highlight-end
     }
 }
 ```
+
+To make sure delegate methods are fired only when slider is dragged, we use `isDragging` flag.
 
 Now in `RangeUISliderWrapper` we have to initialize instance of `RangeUISliderObject`:
 
@@ -185,12 +190,6 @@ public class RangeUISliderWrapper: NSObject {
         get {
             return sliderObject.slider
         }
-    }
-    
-    @objc public func setSliderFrame(_ frame: CGRect) {
-// highlight-start
-        sliderObject.slider.frame = frame
-// highlight-end
     }
     
 // highlight-start
@@ -291,6 +290,8 @@ Awesome! We have exposed Swift-only library and we can proceed with the rest of 
             rangeSlider.showKnobsLabels = true
             return rangeSlider
         }()
+
+        private var isDragging: Bool = false
         
         init() {
             self.slider.delegate = self
@@ -303,10 +304,15 @@ Awesome! We have exposed Swift-only library and we can proceed with the rest of 
         }
         
         public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+            if !isDragging {
+                return
+            }
             self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+            self.isDragging = false
         }
         
         public func rangeChangeStarted() {
+            self.isDragging = true
             self.delegate?.sendOnRangeSliderViewBeginDragEvent()
         }
     }
@@ -332,10 +338,6 @@ Awesome! We have exposed Swift-only library and we can proceed with the rest of 
             get {
                 return sliderObject.slider
             }
-        }
-        
-        @objc public func setSliderFrame(_ frame: CGRect) {
-            sliderObject.slider.frame = frame
         }
         
         @objc public var activeColor: UIColor = UIColor.systemBlue {

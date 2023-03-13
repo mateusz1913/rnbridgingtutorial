@@ -20,6 +20,8 @@ class RangeUISliderObject {
         return rangeSlider
     }()
     
+    private var isDragging: Bool = false
+    
     init() {
         self.slider.delegate = self
     }
@@ -31,10 +33,15 @@ extension RangeUISliderObject: RangeUISliderDelegate {
     }
     
     public func rangeChangeFinished(minValueSelected: CGFloat, maxValueSelected: CGFloat, slider: RangeUISlider) {
+        if !isDragging {
+            return
+        }
         self.delegate?.sendOnRangeSliderViewEndDragEvent(minValue: minValueSelected, maxValue: maxValueSelected)
+        self.isDragging = false
     }
     
     public func rangeChangeStarted() {
+        self.isDragging = true
         self.delegate?.sendOnRangeSliderViewBeginDragEvent()
     }
 }
@@ -53,6 +60,10 @@ public class RangeSliderView: UIView {
             sliderObject.delegate = delegate
         }
     }
+    
+    @objc public var onRangeSliderViewBeginDrag: ((NSDictionary?) -> Void)? = nil
+    @objc public var onRangeSliderViewEndDrag: ((NSDictionary?) -> Void)? = nil
+    @objc public var onRangeSliderViewValueChange: ((NSDictionary?) -> Void)? = nil
 
     private var sliderObject = RangeUISliderObject()
 
@@ -60,16 +71,18 @@ public class RangeSliderView: UIView {
         super.init(frame: frame)
         self.sliderObject.delegate = self.delegate
         self.addSubview(self.sliderObject.slider)
+
+        self.sliderObject.slider.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.sliderObject.slider.topAnchor.constraint(equalTo: self.topAnchor),
+            self.sliderObject.slider.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.sliderObject.slider.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.sliderObject.slider.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override public var frame: CGRect {
-        didSet {
-            sliderObject.slider.frame = frame
-        }
     }
     
     @objc public var activeColor: UIColor = UIColor.systemBlue {
