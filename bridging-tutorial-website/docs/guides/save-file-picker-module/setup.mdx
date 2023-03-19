@@ -7,6 +7,7 @@ title: Module boilerplate
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+import AndroidTurboPackageBoilerplate from '../_android-turbo-package-boilerplate.mdx';
 import LinkPackage from '../_link-package.mdx';
 import PackageStructureBoilerplate from '../_package-structure-boilerplate.mdx';
 
@@ -60,6 +61,12 @@ For Android implementation, create:
 - `android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.kt`
 - `android/src/oldarch/java/com/savefilepickerpackage/SaveFilePickerModule.kt`
 
+<AndroidTurboPackageBoilerplate
+  language="kotlin"
+  namespace="savefilepickerpackage"
+  packageClass="SaveFilePickerTurboPackage"
+/>
+
 </TabItem>
 <TabItem value="java" label="Java">
 
@@ -67,6 +74,12 @@ For Android implementation, create:
 - `android/src/main/java/com/savefilepickerpackage/SaveFilePickerTurboPackage.java`
 - `android/src/newarch/java/com/savefilepickerpackage/SaveFilePickerModule.java`
 - `android/src/oldarch/java/com/savefilepickerpackage/SaveFilePickerModule.java`
+
+<AndroidTurboPackageBoilerplate
+  language="java"
+  namespace="savefilepickerpackage"
+  packageClass="SaveFilePickerTurboPackage"
+/>
 
 </TabItem>
 </Tabs>

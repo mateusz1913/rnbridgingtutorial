@@ -1,12 +1,8 @@
 import CodeBlock from '@theme/CodeBlock';
 
-<h4>
-<code>{props.packageClass}.{props.language === 'java' ? 'java' : 'kt'}</code>
-</h4>
-
 <p>
-The last thing we need to do is to export <code>{props.moduleClass}</code> in the <code>TurboReactPackage</code> instance.
-Let's go to <code>{props.packageClass}.{props.language === 'java' ? 'java' : 'kt'}</code> and add our new module.
+To make the codegen working on Android, the instance of <code>TurboReactPackage</code> needs to be found by the React Native CLI.
+So let's fill the minimal boilerplate to make it possible to link the package.
 </p>
 
 <CodeBlock language={props.language} title={`android/src/main/java/com/${props.namespace}/${props.packageClass}.${props.language === 'java' ? 'java' : 'kt'}`}>
@@ -18,14 +14,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.module.model.ReactModuleInfo;
 import com.facebook.react.module.model.ReactModuleInfoProvider;
-import com.facebook.react.turbomodule.core.interfaces.TurboModule;
-${props.viewManagerClass ? `// highlight-start
-import com.facebook.react.uimanager.ViewManager;\n
-import java.util.Arrays;
-// highlight-end` : ``}
-import java.util.HashMap;${props.viewManagerClass ? `\n// highlight-start
-import java.util.List;
-// highlight-end` : ``}
+import com.facebook.react.turbomodule.core.interfaces.TurboModule;\n
+import java.util.HashMap;
 import java.util.Map;\n
 public class ${props.packageClass} extends TurboReactPackage {
     /**
@@ -34,12 +24,7 @@ public class ${props.packageClass} extends TurboReactPackage {
     @Override
     @Nullable
     public NativeModule getModule(String name, ReactApplicationContext reactContext) {
-        ${props.moduleClass ? `// highlight-start
-        if (name.equals(${props.moduleClass}.NAME)) {
-            return new ${props.moduleClass}(reactContext);
-        }
         return null;
-// highlight-end` : `return null;`}
     }\n
     /**
      * Declare info about exported modules
@@ -49,9 +34,7 @@ public class ${props.packageClass} extends TurboReactPackage {
         /**
          * Here declare the array of exported modules
          */
-        Class<? extends NativeModule>[] moduleList = new Class[] {${props.moduleClass ? `\n// highlight-start
-            ${props.moduleClass}.class
-            // highlight-end` : ``}
+        Class<? extends NativeModule>[] moduleList = new Class[] {
         };
         final Map<String, ReactModuleInfo> reactModuleInfoMap = new HashMap<>();
         /**
@@ -78,15 +61,7 @@ public class ${props.packageClass} extends TurboReactPackage {
                 return reactModuleInfoMap;
             }
         };
-    }${props.viewManagerClass ? `\n\n// highlight-start
-    @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        /**
-        * Here declare the list of exported native components
-        */
-        return Arrays.<ViewManager>asList(new ${props.viewManagerClass}());
     }
-    // highlight-end` : ``}
 }` : `package com.${props.namespace}\n
 import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.NativeModule
@@ -100,12 +75,7 @@ class ${props.packageClass} : TurboReactPackage() {
      * Initialize and export modules based on the name of the required module
      */
     override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-        ${props.moduleClass ? `// highlight-start
-        return when (name) {
-            ${props.moduleClass}.NAME -> ${props.moduleClass}(reactContext)
-            else -> null
-        }
-        // highlight-end` : `return null`}
+        return null
     }\n
     /**
      * Declare info about exported modules
@@ -114,9 +84,7 @@ class ${props.packageClass} : TurboReactPackage() {
         /**
          * Here declare the array of exported modules
          */
-        val moduleList: Array<Class<out NativeModule?>> = arrayOf(${props.moduleClass ? `\n// highlight-start
-            ${props.moduleClass}::class.java
-            // highlight-end` : ``}
+        val moduleList: Array<Class<out NativeModule?>> = arrayOf(
         )
         val reactModuleInfoMap: MutableMap<String, ReactModuleInfo> = HashMap()
         /**
@@ -136,24 +104,6 @@ class ${props.packageClass} : TurboReactPackage() {
                 )
         }
         return ReactModuleInfoProvider { reactModuleInfoMap }
-    }${props.viewManagerClass ? `\n\n// highlight-start
-    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        /**
-        * Here declare the list of exported native components
-        */
-        return listOf(${props.viewManagerClass}())
     }
-    // highlight-end` : ``}
 }`}
 </CodeBlock>
-
-<div>
-  {props.moduleClass ? <div>
-    <p>To export the module, as the first step, we need to return it from <code>getModule</code> method inside <code>{props.packageClass}</code>,
-    if it's requested (the method takes name as a parameter and makes decision which module should be served).</p>
-    <p>The second step is to implement <code>getReactModuleInfoProvider</code> method, where the module is injected to the info provider instance.</p>
-  </div> : props.viewManagerClass ? <p>
-    Here the most important bit is <code>createViewManagers</code> method, which returns collection of view manager classes.
-    Because our package exports only a single view, we register one-element list, with <code>{props.viewManagerClass}</code> class.
-  </p> : null}
-</div>

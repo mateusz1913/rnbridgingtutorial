@@ -69,7 +69,7 @@ Next, let's create <code>{props.packageNameUpperCamelCase}.podspec</code>, the "
 require "json"\n
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))\n
 # Detect if new arch is enabled
-fabric_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'\n
+new_arch_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'\n
 Pod::Spec.new do |s|
   s.name            = "${props.packageNameUpperCamelCase}"
   s.version         = package["version"]
@@ -81,19 +81,9 @@ Pod::Spec.new do |s|
   s.author          = package["author"]
   s.source          = { :git => package["repository"], :tag => "#{s.version}" }\n
   # This is crucial - declare which files will be included in the package (similar to "files" field in \`package.json\`)
-  s.source_files    = "ios/**/*.{h,m,mm,swift}"
-  # Declare dependency (similar to entries under "dependencies" field in \`package.json\`)
-  s.dependency "React-Core"\n
-  # More configuration depending on new or old arch used
-  if fabric_enabled
-    # Some compiler flags
-    folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'\n
-    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
-    # XCode flags for new arch
-    s.pod_target_xcconfig    = {
-      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
-      "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
+  s.source_files    = "ios/**/*.{h,m,mm,swift}"\n
+  if new_arch_enabled
+    s.pod_target_xcconfig = {
       "DEFINES_MODULE" => "YES",
       "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "${props.packageNameUpperCamelCase}-Swift.h",
       # This is handy when we want to detect if new arch is enabled in Swift code
@@ -104,20 +94,18 @@ Pod::Spec.new do |s|
       # // do sth when old arch is enabled
       # #endif
       "OTHER_SWIFT_FLAGS" => "-D${props.packageNameUpperCase}_NEW_ARCH_ENABLED"
-    }\n
-    # Dependencies only for new arch${props.isFabricComponent ? '\n    s.dependency "React-RCTFabric"' : ''}
-    s.dependency "React-Codegen"
-    s.dependency "RCT-Folly"
-    s.dependency "RCTRequired"
-    s.dependency "RCTTypeSafety"
-    s.dependency "ReactCommon/turbomodule/core"
+    }
   else
-    # XCode flags for old arch
     s.pod_target_xcconfig = {
       "DEFINES_MODULE" => "YES",
       "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "${props.packageNameUpperCamelCase}-Swift.h"
     }
-  end
+  end\n
+  # Install all React Native dependencies (RN >= 0.71 must be used)
+  #
+  # check source code for more context
+  # https://github.com/facebook/react-native/blob/0.71-stable/scripts/react_native_pods.rb#L172#L180
+  install_modules_dependencies(s)
 end`}
 </CodeBlock>
 
@@ -305,7 +293,7 @@ def reactNativeRootDir = resolveReactNativeDirectory()\n
 def reactProperties = new Properties()
 file("$reactNativeRootDir/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }\n
 def REACT_NATIVE_VERSION = reactProperties.getProperty("VERSION_NAME")
-def REACT_NATIVE_MINOR_VERSION = REACT_NATIVE_VERSION.startsWith("0.0.0-") ? 1000 : REACT_NATIVE_VERSION.split("\\.")[1].toInteger()\n
+def REACT_NATIVE_MINOR_VERSION = REACT_NATIVE_VERSION.startsWith("0.0.0-") ? 1000 : REACT_NATIVE_VERSION.split("\\\\.")[1].toInteger()\n
 project.ext.shouldConsumeReactNativeFromMavenCentral = { ->
     return REACT_NATIVE_MINOR_VERSION >= 71
 }`}
@@ -356,7 +344,7 @@ val REACT_NATIVE_VERSION: String = reactProperties.getProperty("VERSION_NAME")
 val REACT_NATIVE_MINOR_VERSION = if (REACT_NATIVE_VERSION.startsWith("0.0.0-")) {
     1000
 } else {
-    REACT_NATIVE_VERSION.split(Regex("\\."))[1].toInt()
+    REACT_NATIVE_VERSION.split(Regex("\\\\."))[1].toInt()
 }\n
 val shouldConsumeReactNativeFromMavenCentral by extra {
     fun(): Boolean {
