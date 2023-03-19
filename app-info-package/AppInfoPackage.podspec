@@ -5,7 +5,7 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 # Detect if new arch is enabled
-fabric_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
+new_arch_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
 
 Pod::Spec.new do |s|
   s.name            = "AppInfoPackage"
@@ -20,20 +20,9 @@ Pod::Spec.new do |s|
 
   # This is crucial - declare which files will be included in the package (similar to "files" field in `package.json`)
   s.source_files    = "ios/**/*.{h,m,mm,swift}"
-  # Declare dependency (similar to entries under "dependencies" field in `package.json`)
-  s.dependency "React-Core"
 
-  # More configuration depending on new or old arch used
-  if fabric_enabled
-    # Some compiler flags
-    folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
-
-    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
-    # XCode flags for new arch
-    s.pod_target_xcconfig    = {
-      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
-      "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
+  if new_arch_enabled
+    s.pod_target_xcconfig = {
       "DEFINES_MODULE" => "YES",
       "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "AppInfoPackage-Swift.h",
       # This is handy when we want to detect if new arch is enabled in Swift code
@@ -45,18 +34,16 @@ Pod::Spec.new do |s|
       # #endif
       "OTHER_SWIFT_FLAGS" => "-DAPP_INFO_PACKAGE_NEW_ARCH_ENABLED"
     }
-
-    # Dependencies only for new arch
-    s.dependency "React-Codegen"
-    s.dependency "RCT-Folly"
-    s.dependency "RCTRequired"
-    s.dependency "RCTTypeSafety"
-    s.dependency "ReactCommon/turbomodule/core"
   else
-    # XCode flags for old arch
     s.pod_target_xcconfig = {
       "DEFINES_MODULE" => "YES",
       "SWIFT_OBJC_INTERFACE_HEADER_NAME" => "AppInfoPackage-Swift.h"
     }
   end
+  
+  # Install all React Native dependencies (RN >= 0.71 must be used)
+  #
+  # check source code for more context
+  # https://github.com/facebook/react-native/blob/0.71-stable/scripts/react_native_pods.rb#L172#L180
+  install_modules_dependencies(s)
 end

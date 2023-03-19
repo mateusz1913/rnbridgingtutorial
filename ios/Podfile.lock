@@ -1,35 +1,41 @@
 PODS:
   - AppInfoPackage (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - AppInfoPackageClassic (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - ConicGradientPackage (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - ConicGradientPackageClassic (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.71.1)
@@ -108,39 +114,43 @@ PODS:
   - hermes-engine/Pre-built (0.71.0-rc.5)
   - libevent (2.1.12)
   - NativeListPackage (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - NativeListPackageClassic (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - OpenSSL-Universal (1.1.1100)
   - RangeSliderPackage (0.0.1):
     - RangeUISlider (~> 3.0)
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - RangeSliderPackageClassic (0.0.1):
     - RangeUISlider (~> 3.0)
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - RangeUISlider (3.1.0)
   - RCT-Folly (2021.07.22.00):
@@ -819,32 +829,40 @@ PODS:
     - React-RCTFabric
     - ReactCommon/turbomodule/core
   - SaveFilePickerPackage (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - SaveFilePickerPackageClassic (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - ScreenOrientationPackage (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - ScreenOrientationPackageClassic (0.0.1):
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
@@ -1057,12 +1075,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AppInfoPackage: 28a53b52304945861f265c1025379ada8e709b31
-  AppInfoPackageClassic: c8fb9a0e1bfc582460ee8a9898b2cd9f33182794
+  AppInfoPackage: 391a800e59d0939b5842dab56bf50e829140e02b
+  AppInfoPackageClassic: 8c88e98936ff15812dec8827e74ac4aff7cc7156
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  ConicGradientPackage: a6fb356446b4cdfd69325ae6e8c46982eae8cba2
-  ConicGradientPackageClassic: 2245c3f981761a6f1808a3fcc5d099227cc7356b
+  ConicGradientPackage: 62628f7e2ad742d6c92e03fdaadb5755f74e5177
+  ConicGradientPackageClassic: 582c3fb7e22fdba11e735246af10bf1be0abf47f
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: ad72713385db5289b19f1ead07e8e4aa26dcb01d
   FBReactNativeSpec: 06fc2a521838dc240b499699d43467b071c66908
@@ -1079,11 +1097,11 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: a5d6597b0258a8a6fd737e4b40eeac47278610c4
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  NativeListPackage: 978d9f79f3da69cc25ed3a3e2715c5b5931167a9
-  NativeListPackageClassic: 22bd6d4b622fa0779d2f0ca63ffe5398ea98c3e8
+  NativeListPackage: b682589a8809a24a09817adcd7368e15524628a8
+  NativeListPackageClassic: 515d4c257146ccfd37e7b529a466f0020c48ccd2
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  RangeSliderPackage: b35bcd58b72dc683bf3ea54cc6303654d25df3d8
-  RangeSliderPackageClassic: 25fa2a4902d7243dec4c76064a0130d2f2c29588
+  RangeSliderPackage: f08434f60f21956c56a06847d42aaee076de3442
+  RangeSliderPackageClassic: ac9aa9dd7b9637114543d760702cb461d8630614
   RangeUISlider: bb1a82942ef5b6315bd8bf1c12a6b953f0ed02e8
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
@@ -1118,10 +1136,10 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 311feb67600774723fe10eb8801d3138cae9ad67
   ReactCommon: 03be76588338a27a88d103b35c3c44a3fd43d136
   RNScreens: a838934f2f0d915c8a756409d674a862b70b1677
-  SaveFilePickerPackage: 843cdfbfb4e52740e9dfd5ff55152b6b4e1006b9
-  SaveFilePickerPackageClassic: f3d8645212d871a53fb7f318aa732134697e1964
-  ScreenOrientationPackage: 711d8108aadb3676dabbc5bc6f6a69f69a994aa0
-  ScreenOrientationPackageClassic: 7ae7379a2d93cb00f6590d4055175e2f2ccc7205
+  SaveFilePickerPackage: 26ab81819e37627ce19ee75cca5896883947ae8f
+  SaveFilePickerPackageClassic: 4eea2ba8994d9b2d39f34aaa3e820de4c7abdc71
+  ScreenOrientationPackage: c60f5022840edd8e0773a356fd8860f96d1d7caa
+  ScreenOrientationPackageClassic: 81a3ee362a5097f2dddb8697f169b4c2e361d4ae
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
