@@ -1,0 +1,36 @@
+---
+sidebar_label: iOS implementation
+sidebar_position: 4
+title: iOS implementation
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import IosObjCImpl from './_ios-objc-impl.mdx';
+import IosSwiftImpl from './_ios-swift-impl.mdx';
+
+Let's use XCode, to write iOS code. Open XCode, by running this command from the root directory of your app:
+
+```sh
+xed ios
+```
+
+When workspace is opened, locate `Pods` project and expand it. Search for `Development Pods` and find `ScreenOrientationPackage` inside. When it's expanded, it will show all files that we created under `screen-orientation-package/ios` directory.
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+<IosSwiftImpl />
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+<IosObjCImpl />
+
+</TabItem>
+</Tabs>
+
+You can check training repo for Objective-C & Swift implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/screen-orientation-package) and Objective-C-only implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/screen-orientation-package-classic).
+
+That's iOS part, now let's go to [Android](./android-impl)!

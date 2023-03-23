@@ -1,0 +1,94 @@
+---
+sidebar_label: Usage in practice
+sidebar_position: 6
+title: Usage in practice
+---
+
+import Result from './_result.mdx';
+
+Now that we have our module prepared, let's try to use it in practice!
+
+Prepare some screen where you can try screen orientation module
+
+```tsx title="ScreenOrientationScreen.tsx"
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { NativeEventEmitter, Platform, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScreenOrientationModule } from 'screen-orientation-package';
+
+const moduleEventEmitter = new NativeEventEmitter(Platform.OS === 'ios' ? ScreenOrientationModule : undefined);
+
+export const ScreenOrientationScreen: FC = () => {
+  const [ screenOrientation, setScreenOrientation ] = useState<'portrait' | 'landscape' | 'unknown'>('unknown');
+
+  useEffect(() => {
+    const subscription = moduleEventEmitter.addListener('onScreenOrientationModuleChange', ({ orientation }: { orientation: 'portrait' | 'landscape' | 'unknown' }) => {
+      console.log({ orientation });
+      setScreenOrientation(orientation);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Text style={styles.header}>Simple event module</Text>
+        <View style={styles.body}>
+          <Text style={styles.content}>Constants: {JSON.stringify(ScreenOrientationModule.getConstants())}</Text>
+          <Text style={styles.content}>Screen orientation: {screenOrientation}</Text>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  body: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  container: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  content: {
+    fontSize: 20,
+    fontWeight: '600',
+    paddingVertical: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    paddingVertical: 20,
+    textTransform: 'capitalize',
+  },
+  safeArea: {
+    alignSelf: 'stretch',
+    flex: 1,
+  },
+});
+```
+
+<Result />
+
+Congratulations!
+
+To see more event emitting modules, you may visit:
+
+- [`react-native-localize`](https://github.com/zoontek/react-native-localize)
+- [`react-native-avoid-softinput`](https://github.com/mateusz1913/react-native-avoid-softinput/tree/main/packages/react-native-avoid-softinput)
+
+To see more modules with exported constants, you may visit:
+
+- [`Platform API (Android)`](https://github.com/facebook/react-native/blob/0443c2aa71d8dc0a59d72d94ff989a5924c40a4d/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/AndroidInfoModule.java)
+- [`Platform API (iOS)`](https://github.com/facebook/react-native/blob/0443c2aa71d8dc0a59d72d94ff989a5924c40a4d/packages/react-native/React/CoreModules/RCTPlatform.mm)
+- [`react-native-localize`](https://github.com/zoontek/react-native-localize)

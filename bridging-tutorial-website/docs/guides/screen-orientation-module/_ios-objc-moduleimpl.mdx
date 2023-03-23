@@ -1,0 +1,183 @@
+The complete flow when the orientation changes will look like that:
+
+Orientation notification is emitted -> Notification handler is receiving the notification -> Notification handler is determining if the event should be emitted -> Notification handler emits event to the Delegate class 
+
+#### `ScreenOrientationModuleImpl.h`
+
+```objc title="ios/ScreenOrientationModuleImpl.h"
+#import <Foundation/Foundation.h>
+
+typedef NS_ENUM(NSUInteger, ScreenOrientationModuleEvent) {
+  OnScreenOrientationModuleChange,
+};
+
+extern NSString * _Nonnull ScreenOrientationModuleEventName(ScreenOrientationModuleEvent event);
+
+@protocol ScreenOrientationModuleDelegate
+
+- (void)sendEventWithName:(NSString * _Nonnull)eventName
+                  payload:(NSDictionary<NSString *, id> * _Nonnull)payload;
+
+@end
+
+@interface ScreenOrientationModuleImpl : NSObject
+
+@property (nonatomic, weak) id <ScreenOrientationModuleDelegate> _Nullable delegate;
+
+@end
+
+@interface ScreenOrientationModuleImpl ()
+
++ (NSArray<NSString *> * _Nonnull)supportedEvents;
+
+@end
+```
+
+Here, we declare `ScreenOrientationModuleImpl` class together with `ScreenOrientationModuleDelegate` protocol.
+
+The class will have weak delegate property and a static getter.
+Also at the top, we declare an enum for possible events (in this case there will only be one).
+
+Now let's implement the class in the implementation file
+
+#### `ScreenOrientationModuleImpl.mm`
+
+Let's start by connecting to the orientation notifications.
+
+To listen to orientation events, we will register this class as an observer on the default instance of [`NSNotificationCenter`](https://developer.apple.com/documentation/foundation/nsnotificationcenter?language=objc).
+
+Additionally, to trigger device orientation notifications, we need to explicitly start/stop them
+with [`beginGeneratingDeviceOrientationNotifications`](https://developer.apple.com/documentation/uikit/uidevice/1620041-begingeneratingdeviceorientation?language=objc)
+and [`endGeneratingDeviceOrientationNotifications`](https://developer.apple.com/documentation/uikit/uidevice/1620033-endgeneratingdeviceorientationno?language=objc) methods.
+
+```objc title="ios/ScreenOrientationModuleImpl.mm"
+#import "ScreenOrientationModuleImpl.h"
+
+/**
+ * Native module's shared implementation
+ */
+@implementation ScreenOrientationModuleImpl {
+    NSString *lastOrientation;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        lastOrientation = @"unknown";
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        });
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    });
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)handleOrientationChange:(NSNotification *)notification
+{
+    //
+}
+
+@end
+```
+
+You can notice, that `ScreenOrientationModuleImpl` class overrides initializer and deinitializer.
+Inside initializer, we register the module as an observer of the notification (via [`addObserver(_:selector:name:object:)`](https://developer.apple.com/documentation/foundation/nsnotificationcenter/1415360-addobserver?language=objc)) and we start generating orientation notifications.
+When the class ends its life, those operations should be reverted. And that's done in the `dealloc` function - orientation notifications are stopped, and the listener is unregistered (via [`removeObserver(_:)`](https://developer.apple.com/documentation/foundation/nsnotificationcenter/1413994-removeobserver?language=objc)).
+Received notification will be handled inside `- handleOrientationChange`, which will be implemented in the next step.
+
+```objc title="ios/ScreenOrientationModuleImpl.mm"
+#import "ScreenOrientationModuleImpl.h"
+
+// highlight-start
+NSString *ScreenOrientationModuleEventName(ScreenOrientationModuleEvent event)
+{
+  switch (event) {
+    case OnScreenOrientationModuleChange:
+      return @"onScreenOrientationModuleChange";
+  }
+}
+// highlight-end
+
+/**
+ * Native module's shared implementation
+ */
+@implementation ScreenOrientationModuleImpl {
+    NSString *lastOrientation;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        lastOrientation = @"unknown";
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        });
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    });
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// highlight-start
+/**
+ * Example usage:
+ *
+ * ```objc
+ * [self sendEvent:<%- moduleName %>EventName(On<%- moduleName %>Change) payload:@{ @"value" : result }];
+ * ````
+ */
+- (void)sendEvent:(NSString *)name payload:(NSDictionary<NSString *, id> *)payload {
+    [self.delegate sendEventWithName:name payload:payload];
+}
+
++ (NSArray<NSString *> *)supportedEvents
+{
+    return @[ScreenOrientationModuleEventName(OnScreenOrientationModuleChange)];
+}
+// highlight-end
+
+- (void)handleOrientationChange:(NSNotification *)notification
+{
+    // highlight-start
+    UIDeviceOrientation currentOrientation = [[UIDevice currentDevice] orientation];
+    
+    NSString *orientation = @"unknown";
+    if (currentOrientation == UIDeviceOrientationPortrait || currentOrientation == UIDeviceOrientationPortraitUpsideDown) {
+        orientation = @"portrait";
+    } else if (currentOrientation == UIDeviceOrientationLandscapeLeft || currentOrientation == UIDeviceOrientationLandscapeRight) {
+        orientation = @"landscape";
+    }
+    
+    if (lastOrientation == orientation) {
+        return;
+    }
+    lastOrientation = orientation;
+    
+    [self sendEvent:ScreenOrientationModuleEventName(OnScreenOrientationModuleChange)
+            payload:@{@"orientation": orientation}];
+    // highlight-end
+}
+
+@end
+```
+
+We added 3 snippets of code, the 1st one implements helper function that translates Objective-C enum to the string.
+The 2nd snippet adds a convienient helper for emitting events to the delegate and implements `supportedEvents` static getter.
+The last snippet is adding the logic that compares current orientation value with the previous one and sends an event when there's new value to be emitted.
