@@ -42,7 +42,7 @@ RCT_EXPORT_MODULE(ScreenOrientationClassicModule)
     return NO;
 }
 
-// Declare which events will be emiited by the module
+// Declare which events will be emitted by the module
 - (NSArray<NSString *> *)supportedEvents
 {
     return [ScreenOrientationClassicModuleImpl supportedEvents];
@@ -76,13 +76,10 @@ RCT_EXPORT_MODULE(ScreenOrientationClassicModule)
 }
 
 - (facebook::react::ModuleConstants<JS::NativeScreenOrientationClassicModule::Constants::Builder>)getConstants {
-    facebook::react::ModuleConstants<JS::NativeScreenOrientationClassicModule::Constants::Builder> constants;
-    constants = facebook::react::typedConstants<JS::NativeScreenOrientationClassicModule::Constants::Builder>({
+    return facebook::react::typedConstants<JS::NativeScreenOrientationClassicModule::Constants::Builder>({
         .PORTRAIT = @"portrait",
         .LANDSCAPE = @"landscape"
     });
-
-    return constants;
 }
 #else
 - (NSDictionary *)constantsToExport

@@ -1,0 +1,166 @@
+import ExportingObjCInfo from '../_exporting-objc-info.mdx';
+
+The complete flow when the orientation changes will look like that:
+
+Orientation notification is emitted -> Notification handler is receiving the notification -> Notification handler is determining if the event should be emitted -> Notification handler emits event to the Delegate class 
+
+#### `ScreenOrientationModuleImpl.swift`
+
+```swift title="ios/ScreenOrientationModuleImpl.swift"
+import Foundation
+
+@objc(ScreenOrientationModuleDelegate)
+public protocol ScreenOrientationModuleDelegate {
+    func sendEvent(name: String, payload: Dictionary<String, Any>)
+}
+
+/**
+ * Native module's shared implementation
+ */
+@objc(ScreenOrientationModuleImpl)
+public class ScreenOrientationModuleImpl : NSObject {
+    @objc public weak var delegate: ScreenOrientationModuleDelegate? = nil
+    
+    @objc func handleOrientationChange(notification: NSNotification) {
+        //
+    }
+}
+```
+
+Here, we declare `ScreenOrientationModuleImpl` class together with `ScreenOrientationModuleDelegate` protocol.
+
+<ExportingObjCInfo />
+
+The class will have weak delegate property and a method that will be called with the notification parameter every time device is changing its orientation.
+
+To listen to orientation events, we will register this class as an observer on the default instance of [`NotificationCenter`](https://developer.apple.com/documentation/foundation/notificationcenter).
+
+Additionally, to trigger device orientation notifications, we need to explicitly start/stop them
+with [`beginGeneratingDeviceOrientationNotifications`](https://developer.apple.com/documentation/uikit/uidevice/1620041-begingeneratingdeviceorientation)
+and [`endGeneratingDeviceOrientationNotifications`](https://developer.apple.com/documentation/uikit/uidevice/1620033-endgeneratingdeviceorientationno) methods.
+
+Ok, now let's connect to the orientation notifications
+
+```swift title="ios/ScreenOrientationModuleImpl.swift"
+// ...
+
+/**
+ * Native module's shared implementation
+ */
+@objc(ScreenOrientationModuleImpl)
+public class ScreenOrientationModuleImpl : NSObject {
+    @objc public weak var delegate: ScreenOrientationModuleDelegate? = nil
+
+// highlight-start
+    public override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleOrientationChange(notification:)), name: UIDevice.orientationDidChangeNotification, object: UIDevice.current)
+        DispatchQueue.main.async {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        }
+    }
+    
+    deinit {
+        DispatchQueue.main.async {
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        }
+        NotificationCenter.default.removeObserver(self)
+    }
+// highlight-end
+    
+    @objc func handleOrientationChange(notification: NSNotification) {
+        //
+    }
+}
+```
+
+You can notice, that `ScreenOrientationModuleImpl` class got initializer and deinitializer.
+Inside initializer, we register the module as an observer of the notification (via [`addObserver(_:selector:name:object:)`](https://developer.apple.com/documentation/foundation/notificationcenter/1415360-addobserver)) and we start generating orientation notifications.
+When the class ends its life, those operations should be reverted. And that's done in the `deinit` block - orientation notifications are stopped, and the listener is unregistered (via [`removeObserver(_:)`](https://developer.apple.com/documentation/foundation/notificationcenter/1413994-removeobserver)).
+
+Next step is to handle the notification and emit the event.
+
+```swift title="ios/ScreenOrientationModuleImpl.swift"
+// ...
+
+/**
+ * Native module's shared implementation
+ */
+@objc(ScreenOrientationModuleImpl)
+public class ScreenOrientationModuleImpl : NSObject {
+    @objc public weak var delegate: ScreenOrientationModuleDelegate? = nil
+
+// highlight-start
+    /**
+     * Example usage:
+     *
+     * ```swift
+     * self.sendEvent(name: Event.onScreenOrientationModuleChange.rawValue, payload: [ "value" : result ])
+     * ````
+     */
+    private func sendEvent(name: String, payload: Dictionary<String, Any>) {
+        self.delegate?.sendEvent(name: name, payload: payload)
+    }
+
+    private var lastOrientation = "unknown"
+// highlight-end
+
+    public override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleOrientationChange(notification:)), name: UIDevice.orientationDidChangeNotification, object: UIDevice.current)
+        DispatchQueue.main.async {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        }
+    }
+    
+    deinit {
+        DispatchQueue.main.async {
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        }
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func handleOrientationChange(notification: NSNotification) {
+// highlight-start
+        let currentOrientation = UIDevice.current.orientation
+        
+        var orientation = "unknown"
+        if currentOrientation == UIDeviceOrientation.portrait || currentOrientation == UIDeviceOrientation.portraitUpsideDown {
+            orientation = "portrait"
+        } else if currentOrientation == UIDeviceOrientation.landscapeLeft || currentOrientation == UIDeviceOrientation.landscapeRight {
+            orientation = "landscape"
+        }
+
+        if lastOrientation == orientation {
+            return
+        }
+        lastOrientation = orientation
+        
+        self.sendEvent(name: Event.onScreenOrientationModuleChange.rawValue, payload: ["orientation": orientation])
+// highlight-end
+    }
+}
+
+// highlight-start
+extension ScreenOrientationModuleImpl {
+    enum Event: String, CaseIterable {
+        case onScreenOrientationModuleChange
+    }
+
+    @objc(supportedEvents)
+    public static var supportedEvents: [String] {
+        return Event.allCases.map(\.rawValue);
+    }
+}
+// highlight-end
+```
+
+We added 3 snippets of code, the 1st one adds a convienient helper for emitting events to the delegate and a variable that keeps last emitted value.
+The 2nd snippet is adding the logic that compares current orientation value with the previous one and sends an event when there's new value to be emitted.
+The last snippet declares an extension on `ScreenOrientationModuleImpl` with `Event` enum and `supportedEvents` static getter.
+
+:::tip
+
+For more on [extensions](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/extensions) or [enums](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/enumerations) in Swift, visit Swift's docs.
+
+:::

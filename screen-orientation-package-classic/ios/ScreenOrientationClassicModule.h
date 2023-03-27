@@ -1,4 +1,3 @@
-#import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 
 
@@ -10,6 +9,6 @@
  * 
  * If the module emits events, it must extend RCTEventEmitter class.
  */
-@interface ScreenOrientationClassicModule : RCTEventEmitter<RCTBridgeModule>
+@interface ScreenOrientationClassicModule : RCTEventEmitter
 
 @end

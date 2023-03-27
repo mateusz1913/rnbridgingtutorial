@@ -1,0 +1,393 @@
+import CompleteFile from '../_complete-file.mdx';
+
+#### `ScreenOrientationModule.h`
+
+Now, let's go to the module to glue the native events and constants to the JS code:
+
+```objc title="ios/ScreenOrientationModule.h"
+#import <React/RCTEventEmitter.h>
+
+/**
+ * When using Swift classes in ObjC header, the class must have its
+ * "forward declaration"
+ * 
+ * @see https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations
+ */
+@class ScreenOrientationModuleImpl;
+
+/**
+ * Declare the ObjC interface for that native module class.
+ * 
+ * It must extend NSObject (like every class in ObjC) and
+ * implement RCTBridgeModule (like each RN native module).
+ * 
+ * If the module emits events, it must extend RCTEventEmitter class.
+ */
+@interface ScreenOrientationModule : RCTEventEmitter
+
+@end
+```
+
+In the header file for `ScreenOrientationModule` class we declare our class extending `RCTEventEmitter` (as each RN iOS module with events emitting capability).
+
+Additionally, to use Swift `ScreenOrientationModuleImpl` class, we must do "forward-declaration" (check out Apple's Swift-ObjC interop [dedicated docs section](https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations)).
+
+#### `ScreenOrientationModule.mm`
+
+```objc title="ios/ScreenOrientationModule.mm"
+#import "ScreenOrientationModule.h"
+
+/**
+ * When using Swift classes in ObjC implementation, the classes must be imported
+ * from generated Objective-C Interface Header
+ *
+ * @see https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Import-Code-Within-an-App-Target
+ */
+#import "ScreenOrientationPackage-Swift.h"
+
+#if RCT_NEW_ARCH_ENABLED
+/**
+ * Import header file with codegenerated protocols based on the JS specification
+ *
+ * The name of the header matches the name provided in codegenConfig's `name` field in package.json
+ */
+#import "ScreenOrientationPackage.h"
+
+// Each turbo module extends codegenerated spec class
+@interface ScreenOrientationModule () <NativeScreenOrientationModuleSpec>
+@end
+#endif
+
+// Declare the ObjC implementation for that native module class
+@implementation ScreenOrientationModule
+
+// Return the name of the module - it should match the name provided in JS specification
+RCT_EXPORT_MODULE(ScreenOrientationModule)
+
+#if RCT_NEW_ARCH_ENABLED
+// Implement RCTTurboModule protocol
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+    (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+    return std::make_shared<facebook::react::NativeScreenOrientationModuleSpecJSI>(params);
+}
+#endif
+
+@end
+```
+
+This is the implementation file for `ScreenOrientationModule` class.
+
+Before declaring the implementation block, we have to import Swift-ObjC generated interface header (check out [dedicated docs section](https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations)),
+and we have to implement code-generated spec protocol for new architecture (code between `#if RCT_NEW_ARCH_ENABLED` & `#endif` directives).
+
+After that, inside implementation block we have `RCT_EXPORT_MODULE` macro invoked with `ScreenOrientationModule` argument. This basically registers the module with provided name on iOS side, so that it's accessible in the JS world.
+
+Also, for new architecture, it implements `- getTurboModule:` method (from `RCTTurboModule` protocol).
+If you won't implement that method, XCode will complain that the code-generated spec protocol methods are not implemented.
+
+Let's use `ScreenOrientationModuleImpl` class
+
+```objc title="ios/ScreenOrientationModule.mm"
+// ...
+
+// highlight-start
+@interface ScreenOrientationModule () <ScreenOrientationModuleDelegate>
+@end
+
+// Declare the ObjC implementation for that native module class
+@implementation ScreenOrientationModule {
+    ScreenOrientationModuleImpl *moduleImpl;
+    BOOL hasListeners;
+}
+// highlight-end
+
+// Return the name of the module - it should match the name provided in JS specification
+RCT_EXPORT_MODULE(ScreenOrientationModule)
+
+// highlight-start
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        moduleImpl = [ScreenOrientationModuleImpl new];
+        moduleImpl.delegate = self;
+    }
+    return self;
+}
+
+// Declare if module should be initialized on the main queue
++ (BOOL)requiresMainQueueSetup
+{
+    return NO;
+}
+// highlight-end
+
+// ...
+
+@end
+```
+
+First, we declare `moduleImpl` private variable on `ScreenOrientationModule` that will be initialized in the `- init` method.
+We can use `ScreenOrientationModuleImpl` Swift class, because it's imported from `ScreenOrientationPackage-Swift.h`.
+
+We also declare `hasListeners` variable, we will use it to check if there're any JS listeners registered to the module.
+
+Next, we override static method `+ requiresMainQueueSetup`, which must be done whenever `- init` method on the RN's wrapper class is overriden.
+
+To handle events-specific methods from parent `RCTEventEmitter` class, we need to override 3 methods:
+
+```objc title="ios/ScreenOrientationModule.mm"
+// ...
+
+@implementation ScreenOrientationModule {
+    ScreenOrientationModuleImpl *moduleImpl;
+    BOOL hasListeners;
+}
+
+// ...
+
+// Declare if module should be initialized on the main queue
++ (BOOL)requiresMainQueueSetup
+{
+    return NO;
+}
+
+// highlight-start
+// Declare which events will be emitted by the module
+- (NSArray<NSString *> *)supportedEvents
+{
+    return [ScreenOrientationModuleImpl supportedEvents];
+}
+
+- (void)startObserving
+{
+    hasListeners = YES;
+}
+
+- (void)stopObserving
+{
+    hasListeners = NO;
+}
+// highlight-end
+
+// ...
+
+@end
+```
+
+To mark which events will be emitted by the module, we need to override `- supportedEvents` getter - we use the value from `ScreenOrientationModuleImpl` class as a source of truth.
+Two other methods, are called when the first/last JS observer is registered/unregistered.
+
+We still have to emit the events received from `ScreenOrientationModuleImpl` - as you may noticed, XCode displayed a warning about `ScreenOrientationModuleDelegate`.
+The module class is marked to be implementing the delegate protocol,
+the `ScreenOrientationModuleImpl` delegate property is set to this module instance,
+but we still need to implement delegate's methods.
+
+```objc title="ios/ScreenOrientationModule.mm"
+// ...
+
+@implementation ScreenOrientationModule {
+    ScreenOrientationModuleImpl *moduleImpl;
+    BOOL hasListeners;
+}
+
+// ...
+
+- (void)stopObserving
+{
+    hasListeners = NO;
+}
+
+// highlight-start
+- (void)sendEventWithName:(NSString * _Nonnull)eventName
+                  payload:(NSDictionary<NSString *,id> * _Nonnull)payload
+{
+    if (hasListeners) {
+        [self sendEventWithName:eventName body:payload];
+    }
+}
+// highlight-end
+
+// ...
+
+@end
+```
+
+In the delegate's method, the module checks if there's any receiver that listens to events and if yes, invokes `- sendEventWithName:body:` method from `RCTEventEmitter` base class.
+
+The last thing to do is to export constants to the JS world.
+
+```objc title="ios/ScreenOrientationModule.mm"
+// ...
+
+@implementation ScreenOrientationModule {
+    ScreenOrientationModuleImpl *moduleImpl;
+    BOOL hasListeners;
+}
+
+// ...
+
+- (void)sendEventWithName:(NSString * _Nonnull)eventName
+                  payload:(NSDictionary<NSString *,id> * _Nonnull)payload
+{
+    if (hasListeners) {
+        [self sendEventWithName:eventName body:payload];
+    }
+}
+
+// highlight-start
+/**
+ * Declare constants exported by the module
+ */
+#if RCT_NEW_ARCH_ENABLED
+- (facebook::react::ModuleConstants<JS::NativeScreenOrientationModule::Constants::Builder>)constantsToExport
+{
+    return [self getConstants];
+}
+
+- (facebook::react::ModuleConstants<JS::NativeScreenOrientationModule::Constants::Builder>)getConstants {
+    return facebook::react::typedConstants<JS::NativeScreenOrientationModule::Constants::Builder>({
+        .PORTRAIT = @"portrait",
+        .LANDSCAPE = @"landscape"
+    });
+}
+#else
+- (NSDictionary *)constantsToExport
+{
+    return @{ @"PORTRAIT": @"portrait", @"LANDSCAPE": @"landscape" };
+}
+#endif
+// highlight-end
+
+// ...
+
+@end
+```
+
+In old architecture mode, it's super simple, we have to return an object (`NSDictionary *`) from `- constantsToExport` method.
+
+In new architecture mode, it looks a bit more complex:
+
+- we use code-generated type-safe C++ structs instead of `NSDictionary *` type
+- together with `- constantsToExport` we have to override `- getConstants` method (both return type-safe C++ structs)
+- to produce type-safe struct, we use `facebook::react::typedConstants` function
+
+:::tip
+
+If you're wondering where all those C++ structs are defined, you can find `#import "ScreenOrientationPackage.h"` in XCode, Cmd+Click on it and select "Jump to Definition" action.
+
+:::
+
+<CompleteFile
+  filename="ScreenOrientationModule.mm"
+  language="objc"
+>
+
+
+    #import "ScreenOrientationModule.h"
+
+    /**
+    * When using Swift classes in ObjC implementation, the classes must be imported
+    * from generated Objective-C Interface Header
+    *
+    * @see https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Import-Code-Within-an-App-Target
+    */
+    #import "ScreenOrientationPackage-Swift.h"
+
+    #if RCT_NEW_ARCH_ENABLED
+    /**
+    * Import header file with codegenerated protocols based on the JS specification
+    *
+    * The name of the header matches the name provided in codegenConfig's `name` field in package.json
+    */
+    #import "ScreenOrientationPackage.h"
+
+    // Each turbo module extends codegenerated spec class
+    @interface ScreenOrientationModule () <NativeScreenOrientationModuleSpec>
+    @end
+    #endif
+
+    @interface ScreenOrientationModule () <ScreenOrientationModuleDelegate>
+    @end
+
+    // Declare the ObjC implementation for that native module class
+    @implementation ScreenOrientationModule {
+        ScreenOrientationModuleImpl *moduleImpl;
+        BOOL hasListeners;
+    }
+
+    // Return the name of the module - it should match the name provided in JS specification
+    RCT_EXPORT_MODULE(ScreenOrientationModule)
+
+    - (instancetype)init {
+        self = [super init];
+        if (self) {
+            moduleImpl = [ScreenOrientationModuleImpl new];
+            moduleImpl.delegate = self;
+        }
+        return self;
+    }
+
+    // Declare if module should be initialized on the main queue
+    + (BOOL)requiresMainQueueSetup
+    {
+        return NO;
+    }
+
+    // Declare which events will be emitted by the module
+    - (NSArray<NSString *> *)supportedEvents
+    {
+        return [ScreenOrientationModuleImpl supportedEvents];
+    }
+
+    - (void)startObserving
+    {
+        hasListeners = YES;
+    }
+
+    - (void)stopObserving
+    {
+        hasListeners = NO;
+    }
+
+    - (void)sendEventWithName:(NSString * _Nonnull)eventName
+                      payload:(NSDictionary<NSString *,id> * _Nonnull)payload
+    {
+        if (hasListeners) {
+            [self sendEventWithName:eventName body:payload];
+        }
+    }
+
+    /**
+    * Declare constants exported by the module
+    */
+    #if RCT_NEW_ARCH_ENABLED
+    - (facebook::react::ModuleConstants<JS::NativeScreenOrientationModule::Constants::Builder>)constantsToExport
+    {
+        return [self getConstants];
+    }
+
+    - (facebook::react::ModuleConstants<JS::NativeScreenOrientationModule::Constants::Builder>)getConstants {
+        return facebook::react::typedConstants<JS::NativeScreenOrientationModule::Constants::Builder>({
+            .PORTRAIT = @"portrait",
+            .LANDSCAPE = @"landscape"
+        });
+    }
+    #else
+    - (NSDictionary *)constantsToExport
+    {
+        return @{ @"PORTRAIT": @"portrait", @"LANDSCAPE": @"landscape" };
+    }
+    #endif
+
+    #if RCT_NEW_ARCH_ENABLED
+    // Implement RCTTurboModule protocol
+    - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+        (const facebook::react::ObjCTurboModule::InitParams &)params
+    {
+        return std::make_shared<facebook::react::NativeScreenOrientationModuleSpecJSI>(params);
+    }
+    #endif
+
+    @end
+</CompleteFile>

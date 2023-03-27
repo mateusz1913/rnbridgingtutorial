@@ -1,0 +1,39 @@
+---
+sidebar_label: JS specification
+sidebar_position: 3
+title: JS specification
+---
+
+import CodegenSpec from '../_codegen-spec.mdx';
+
+When all boilerplate is ready, let's navigate to `src/NativeScreenOrientationModule.ts`. To declare module spec, let's paste following content:
+
+```tsx title="src/NativeScreenOrientationModule.ts"
+import type { TurboModule } from 'react-native';
+import { TurboModuleRegistry } from 'react-native';
+
+export interface Spec extends TurboModule {
+  getConstants(): { PORTRAIT: string; LANDSCAPE: string }
+  addListener(eventName: string): void
+  removeListeners(count: number): void
+}
+
+export default TurboModuleRegistry.getEnforcing<Spec>('ScreenOrientationModule');
+```
+
+Each module that emits events needs to declare two methods in its spec - `addListener` and `removeListeners`.
+
+If a module exports some constants, it needs to declare `getConstants` method in its spec,
+that returns an object with all registered constants. In this case, the module declares two constants: `PORTRAIT` & `LANDSCAPE`.
+
+The module is available under the `ScreenOrientationModule` name
+
+<CodegenSpec />
+
+After that, let's finalize JS part with exporting module from `index.ts`
+
+```tsx title="src/index.ts"
+export { default as ScreenOrientationModule } from './NativeScreenOrientationModule';
+```
+
+JS part finished! Let's jump to [iOS implementation](./ios-impl).

@@ -1,0 +1,91 @@
+---
+sidebar_label: Module boilerplate
+sidebar_position: 2
+title: Module boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import AndroidTurboPackageBoilerplate from '../_android-turbo-package-boilerplate.mdx';
+import LinkPackage from '../_link-package.mdx';
+import PackageStructureBoilerplate from '../_package-structure-boilerplate.mdx';
+
+### Create package structure
+
+#### Package boilerplate
+
+<PackageStructureBoilerplate
+  isFabricComponent={false}
+  packageName="screen-orientation-package"
+  packageNameUpperCamelCase="ScreenOrientationPackage"
+  packageNameLowercase="screenorientationpackage"
+  packageNameUpperCase="SCREEN_ORIENTATION_PACKAGE"
+/>
+
+#### Source files stubs
+
+Finally, let's create stubs for source files. For JS, create following empty files:
+
+- `src/index.ts`
+- `src/NativeScreenOrientationModule.ts`
+
+For iOS implementation, create:
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+- `ios/ScreenOrientationModule.h`
+- `ios/ScreenOrientationModule.mm`
+- `ios/ScreenOrientationModuleImpl.swift`
+- `ios/ScreenOrientationPackage-Bridging-Header.h`
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+- `ios/ScreenOrientationModule.h`
+- `ios/ScreenOrientationModule.mm`
+- `ios/ScreenOrientationModuleImpl.h`
+- `ios/ScreenOrientationModuleImpl.mm`
+
+</TabItem>
+</Tabs>
+
+For Android implementation, create:
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+- `android/src/main/java/com/screenorientationpackage/ScreenOrientationModuleImpl.kt`
+- `android/src/main/java/com/screenorientationpackage/ScreenOrientationTurboPackage.kt`
+- `android/src/newarch/java/com/screenorientationpackage/ScreenOrientationModule.kt`
+- `android/src/oldarch/java/com/screenorientationpackage/ScreenOrientationModule.kt`
+
+<AndroidTurboPackageBoilerplate
+  language="kotlin"
+  namespace="screenorientationpackage"
+  packageClass="ScreenOrientationTurboPackage"
+/>
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+- `android/src/main/java/com/screenorientationpackage/ScreenOrientationModuleImpl.java`
+- `android/src/main/java/com/screenorientationpackage/ScreenOrientationTurboPackage.java`
+- `android/src/newarch/java/com/screenorientationpackage/ScreenOrientationModule.java`
+- `android/src/oldarch/java/com/screenorientationpackage/ScreenOrientationModule.java`
+
+<AndroidTurboPackageBoilerplate
+  language="java"
+  namespace="screenorientationpackage"
+  packageClass="ScreenOrientationTurboPackage"
+/>
+
+</TabItem>
+</Tabs>
+
+### Link the package with the app
+
+<LinkPackage package="screen-orientation-package" />
+
+Setup completed. Now, let's start coding with the [JS spec](./js-spec).
