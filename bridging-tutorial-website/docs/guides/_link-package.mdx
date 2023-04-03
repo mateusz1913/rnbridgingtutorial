@@ -90,3 +90,18 @@ Install Pods to link them to iOS project.
 ```sh
 npx pod-install
 ```
+
+:::tip
+
+<span>
+  You might encounter following error:
+  <br />
+  <code>
+    Specs satisfying the {props.packageNameUpperCamelCase} (from "../{props.package}") dependency were found, but they required a higher minimum deployment target.
+  </code>
+  <br />
+  <br />
+  To fix it, go to project's Podfile at <code>{`<rootDir>/ios/Podfile`}</code> and change <code>platform :ios, min_ios_version_supported</code> to <code>platform :ios, '13.0'</code>
+</span>
+
+:::
