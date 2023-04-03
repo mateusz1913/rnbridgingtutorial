@@ -46,6 +46,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+bridging-tutorial-website/.yarn/*
 
 # fastlane
 #
