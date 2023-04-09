@@ -4,28 +4,31 @@ sidebar_position: 2
 title: Method types
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 ### Void method
 
-Void methods can take multiple amount of arguments and does not return any value.
+Void methods can take multiple arguments and do not return any value.
 
 <Tabs groupId="specs">
 <TabItem value="JS" label="JS Spec">
 
 ```tsx title="src/NativeMyAwesomeModule.ts"
-import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import type { TurboModule } from "react-native";
+import { TurboModuleRegistry } from "react-native";
 
 // ...
 
 export interface Spec extends TurboModule {
-  myAwesomeVoidMethod(): void
-  myAwesomeVoidMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }): void
+  myAwesomeVoidMethod(): void;
+  myAwesomeVoidMethodWithArguments(
+    numArg: number,
+    objArg: { firstObjProp: string; secondObjProp?: boolean }
+  ): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+export default TurboModuleRegistry.getEnforcing<Spec>("MyAwesomeModule");
 ```
 
 </TabItem>
@@ -37,7 +40,7 @@ RCT_EXPORT_METHOD(myAwesomeVoidMethod)
     // ...
 }
 
-RCT_EXPORT_METHOD(myAwesomeVoidMethodWithArguments:(NSNumber *) numArg 
+RCT_EXPORT_METHOD(myAwesomeVoidMethodWithArguments:(NSNumber *) numArg
                                             objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomeVoidMethodWithArgumentsObjArg &) objArg)
 {
     // ...
@@ -91,23 +94,26 @@ public void myAwesomeVoidMethodWithArguments(double numArg, ReadableMap objArg) 
 
 ### Sync method
 
-Sync methods can take multiple amount of arguments and synchronously return the value.
+Sync methods can take multiple arguments and synchronously return the value.
 
 <Tabs groupId="specs">
 <TabItem value="JS" label="JS Spec">
 
 ```tsx title="src/NativeMyAwesomeModule.ts"
-import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import type { TurboModule } from "react-native";
+import { TurboModuleRegistry } from "react-native";
 
 // ...
 
 export interface Spec extends TurboModule {
-  myAwesomeSyncMethod(): number
-  myAwesomeSyncMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }): number
+  myAwesomeSyncMethod(): number;
+  myAwesomeSyncMethodWithArguments(
+    numArg: number,
+    objArg: { firstObjProp: string; secondObjProp?: boolean }
+  ): number;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+export default TurboModuleRegistry.getEnforcing<Spec>("MyAwesomeModule");
 ```
 
 </TabItem>
@@ -120,7 +126,7 @@ RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethod)
     return 42;
 }
 
-RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethodWithArguments:(NSNumber *) numArg 
+RCT_EXPORT_SYNCHRONOUS_TYPED_METHOD(double, myAwesomeSyncMethodWithArguments:(NSNumber *) numArg
                                                                       objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomeSyncMethodWithArgumentsObjArg &) objArg)
 {
     // ...
@@ -179,23 +185,26 @@ public double myAwesomeSyncMethodWithArguments(double numArg, ReadableMap objArg
 
 ### Promise method
 
-Promise methods can take multiple amount of arguments and asynchronously return the value.
+Promise methods can take multiple arguments and asynchronously return the value.
 
 <Tabs groupId="specs">
 <TabItem value="JS" label="JS Spec">
 
 ```tsx title="src/NativeMyAwesomeModule.ts"
-import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import type { TurboModule } from "react-native";
+import { TurboModuleRegistry } from "react-native";
 
 // ...
 
 export interface Spec extends TurboModule {
-  myAwesomePromiseMethod(): Promise<boolean>
-  myAwesomePromiseMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }): Promise<boolean>
+  myAwesomePromiseMethod(): Promise<boolean>;
+  myAwesomePromiseMethodWithArguments(
+    numArg: number,
+    objArg: { firstObjProp: string; secondObjProp?: boolean }
+  ): Promise<boolean>;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+export default TurboModuleRegistry.getEnforcing<Spec>("MyAwesomeModule");
 ```
 
 </TabItem>
@@ -209,7 +218,7 @@ RCT_EXPORT_METHOD(myAwesomePromiseMethod:(RCTPromiseResolveBlock) resolve
     resolve(@(YES));
 }
 
-RCT_EXPORT_METHOD(myAwesomePromiseMethodWithArguments:(NSNumber *) numArg 
+RCT_EXPORT_METHOD(myAwesomePromiseMethodWithArguments:(NSNumber *) numArg
                                                objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomePromiseMethodWithArgumentsObjArg &) objArg
                                               resolve:(RCTPromiseResolveBlock) resolve
                                                reject:(RCTPromiseRejectBlock) reject)
@@ -272,23 +281,27 @@ public void myAwesomePromiseMethodWithArguments(double numArg, ReadableMap objAr
 
 ### Callback method
 
-Callback methods can take multiple amount of arguments and take callback arguments which are used to communicate from native to JS world. Callbacks should be put as last arguments in the method.
+Callback methods can take multiple arguments including callback arguments which are used to communicate from native to JS world. Callbacks should be put as last arguments in the method.
 
 <Tabs groupId="specs">
 <TabItem value="JS" label="JS Spec">
 
 ```tsx title="src/NativeMyAwesomeModule.ts"
-import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import type { TurboModule } from "react-native";
+import { TurboModuleRegistry } from "react-native";
 
 // ...
 
 export interface Spec extends TurboModule {
-  myAwesomeCallbackMethod(myResultCallback: () => void): void
-  myAwesomeCallbackMethodWithArguments(numArg: number, objArg: { firstObjProp: string, secondObjProp?: boolean }, myResultCallback: () => void): void
+  myAwesomeCallbackMethod(myResultCallback: () => void): void;
+  myAwesomeCallbackMethodWithArguments(
+    numArg: number,
+    objArg: { firstObjProp: string; secondObjProp?: boolean },
+    myResultCallback: () => void
+  ): void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('MyAwesomeModule');
+export default TurboModuleRegistry.getEnforcing<Spec>("MyAwesomeModule");
 ```
 
 </TabItem>
@@ -301,7 +314,7 @@ RCT_EXPORT_METHOD(myAwesomeCallbackMethod:(RCTResponseSenderBlock) myResultCallb
     myResultCallback(@[nil]);
 }
 
-RCT_EXPORT_METHOD(myAwesomeCallbackMethodWithArguments:(NSNumber *) numArg 
+RCT_EXPORT_METHOD(myAwesomeCallbackMethodWithArguments:(NSNumber *) numArg
                                                 objArg:(JS::NativeMyAwesomeModule::SpecMyAwesomePromiseMethodWithArgumentsObjArg &) objArg
                                       myResultCallback:(RCTResponseSenderBlock) myResultCallback)
 {

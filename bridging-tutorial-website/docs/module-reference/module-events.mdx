@@ -79,7 +79,7 @@ Then in the implementation part, module has to override `supportedEvents` getter
 It has to also override `startObserving` and `stopObserving` methods, which are called when first and last listeners are added/removed.
 
 To emit event, the module should call `sendEventWithName:body:` method, which is inherited from `RCTEventEmitter` class.
-It takes event name and an object payload (NSDictionary type), which will be send to JS listener.
+It takes event name and an object payload (NSDictionary type), which will be sent to JS listener.
 
 </TabItem>
 
