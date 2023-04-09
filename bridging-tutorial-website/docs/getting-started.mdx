@@ -76,7 +76,7 @@ Install and configure `babel-plugin-module-resolver`:
 yarn add -D babel-plugin-module-resolver
 ```
 
-This will enable you to map imports to specified directories with nice aliases.
+This will allow you to map imports to specified directories with nice aliases.
 
 ```diff title="babel.config.js"
 module.exports = {
@@ -162,11 +162,11 @@ module.exports = {
 }
 ```
 
-First change to `"android"` command is decreasing build times on Android - it will only build for CPU architecture of the connected device/emulator that you will use for the development.
+First change to `"android"` command is decreasing build times on Android - it will only build for CPU architecture of the connected device/emulator that you will use for development.
 
 Those other commands - `"codegen:android"` & `"codegen:ios"` - are commands that invoke React Native Codegen and generate specification for your native code.
 
-### 6. If you'll use Kotlin for Android development, add Kotlin to your test project, otherwise skip this step
+### 6. If youa are going to use Kotlin for Android development, add Kotlin to your test project, otherwise skip this step
 
 ```diff title="android/build.gradle"
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -212,7 +212,7 @@ yarn android
 
 ### 7. Switch the app to ["New Architecture"](https://reactnative.dev/docs/the-new-architecture/landing-page)
 
-"New Architecture" is the future and that's why it will be used throughout this tutorial. Guides will showcase how to write the code that supports both old and new arch. However, because new arch setups are more complex, you'll benefit from testing the native code you wrote with TurboModules and Fabric and the backward compatibility layer will make it just work on the old architecture.
+"New Architecture" is the future and that's why it will be used throughout this tutorial. Guides will showcase how to write code that supports both old and new arch. However, because new arch setups are more complex, you'll benefit from testing the native code you wrote with TurboModules and Fabric and the backward compatibility layer will make it work on the old architecture.
 
 To enable "New Architecture" on Android:
 - go to `android/gradle.properties` in your IDE

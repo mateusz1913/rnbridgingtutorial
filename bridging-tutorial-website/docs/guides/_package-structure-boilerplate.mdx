@@ -5,10 +5,10 @@ import TabItem from '@theme/TabItem';
 ##### `package.json`
 
 <p>
-Let's start with creating <code>{props.packageName}</code> directory containing package's code.
+Let's start by creating <code>{props.packageName}</code> directory (in project's root) containing package's code.
 </p>
 
-Inside that directory, let's create `package.json` with the following content:
+Inside that directory, let's create a `package.json` file with the following content:
 
 <CodeBlock language="json" title="package.json">
   {`{
@@ -113,7 +113,7 @@ This will link Objective-C, Objective-C++ & Swift files from `ios` directory and
 
 ##### `build.gradle`
 
-We also need similar configuration for Android - let's create `build.gradle` inside `android` directory
+We also need similar configuration for Android. First let's create `android` directory and then under that directory create `build.gradle` file.
 
 <Tabs groupId="gradle">
 <TabItem value="groovy" label="Groovy script (build.gradle)">
@@ -255,7 +255,7 @@ dependencies {
 
 This will link Java & Kotlin files under `android/src/{main|newarch|oldarch}/java/com/<packagename>` as well as code-generated files under `android/build/generated/source/codegen/java/com/<packagename>` (combined values declared under `namespace` and `sourceSets`).
 
-You may noticed, that the configuration loads sth from `$projectDir/react-native-helpers.gradle`. In fact that file includes implementation for `shouldConsumeReactNativeFromMavenCentral` helper. Let's create it:
+You may have noticed, that the configuration loads sth from `$projectDir/react-native-helpers.gradle`. In fact that file includes implementation for `shouldConsumeReactNativeFromMavenCentral` helper. Let's create it:
 
 <Tabs groupId="gradle">
 <TabItem value="groovy" label="Groovy script (build.gradle)">
@@ -356,8 +356,8 @@ val shouldConsumeReactNativeFromMavenCentral by extra {
 </TabItem>
 </Tabs>
 
-Wow, lots of code just to detect used RN version. Fortunately, you will have to write it only once.
+Wow, lots of code just to detect used RN version. Fortunately, you will only have to write it once.
 
 If you are curious, this code tries to locate `react-native/ReactAndroid/gradle.properties` file, where `VERSION_NAME` property is saved. Then it tries to retrieve minor part and use it in `shouldConsumeReactNativeFromMavenCentral`.
 That function checks if minor version is greater or equal than 71 (the first version with RN's Android code published to MavenCentral - sth like npm, but for Android packages). The function is declared as `project.ext`/`by extra`,
-which makes it possible, to use that in other Gradle script file.
+which makes it possible to use that in other Gradle script file.
