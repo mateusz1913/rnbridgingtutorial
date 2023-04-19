@@ -68,8 +68,8 @@ RCT_EXPORT_METHOD(setRightKnobValueProgrammatically:(nonnull NSNumber*) reactTag
 
 - (void)sendOnRangeSliderViewValueChangeEventWithMinValue:(double)minValue maxValue:(double)maxValue
 {
-    if (slider.onRangeSliderViewValueChange) {
-        slider.onRangeSliderViewValueChange(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
+    if (sliderView.onRangeSliderViewValueChange) {
+        sliderView.onRangeSliderViewValueChange(@{ @"leftKnobValue": @(minValue), @"rightKnobValue": @(maxValue) });
     }
 }
 
