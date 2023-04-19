@@ -22,12 +22,12 @@ export default TurboModuleRegistry.getEnforcing<Spec>('AppInfoModule');
 ```
 
 This does 2 things:
-- declares module specification with 3 synchronous methods, each one returning string value
+- declares module specification with 3 synchronous methods, each one returning a string value
 - declares that module, should be available under `AppInfoModule` name
 
 <CodegenSpec />
 
-After that, let's finalize JS part with exporting module from `index.ts`
+After that, let's finalize JS part by exporting module from `index.ts`
 
 ```tsx title="src/index.ts"
 export { default as AppInfoModule } from './NativeAppInfoModule';

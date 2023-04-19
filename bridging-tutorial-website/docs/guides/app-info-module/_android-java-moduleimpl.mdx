@@ -65,7 +65,7 @@ public class AppInfoModuleImpl {
 }
 ```
 
-`AppInfoModuleImpl` declares 3 methods, each of them returns string value. It also declares static `NAME` constant which will be used in RN's module wrapper.
+`AppInfoModuleImpl` declares 3 methods, each of them returns a string value. It also declares static `NAME` constant which will be used in RN's module wrapper.
 
 To retrieve bundle id, we will use [Context#getPackageName](https://developer.android.com/reference/android/content/Context#getPackageName()) method.
 For other app informations we will be calling [PackageManager#getPackageInfo](https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20android.content.pm.PackageManager.PackageInfoFlags)) (which can be obtained with [Context#getPackageManager](https://developer.android.com/reference/android/content/Context#getPackageManager())).
