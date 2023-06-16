@@ -1,0 +1,178 @@
+---
+sidebar_label: JS specification
+sidebar_position: 3
+title: JS specification
+---
+
+import CodegenSpec from '../_codegen-spec.mdx';
+
+When all boilerplate is ready, let's navigate to `src` directory, where JS specification files are located.
+Very often, complex native layouts expose different APIs, that are platform-specific, so it's hard to handle them with one specification.
+Luckily, RN's [codegenNativeComponent](https://reactnative.dev/docs/the-new-architecture/pillars-fabric-components#2-javascript-specification) function accepts `excludedPlatforms` field as an option.
+**We'll use it for learning purposes**, to declare Android-only and iOS-only specifications.
+
+Let's start with the iOS - navigate to `src/RNNativeListViewNativeComponent.tsx` and declare the spec:
+
+```tsx title="src/RNNativeListViewNativeComponent.tsx"
+import type * as React from 'react';
+import type {
+  HostComponent,
+  ViewProps,
+} from 'react-native';
+import type { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+type DataItem = { imageUrl: string; description: string }
+
+export interface RNNativeListViewProps extends ViewProps {
+  data: ReadonlyArray<Readonly<DataItem>>;
+  options: { placeholderImage: string };
+}
+
+export type RNNativeListViewComponent = HostComponent<RNNativeListViewProps>;
+
+export interface RNNativeListViewNativeCommands {
+  scrollToItem: (viewRef: React.ElementRef<RNNativeListViewComponent>, index: Int32) => void;
+}
+
+export const RNNativeListViewCommands = codegenNativeCommands<RNNativeListViewNativeCommands>({
+  supportedCommands: [ 'scrollToItem' ],
+});
+
+export default codegenNativeComponent<RNNativeListViewProps>('RNNativeListView', {
+  excludedPlatforms: [ 'android' ],
+}) as RNNativeListViewComponent;
+```
+
+The iOS native component will accept two props, first is an array of objects, and second is an object.
+Additionally, component will have one scroll command declared with `codegenNativeCommands` function.
+To mark the component as iOS-only, let's put `excludedPlatforms` array to the `codegenNativeComponent` options argument.
+
+Now, let's handle Android - navigate to `src/AndroidNativeListViewNativeComponent.tsx` and declare the spec:
+
+```tsx title="src/AndroidNativeListViewNativeComponent.tsx"
+import type * as React from 'react';
+import type {
+  HostComponent,
+  ViewProps,
+} from 'react-native';
+import type { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
+type DataItem = { imageUrl: string; description: string }
+
+export interface AndroidNativeListViewProps extends ViewProps {
+  data: ReadonlyArray<Readonly<DataItem>>;
+  options: { placeholderImage: string };
+}
+
+export type AndroidNativeListViewComponent = HostComponent<AndroidNativeListViewProps>;
+
+export interface AndroidNativeListViewNativeCommands {
+  scrollToItem: (viewRef: React.ElementRef<AndroidNativeListViewComponent>, index: Int32) => void;
+}
+
+export const AndroidNativeListViewCommands = codegenNativeCommands<AndroidNativeListViewNativeCommands>({
+  supportedCommands: [ 'scrollToItem' ],
+});
+
+export default codegenNativeComponent<AndroidNativeListViewProps>('AndroidNativeListView', {
+  excludedPlatforms: [ 'iOS' ],
+}) as AndroidNativeListViewComponent;
+```
+
+The spec looks very similar to the iOS one, **however we keep them separate for learning purposes** - after finishing this guide, you may want to play with those platform layouts and try to expose some specific props or commands without breaking the other platform.
+
+<CodegenSpec />
+
+Now let's wrap native components - to do that, we will use platform-specific file extension (`.ios.tsx` & `.android.tsx`) to let the bundler pick correct one, depending on the platform:
+
+- `src/NativeListView.ios.tsx`
+
+```tsx title="src/NativeListView.ios.tsx"
+import * as React from 'react';
+
+import type { RNNativeListViewComponent } from './RNNativeListViewNativeComponent';
+import RNNativeListViewNativeComponent, { RNNativeListViewCommands } from './RNNativeListViewNativeComponent';
+
+type Props = React.ComponentProps<typeof RNNativeListViewNativeComponent>;
+
+export class NativeListView extends React.Component<Props> {
+  private innerRef = React.createRef<React.ElementRef<RNNativeListViewComponent>>();
+
+  scrollToItem = (index: number) => {
+    const ref = this.innerRef.current;
+
+    if (ref) {
+      RNNativeListViewCommands.scrollToItem(ref, index);
+    }
+  };
+
+  render() {
+    return <RNNativeListViewNativeComponent ref={this.innerRef} {...this.props} />;
+  }
+}
+```
+
+- `src/NativeListView.android.tsx`
+
+```tsx title="src/NativeListView.android.tsx"
+import * as React from 'react';
+
+import type { AndroidNativeListViewComponent } from './AndroidNativeListViewNativeComponent';
+import AndroidNativeListViewNativeComponent, { AndroidNativeListViewCommands } from './AndroidNativeListViewNativeComponent';
+
+type Props = React.ComponentProps<typeof AndroidNativeListViewNativeComponent>;
+
+export class NativeListView extends React.Component<Props> {
+  private innerRef = React.createRef<React.ElementRef<AndroidNativeListViewComponent>>();
+
+  scrollToItem = (index: number) => {
+    const ref = this.innerRef.current;
+
+    if (ref) {
+      AndroidNativeListViewCommands.scrollToItem(ref, index);
+    }
+  };
+
+  render() {
+    return <AndroidNativeListViewNativeComponent ref={this.innerRef} {...this.props} />;
+  }
+}
+```
+
+- `src/NativeListView.tsx`
+
+```tsx title="src/NativeListView.tsx"
+import * as React from 'react';
+import type { ViewProps } from 'react-native';
+import { View } from 'react-native';
+
+type Props = ViewProps & {
+  data: ReadonlyArray<{ imageUrl: string; description: string }>
+  options: Readonly<{ placeholderImage: string }>
+};
+
+export class NativeListView extends React.Component<Props> {
+  scrollToItem = (index: number) => {
+    console.log(index);
+  };
+
+  render() {
+    return <View {...this.props} />;
+  }
+}
+```
+
+In iOS & Android specific implementations, we pass all the props, and handle the `scrollToItem` command.
+Inside the `src/NativeListView.tsx` we declare "dummy" implementation for out-of-tree platforms.
+
+After that, let's finalize JS part with exporting module from `index.ts`
+
+```tsx title="src/index.ts"
+export { NativeListView } from './NativeListView';
+```
+
+JS part finished! Let's jump to [iOS implementation](./ios-impl).

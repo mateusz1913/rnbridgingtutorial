@@ -1,0 +1,39 @@
+#### `DataItem.h`
+
+```objc title="DataItem.h"
+#import <Foundation/Foundation.h>
+
+@interface DataItem : NSObject
+
+@property (nonatomic, copy) NSString * _Nonnull imageUrl;
+@property (nonatomic, copy) NSString * _Nonnull itemDescription;
+
+- (instancetype)initWithImageUrl:(NSString * _Nonnull)imageUrl itemDescription:(NSString * _Nonnull)itemDescription;
+
+@end
+```
+
+We start by defining `DataItem` object's interface - it extends `NSObject` and declares two properties (`imageUrl` & `itemDescription`).
+
+#### `DataItem.mm`
+
+```swift title="ios/DataItem.swift"
+#import "DataItem.h"
+
+@implementation DataItem
+
+- (instancetype)initWithImageUrl:(NSString *)imageUrl itemDescription:(NSString *)itemDescription
+{
+    self = [super init];
+    if (self) {
+        _imageUrl = imageUrl;
+        _itemDescription = itemDescription;
+    }
+    return self;
+}
+
+@end
+```
+
+Next step is declaring implementation for the object.
+We will use it later when parsing `data` prop in Objective-C++ code

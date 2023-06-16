@@ -1,0 +1,94 @@
+#### `AndroidNativeListViewFragment.java`
+
+Let's make all `RecyclerView` setup in the custom [`Fragment`](https://developer.android.com/reference/androidx/fragment/app/Fragment.html) class:
+
+```java title="android/src/main/java/com/nativelistpackage/AndroidNativeListViewFragment.java"
+package com.nativelistpackage;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AndroidNativeListViewFragment extends Fragment {
+    public static final String NAME = "AndroidNativeListView";
+    private static final int NUM_OF_COLUMNS = 3;
+
+    @Override
+    public View onCreateView(
+        LayoutInflater inflater,
+        ViewGroup container,
+        Bundle savedInstanceState
+    ) {
+        return inflater.inflate(R.layout.fragment_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new GridLayoutManager(
+                requireContext(),
+                NUM_OF_COLUMNS,
+                GridLayoutManager.VERTICAL,
+                false
+        ));
+        recyclerView.setAdapter(new NativeListAdapter(requireContext()));
+    }
+
+    public void setBackgroundColor(@Nullable Integer backgroundColor) {
+        Integer color = backgroundColor;
+        if (color == null) {
+            color = Color.TRANSPARENT;
+        }
+        requireView().setBackgroundColor(color);
+    }
+
+    public void setData(ReadableArray data) {
+        List<DataItem> listData = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            ReadableMap item = data.getMap(i);
+            DataItem dataItem = new DataItem(item.getString("imageUrl"), item.getString("description"));
+            listData.add(dataItem);
+        }
+        RecyclerView recyclerView = requireView().findViewById(R.id.list);
+        ((NativeListAdapter)recyclerView.getAdapter()).data = listData;
+    }
+
+    public void setOptions(ReadableMap options) {
+        String placeholderImage = options.getString("placeholderImage");
+        RecyclerView recyclerView = requireView().findViewById(R.id.list);
+        ((NativeListAdapter)recyclerView.getAdapter()).placeholderImage = placeholderImage;
+    }
+
+    public void scrollToItem(int index) {
+        RecyclerView recyclerView = requireView().findViewById(R.id.list);
+        recyclerView.smoothScrollToPosition(index);
+    }
+}
+```
+
+To connect the XML layout we created before, we need to override `onCreateView` method.
+That method returns the root view of the fragment, which in our case is inflated XML layout with the `RecyclerView`.
+
+In order to set the properties of the `RecyclerView`, we need to override `onViewCreated` method.
+It provides the instance of fragment's root view, that we can use to find the `RecyclerView` and attach the adapter class created before.
+Additionally we need to specify the type of [`RecyclerView.LayoutManager`](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.LayoutManager) used by the list - in our case we want to have vertical list with multiple columns and we can achieve it with [`GridLayoutManager`](https://developer.android.com/reference/androidx/recyclerview/widget/GridLayoutManager) (**to simplify the example**, we will set 3 columns - after finishing the guide if you want, you can think how to make it dynamic and controlled from JS code).
+
+To handle props and scroll command, we also need to declare additional methods that interact with the `RecyclerView`.
+
+With the fragment ready, let's finish by connecting it to the RN's views hierarchy.

@@ -1,0 +1,366 @@
+import CompleteFile from '../_complete-file.mdx';
+
+#### `RNNativeListViewViewController.h`
+
+Next step is to create custom view controller:
+
+```objc title="ios/RNNativeListViewViewController.h"
+#import <UIKit/UIKit.h>
+
+#import "DataItem.h"
+
+@interface RNNativeListViewViewController : UIViewController
+
+@property (nonatomic, copy) NSArray<DataItem *> * _Nonnull data;
+@property (nonatomic, copy) NSString * _Nonnull placeholderImage;
+@property (nonatomic, strong) UIColor * _Nullable backgroundColor;
+
+- (void)scrollToItem:(NSInteger)index;
+
+@end
+```
+
+Let's start by defining custom class that extends base [`UIViewController`](https://developer.apple.com/documentation/uikit/uiviewcontroller?language=objc).
+
+#### `RNNativeListViewViewController.mm`
+
+After declaring the header interface, let's create implementation for view controller class:
+
+```objc title="ios/RNNativeListViewViewController.mm"
+#import <UIKit/UIKit.h>
+
+#import "RNNativeListViewViewController.h"
+#import "NativeListCell.h"
+
+@implementation RNNativeListViewViewController {
+    NSInteger NUM_OF_COLUMNS;
+    UICollectionView * _Nullable collectionView;
+    UICollectionViewFlowLayout *layout;
+}
+
++ (NSString *)cellIdentifier
+{
+    return @"MyCell";
+}
+
+- (instancetype)init
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        NUM_OF_COLUMNS = 3;
+        layout = [UICollectionViewFlowLayout new];
+        layout.sectionInset = UIEdgeInsetsMake(20, 10, 10, 10);
+        layout.minimumLineSpacing = 10;
+        layout.minimumInteritemSpacing = 10;
+    }
+    return self;
+}
+
+- (void)setData:(NSArray<DataItem *> *)data
+{
+    _data = data;
+    if (collectionView != nil) {
+        [collectionView reloadData];
+    }
+}
+
+- (UIColor *)backgroundColor
+{
+    return self.view.backgroundColor;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    [self.view setBackgroundColor:backgroundColor];
+}
+
+- (void)scrollToItem:(NSInteger)index
+{
+    if (collectionView != nil) {
+        [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+    }
+}
+
+@end
+```
+
+It has private fields that hold [`UICollectionViewFlowLayout`](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout?language=objc) and [`UICollectionView`](https://developer.apple.com/documentation/uikit/uicollectionview?language=objc) instances.
+To handle JS props it also declares public properties (also exported to Objective-C code). And there's `scrollToItem:` method which handles our scroll command.
+
+Next step is to extend the class with [`UICollectionViewDataSource`](https://developer.apple.com/documentation/uikit/uicollectionviewdatasource?language=objc) protocol:
+
+```objc title="ios/RNNativeListViewViewController.mm"
+#import <UIKit/UIKit.h>
+
+#import "RNNativeListViewViewController.h"
+#import "NativeListCell.h"
+
+// highlight-start
+@interface RNNativeListViewViewController () <UICollectionViewDataSource>
+@end
+// highlight-end
+
+@implementation RNNativeListViewViewController {
+    NSInteger NUM_OF_COLUMNS;
+    UICollectionView * _Nullable collectionView;
+    UICollectionViewFlowLayout *layout;
+}
+
+// ...
+
+// highlight-start
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return _data.count;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NativeListCell *myCell = (NativeListCell *)[collectionView dequeueReusableCellWithReuseIdentifier:[RNNativeListViewViewController cellIdentifier] forIndexPath:indexPath];
+    DataItem *item = _data[indexPath.item];
+    [myCell setupCellWithItem:item placeholderImage:_placeholderImage];
+    return myCell;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+// highlight-end
+
+@end
+```
+
+With that extension, we declare details about items count, sections count (in that case we don't split data in sections, so we return 1) and the item that is rendered in specific column & row.
+You can take a look at the latter method - `collectionView:cellForItemAtIndexPath:` - it gets new or recycled cell for a specific column & row and bounds it to data item (via `setupCellWithItem:placeholderImage:` method that we defined earlier on the cell instance).
+
+The last step is to handle mounting/unmounting our list element when the view controller is displayed or disappears:
+
+```objc title="ios/RNNativeListViewViewController.mm"
+// ...
+
+@implementation RNNativeListViewViewController {
+    NSInteger NUM_OF_COLUMNS;
+    UICollectionView * _Nullable collectionView;
+    UICollectionViewFlowLayout *layout;
+}
+
+// ...
+
+- (instancetype)init
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        NUM_OF_COLUMNS = 3;
+        layout = [UICollectionViewFlowLayout new];
+        layout.sectionInset = UIEdgeInsetsMake(20, 10, 10, 10);
+        layout.minimumLineSpacing = 10;
+        layout.minimumInteritemSpacing = 10;
+    }
+    return self;
+}
+
+// highlight-start
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+
+    if (collectionView == nil) {
+        return;
+    }
+
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)collectionView.collectionViewLayout;
+    if (layout == nil) {
+        return;
+    }
+
+    CGFloat sectionInsetMargins = layout.sectionInset.left + layout.sectionInset.right;
+    CGFloat safeAreaMargins = collectionView.safeAreaInsets.left + collectionView.safeAreaInsets.right;
+    CGFloat marginsAndInsets = sectionInsetMargins + safeAreaMargins + layout.minimumInteritemSpacing * (CGFloat)(NUM_OF_COLUMNS - 1);
+    CGFloat itemWidth = (collectionView.bounds.size.width - marginsAndInsets) / (CGFloat)NUM_OF_COLUMNS;
+    [layout setItemSize:CGSizeMake(itemWidth, itemWidth)];
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent != nil) {
+        UICollectionView *newCollectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
+        newCollectionView.dataSource = self;
+        [newCollectionView registerClass:[NativeListCell class] forCellWithReuseIdentifier:[RNNativeListViewViewController cellIdentifier]];
+        [newCollectionView setBackgroundColor:[[UIColor alloc] initWithWhite:1 alpha:0]];
+
+        collectionView = newCollectionView;
+        [self.view addSubview:collectionView];
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [collectionView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [collectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [collectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
+    }
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent == nil) {
+        [collectionView removeFromSuperview];
+        collectionView = nil;
+    }
+}
+// highlight-end
+
+- (void)setData:(NSArray<DataItem *> *)data
+{
+    _data = data;
+    if (collectionView != nil) {
+        [collectionView reloadData];
+    }
+}
+
+// ...
+
+@end
+```
+
+Three methods on our view controller are overriden here.
+
+Inside `didMoveToParentViewController:`, when the view controller is mounted, the `UICollectionView` instance is created with the flow layout.
+It has `NativeListCell` class registered, its `dataSource` field is set to `self` and the collection view position inside view controller is set.
+
+The `willMoveToParentViewController:` is used to do the cleanup (when the view controller is unmounted) - the collection view is unmounted and garbage collected.
+
+Third method (`viewWillLayoutSubviews`) is used to declare the item size based on the width of the list element and number of columns (**to simplify the example**, it's set to 3 - after finishing the guide if you want, you can think how to make it dynamic and controlled from JS code).
+
+<CompleteFile
+  filename="RNNativeListViewViewController.mm"
+  language="objc"
+>
+
+    #import <UIKit/UIKit.h>
+
+    #import "RNNativeListViewViewController.h"
+    #import "NativeListCell.h"
+
+    @interface RNNativeListViewViewController () <UICollectionViewDataSource>
+    @end
+
+    @implementation RNNativeListViewViewController {
+        NSInteger NUM_OF_COLUMNS;
+        UICollectionView * _Nullable collectionView;
+        UICollectionViewFlowLayout *layout;
+    }
+
+    + (NSString *)cellIdentifier
+    {
+        return @"MyCell";
+    }
+
+    - (instancetype)init
+    {
+        self = [super initWithNibName:nil bundle:nil];
+        if (self) {
+            NUM_OF_COLUMNS = 3;
+            layout = [UICollectionViewFlowLayout new];
+            layout.sectionInset = UIEdgeInsetsMake(20, 10, 10, 10);
+            layout.minimumLineSpacing = 10;
+            layout.minimumInteritemSpacing = 10;
+        }
+        return self;
+    }
+
+    - (void)viewWillLayoutSubviews
+    {
+        [super viewWillLayoutSubviews];
+
+        if (collectionView == nil) {
+            return;
+        }
+
+        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)collectionView.collectionViewLayout;
+        if (layout == nil) {
+            return;
+        }
+
+        CGFloat sectionInsetMargins = layout.sectionInset.left + layout.sectionInset.right;
+        CGFloat safeAreaMargins = collectionView.safeAreaInsets.left + collectionView.safeAreaInsets.right;
+        CGFloat marginsAndInsets = sectionInsetMargins + safeAreaMargins + layout.minimumInteritemSpacing * (CGFloat)(NUM_OF_COLUMNS - 1);
+        CGFloat itemWidth = (collectionView.bounds.size.width - marginsAndInsets) / (CGFloat)NUM_OF_COLUMNS;
+        [layout setItemSize:CGSizeMake(itemWidth, itemWidth)];
+    }
+
+    - (void)didMoveToParentViewController:(UIViewController *)parent
+    {
+        if (parent != nil) {
+            UICollectionView *newCollectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
+            newCollectionView.dataSource = self;
+            [newCollectionView registerClass:[NativeListCell class] forCellWithReuseIdentifier:[RNNativeListViewViewController cellIdentifier]];
+            [newCollectionView setBackgroundColor:[[UIColor alloc] initWithWhite:1 alpha:0]];
+
+            collectionView = newCollectionView;
+            [self.view addSubview:collectionView];
+            
+            collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+            [NSLayoutConstraint activateConstraints:@[
+                [collectionView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+                [collectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+                [collectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+                [collectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+            ]];
+        }
+    }
+
+    - (void)willMoveToParentViewController:(UIViewController *)parent
+    {
+        if (parent == nil) {
+            [collectionView removeFromSuperview];
+            collectionView = nil;
+        }
+    }
+
+    - (void)setData:(NSArray<DataItem *> *)data
+    {
+        _data = data;
+        if (collectionView != nil) {
+            [collectionView reloadData];
+        }
+    }
+
+    - (UIColor *)backgroundColor
+    {
+        return self.view.backgroundColor;
+    }
+
+    - (void)setBackgroundColor:(UIColor *)backgroundColor
+    {
+        [self.view setBackgroundColor:backgroundColor];
+    }
+
+    - (void)scrollToItem:(NSInteger)index
+    {
+        if (collectionView != nil) {
+            [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+        }
+    }
+
+    - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+    {
+        return _data.count;
+    }
+
+    - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+    {
+        NativeListCell *myCell = (NativeListCell *)[collectionView dequeueReusableCellWithReuseIdentifier:[RNNativeListViewViewController cellIdentifier] forIndexPath:indexPath];
+        DataItem *item = _data[indexPath.item];
+        [myCell setupCellWithItem:item placeholderImage:_placeholderImage];
+        return myCell;
+    }
+
+    - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+    {
+        return 1;
+    }
+
+    @end
+</CompleteFile>

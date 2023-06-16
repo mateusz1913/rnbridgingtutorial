@@ -1,0 +1,20 @@
+#### `fragment_list.xml`
+
+Open `android/src/main/res/layout/fragment_list.xml` file in Android Studio and paste the following code:
+
+```xml title="android/src/main/res/layout/fragment_list.xml"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Here we're wrapping `RecyclerView` (the native list element) inside a `ConstraintLayout` and make it fill parent's size.
+As in the card item layout, we declare `android:id` attribute, to reference the `RecyclerView` later inside the code.

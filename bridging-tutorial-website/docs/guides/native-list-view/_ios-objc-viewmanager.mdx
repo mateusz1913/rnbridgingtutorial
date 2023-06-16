@@ -1,0 +1,73 @@
+#### `RNNativeListViewManager.h`
+
+```objc title="RNNativeListViewManager.h"
+#import <React/RCTUIManager.h>
+#import <React/RCTViewManager.h>
+
+@interface RNNativeListViewManager : RCTViewManager
+
+@end
+```
+
+We declare the view manager class that extends RCTViewManager. One thing you may have noticed is RCTUIManager import - we will use it to implement native commands for the old architecture view.
+
+#### `RNNativeListViewManager.mm`
+
+```objc title="RNNativeListViewManager.mm"
+#import "RNNativeListViewManager.h"
+
+#import <React/RCTConvert.h>
+
+#import "RNNativeListClassicViewContainerView.h"
+#import "RNNativeListClassicViewViewController.h"
+
+@implementation RNNativeListViewManager
+
+RCT_EXPORT_MODULE(RNNativeListView)
+
+RCT_CUSTOM_VIEW_PROPERTY(data, NSArray, RNNativeListViewContainerView)
+{
+    NSArray<NSDictionary *> *array = [RCTConvert NSDictionaryArray:json];
+    NSMutableArray<DataItem *> *data = [NSMutableArray arrayWithCapacity:array.count];
+    for (int i = 0; i < array.count; i++) {
+        [data addObject:[[DataItem alloc] initWithImageUrl:array[i][@"imageUrl"] itemDescription:array[i][@"description"]]];
+    }
+    [view.viewController setData:data];
+}
+RCT_CUSTOM_VIEW_PROPERTY(options, NSDictionary, RNNativeListViewContainerView)
+{
+    [view.viewController setPlaceholderImage:[RCTConvert NSString:json[@"placeholderImage"]]];
+}
+RCT_CUSTOM_VIEW_PROPERTY(backgroundColor, UIColor, RNNativeListViewContainerView)
+{
+    [view.viewController setBackgroundColor:[RCTConvert UIColor:json]];
+}
+
+#if RCT_NEW_ARCH_ENABLED
+#else
+RCT_EXPORT_METHOD(scrollToItem:(nonnull NSNumber*) reactTag index:(NSInteger) index) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        UIView *view = viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:[RNNativeListViewContainerView class]]) {
+            return;
+        }
+        [((RNNativeListViewContainerView *) view).viewController scrollToItem:index];
+    }];
+}
+
+- (UIView *)view
+{
+    RNNativeListViewContainerView *view = [RNNativeListViewContainerView new];
+    view.viewController = [RNNativeListViewViewController new];
+    return view;
+}
+#endif
+
+@end
+```
+
+And as for every view manager class, we start with `RCT_EXPORT_MODULE` macro and we declare exported properties with `RCT_EXPORT_VIEW_PROPERTY` macro.
+
+For the old architecture mode, we have to additionaly declare native command for `scrollToItem` method (using `RCT_EXPORT_METHOD` macro and `RCTUIManager` class).
+
+The `view` getter is also declared for the old arch - for new arch we are just using Fabric component view.

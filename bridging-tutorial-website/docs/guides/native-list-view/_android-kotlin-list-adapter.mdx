@@ -1,0 +1,72 @@
+#### `NativeListAdapter.kt`
+
+With view holder ready, let's use it inside [`RecyclerView.Adapter`](https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView.Adapter) custom class:
+
+```kotlin title="android/src/main/java/com/nativelistpackage/NativeListAdapter.kt"
+package com.nativelistpackage
+
+import android.content.Context
+import android.content.res.Resources
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
+import java.lang.reflect.Field
+
+class NativeListAdapter(private val context: Context): RecyclerView.Adapter<NativeListViewHolder>() {
+    var data: List<DataItem> = emptyList()
+    var placeholderImage: String = ""
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NativeListViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_item, parent, false)
+        return NativeListViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: NativeListViewHolder, position: Int) {
+        val drawable = ResourcesCompat.getDrawable(
+            context.resources,
+            getDrawableIdWithName(placeholderImage),
+            null
+        )
+        holder.imageView.setImageDrawable(drawable)
+        holder.label.text = data[position].description
+    }
+
+    override fun getItemCount(): Int {
+        return data.size
+    }
+
+    private fun getDrawableIdWithName(name: String): Int {
+        val appResources: Resources = context.resources
+        var resourceId = appResources.getIdentifier(name, "drawable", context.packageName)
+        if (resourceId == 0) {
+            // If drawable is not present in app's resources, check system's resources
+            resourceId = getResId(name, android.R.drawable::class.java)
+        }
+        return resourceId
+    }
+
+    private fun getResId(resName: String, c: Class<*>): Int {
+        return try {
+            val idField: Field = c.getDeclaredField(resName)
+            idField.getInt(idField)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+    }
+}
+```
+
+Inside the custom adapter class we have to override 3 methods:
+
+- `onCreateViewHolder` - it creates the view for the item and wraps it in the instance of `RecyclerView.ViewHolder` class (in this case `NativeListViewHolder`)
+- `onBindViewHolder` - it binds the data for specific item to dedicated view holder instance (in this case the description text and the name of the system image to the drawable displayed in the image view)
+- `getItemCount` - it returns the size of the list (in this case size of `data` property, which represents the JS prop value)
+
+:::info
+
+**For learning purposes**, we only use system images/icons for the image view.
+After completing this guide, you can work on enhancing the experience by using remote images with e.g. [Glide library](https://github.com/bumptech/glide).
+
+:::

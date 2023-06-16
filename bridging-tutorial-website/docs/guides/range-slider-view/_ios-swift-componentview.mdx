@@ -6,6 +6,8 @@ import CompleteFile from '../_complete-file.mdx';
 #if RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
 
+@class RangeSliderView;
+
 @interface RangeSliderViewComponentView : RCTViewComponentView
 
 @end
@@ -13,7 +15,9 @@ import CompleteFile from '../_complete-file.mdx';
 #endif
 ```
 
-Nothing fancy here, Fabric component view extending base `RCTViewComponentView` class.
+Here the Fabric component view extends base `RCTViewComponentView` class.
+
+The `RangeSliderView` Swift class has its "forward-declaration" (check out Apple's Swift-ObjC interop [dedicated docs section](https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations)).
 
 #### `RangeSliderViewComponentView.mm`
 

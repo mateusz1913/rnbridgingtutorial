@@ -1,0 +1,46 @@
+#### `card_item.xml`
+
+Let's start by defining XML layouts for the list and its items. Open `android/src/main/res/layout/card_item.xml` file in Android Studio and paste following code:
+
+```xml title="android/src/main/res/layout/card_item.xml"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_card"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    app:cardBackgroundColor="#89CC65"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/list_card_image"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+
+        <TextView
+            android:id="@+id/list_card_label"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+```
+
+Here we are defining the `CardView` element that will hold an image and text views.
+Each of these will have `android:id` attribute assigned - in the code, we will be able to interact with these elements by their ids.
+**To simplify the example**, the card items will have a fixed size 100x100.
+
+Next, let's declare the layout for the list element.

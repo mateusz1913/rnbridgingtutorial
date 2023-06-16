@@ -5,7 +5,7 @@ import CodeBlock from '@theme/CodeBlock';
 </h4>
 
 <p>
-The last thing we need to do is to export <code>{props.moduleClass}</code> in the <code>TurboReactPackage</code> instance.
+The last thing we need to do is to export <code>{props.viewManagerClass ? props.viewManagerClass : props.moduleClass}</code> in the <code>TurboReactPackage</code> instance.
 Let's go to <code>{props.packageClass}.{props.language === 'java' ? 'java' : 'kt'}</code> and add our new module.
 </p>
 

@@ -1,0 +1,48 @@
+---
+sidebar_label: Android implementation
+sidebar_position: 5
+title: Android implementation
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import AndroidJavaImpl from './_android-java-impl.mdx';
+import AndroidKotlinImpl from './_android-kotlin-impl.mdx';
+
+Let's use Android Studio for writing Android code. Launch Android Studio and open the project under `<your-project-dir>/android` path.
+When the project is opened, find `native-list-package` inside project-tree
+
+The `native-list-package` contains 3 packages with the same name `com.nativelistpackage`. After expanding them, you'll notice that these contain following things:
+
+- code-generated Java spec files
+- `AndroidNativeListViewManager` view manager class stub files
+- `AndroidNativeListFragment` fragment class stub file
+- `DataItem` class stub file
+- `NativeListAdapter` class stub file
+- `NativeListViewHolder` class stub file
+- `NativeListTurboPackage` class stub file
+
+Additionally, if you search for the `res` resources folder, you'll see the layout directory inside, which contains two layout files:
+
+- `card_item` that will contain the layout for each list item
+- `fragment_list` that will contain the `RecyclerView` element
+
+Let's start implementing!
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+<AndroidKotlinImpl />
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+<AndroidJavaImpl />
+
+</TabItem>
+</Tabs>
+
+You can check training repo for Kotlin implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/native-list-package) and Java implementation [here](https://github.com/mateusz1913/rnbridgingtutorial/tree/main/native-list-package-classic).
+
+That's Android part, now let's wrap things up and [see our list](./usage) in action!
