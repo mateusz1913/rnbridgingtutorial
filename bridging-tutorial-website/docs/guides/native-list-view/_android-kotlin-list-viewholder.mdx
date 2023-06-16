@@ -1,0 +1,25 @@
+#### `NativeListViewHolder.kt`
+
+Now, we need to define the view holder class that will be used by `RecyclerView` to keep reference to the UI elements inside single list item
+
+```kotlin title="android/src/main/java/com/nativelistpackage/NativeListViewHolder.kt"
+package com.nativelistpackage
+
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+
+class NativeListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    var imageView: ImageView
+    var label: TextView
+
+    init {
+        imageView = itemView.findViewById(R.id.list_card_image)
+        label = itemView.findViewById(R.id.list_card_label)
+    }
+}
+```
+
+Each class needs to extend base [`RecyclerView.ViewHolder`](https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView.ViewHolder) class.
+Additionally we declare properties for image and text views, to make it easier later to interact with them.

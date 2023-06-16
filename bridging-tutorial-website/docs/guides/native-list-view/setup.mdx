@@ -1,0 +1,118 @@
+---
+sidebar_label: View boilerplate
+sidebar_position: 2
+title: View boilerplate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import AndroidTurboPackageBoilerplate from '../_android-turbo-package-boilerplate.mdx';
+import LinkPackage from '../_link-package.mdx';
+import PackageStructureBoilerplate from '../_package-structure-boilerplate.mdx';
+
+### Create package structure
+
+#### Package boilerplate
+
+<PackageStructureBoilerplate
+  isFabricComponent={true}
+  packageName="native-list-package"
+  packageNameUpperCamelCase="NativeListPackage"
+  packageNameLowercase="nativelistpackage"
+  packageNameUpperCase="NATIVE_LIST_PACKAGE"
+/>
+
+#### Source files stubs
+
+Finally, let's create stubs for source files. For JS, create following empty files:
+
+- `src/index.ts`
+- `src/NativeListView.tsx`
+- `src/NativeListView.android.tsx`
+- `src/NativeListView.ios.tsx`
+- `src/AndroidNativeListViewNativeComponent.ts`
+- `src/RNNativeListViewNativeComponent.ts`
+
+For iOS implementation, create:
+
+<Tabs groupId="ios_lang">
+<TabItem value="swift" label="ObjC++ & Swift">
+
+- `ios/DataItem.swift`
+- `ios/NativeListCell.swift`
+- `ios/RNNativeListViewComponentView.h`
+- `ios/RNNativeListViewComponentView.mm`
+- `ios/RNNativeListViewManager.h`
+- `ios/RNNativeListViewManager.mm`
+- `ios/RNNativeListViewContainerView.swift`
+- `ios/RNNativeListViewViewController.swift`
+- `ios/NativeListPackage-Bridging-Header.h`
+
+</TabItem>
+<TabItem value="objc" label="ObjC++ only">
+
+- `ios/DataItem.h`
+- `ios/DataItem.mm`
+- `ios/NativeListCell.h`
+- `ios/NativeListCell.mm`
+- `ios/RNNativeListViewComponentView.h`
+- `ios/RNNativeListViewComponentView.mm`
+- `ios/RNNativeListViewManager.h`
+- `ios/RNNativeListViewManager.mm`
+- `ios/RNNativeListViewContainerView.h`
+- `ios/RNNativeListViewContainerView.mm`
+- `ios/RNNativeListViewViewController.h`
+- `ios/RNNativeListViewViewController.mm`
+
+</TabItem>
+</Tabs>
+
+For Android implementation, create:
+
+<Tabs groupId="android_lang">
+<TabItem value="kotlin" label="Kotlin">
+
+- `android/src/main/java/com/nativelistpackage/AndroidNativeListViewFragment.kt`
+- `android/src/main/java/com/nativelistpackage/NativeListTurboPackage.kt`
+- `android/src/main/java/com/nativelistpackage/DataItem.kt`
+- `android/src/main/java/com/nativelistpackage/NativeListAdapter.kt`
+- `android/src/main/java/com/nativelistpackage/NativeListViewHolder.kt`
+- `android/src/main/res/layout/card_item.xml`
+- `android/src/main/res/layout/fragment_list.xml`
+- `android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt`
+- `android/src/oldarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt`
+
+<AndroidTurboPackageBoilerplate
+  language="kotlin"
+  namespace="nativelistpackage"
+  packageClass="NativeListTurboPackage"
+/>
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+- `android/src/main/java/com/nativelistpackage/AndroidNativeListViewFragment.java`
+- `android/src/main/java/com/nativelistpackage/NativeListTurboPackage.java`
+- `android/src/main/java/com/nativelistpackage/DataItem.java`
+- `android/src/main/java/com/nativelistpackage/NativeListAdapter.java`
+- `android/src/main/java/com/nativelistpackage/NativeListViewHolder.java`
+- `android/src/main/res/layout/card_item.xml`
+- `android/src/main/res/layout/fragment_list.xml`
+- `android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.java`
+- `android/src/oldarch/java/com/nativelistpackage/AndroidNativeListViewManager.java`
+
+<AndroidTurboPackageBoilerplate
+  language="java"
+  namespace="nativelistpackage"
+  packageClass="NativeListTurboPackage"
+/>
+
+</TabItem>
+</Tabs>
+
+### Link the package with the app
+
+<LinkPackage package="native-list-package" packageNameUpperCamelCase="NativeListPackage" />
+
+Setup completed. Now, let's start coding with the [JS spec](./js-spec).

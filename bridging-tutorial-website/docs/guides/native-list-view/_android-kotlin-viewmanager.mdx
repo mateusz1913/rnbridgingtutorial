@@ -1,0 +1,837 @@
+import CompleteFile from '../_complete-file.mdx';
+import OldArchAndroidViewManagerFile from '../_old-arch-android-viewmanager-file.mdx';
+
+#### `AndroidNativeListViewManager.kt`
+
+The view manager class will connect the custom fragment with our RN app. However, RN does not support Android fragments out-of-the-box.
+To embed a fragment inside a view, we will use [FragmentContainerView](https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentContainerView) - let's start by creating the boilerplate:
+
+```kotlin title="android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt"
+package com.nativelistpackage
+
+import androidx.fragment.app.FragmentContainerView
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.uimanager.SimpleViewManager
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerDelegate
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerInterface
+
+@ReactModule(name = AndroidNativeListViewFragment.NAME)
+class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>(), AndroidNativeListViewManagerInterface<FragmentContainerView> {
+    private val mDelegate: ViewManagerDelegate<FragmentContainerView> = AndroidNativeListViewManagerDelegate(this)
+  
+    override fun getName() = AndroidNativeListViewFragment.NAME
+
+    override fun getDelegate() = mDelegate
+
+    override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+        mDelegate.receiveCommand(root, commandId, args)
+    }
+
+    override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+        return FragmentContainerView(reactContext)
+    }
+
+    @ReactProp(name = "data")
+    override fun setData(view: FragmentContainerView, data: ReadableArray?) {
+        //
+    }
+
+    @ReactProp(name = "options")
+    override fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+        //
+    }
+
+    override fun scrollToItem(view: FragmentContainerView, index: Int) {
+        //
+    }
+}
+```
+
+We start by creating view manager class that extends `SimpleViewManager` base class and implements code-generated interface.
+The class needs to override required methods (`getName`, `getDelegate`, `receiveCommand` & `createViewInstance`) as well as prop & command handlers declared in code-generated interface.
+
+You can take a look at the `createViewInstance` method - it returns already mentioned `FragmentContainerView`. This is specialized kind of Android UI element, that is able to encapsulate custom fragment layout and handle its lifecycle.
+
+Now, let's define a few helper functions that will be needed when adding/removing fragment layout:
+
+```kotlin title="android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt"
+package com.nativelistpackage
+
+// highlight-start
+import android.view.View
+import androidx.fragment.app.FragmentActivity
+// highlight-end
+import androidx.fragment.app.FragmentContainerView
+// highlight-start
+import androidx.fragment.app.FragmentManager
+// highlight-end
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.uimanager.SimpleViewManager
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerDelegate
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerInterface
+
+@ReactModule(name = AndroidNativeListViewFragment.NAME)
+class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>(), AndroidNativeListViewManagerInterface<FragmentContainerView> {
+    private val mDelegate: ViewManagerDelegate<FragmentContainerView> = AndroidNativeListViewManagerDelegate(this)
+
+// highlight-start
+    private var mHeight: Int = 0
+    private var mWidth: Int = 0
+// highlight-end
+
+    override fun getName() = AndroidNativeListViewFragment.NAME
+
+    override fun getDelegate() = mDelegate
+
+    override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+        mDelegate.receiveCommand(root, commandId, args)
+    }
+
+    override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+        return FragmentContainerView(reactContext)
+    }
+
+    @ReactProp(name = "data")
+    override fun setData(view: FragmentContainerView, data: ReadableArray?) {
+        //
+    }
+
+    @ReactProp(name = "options")
+    override fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+        //
+    }
+
+    override fun scrollToItem(view: FragmentContainerView, index: Int) {
+        //
+    }
+
+// highlight-start
+    private fun layoutChildren(view: View) {
+        val width = mWidth
+        val height = mHeight
+
+        view.measure(
+            View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+        )
+        view.layout(0, 0, width, height)
+    }
+
+    private fun findFragment(fragmentManager: FragmentManager, view: View): AndroidNativeListViewFragment? {
+        return fragmentManager.findFragmentByTag(getFragmentTag(view)) as? AndroidNativeListViewFragment
+    }
+
+    private fun getFragmentManager(view: View): FragmentManager? {
+        val reactContext = view.context as? ThemedReactContext ?: return null
+        val activity = reactContext.currentActivity as? FragmentActivity ?: return null
+
+        return activity.supportFragmentManager
+    }
+
+    private fun getFragmentTag(view: View) = "AndroidNativeListViewFragment-" + view.id
+// highlight-end
+}
+```
+
+The first helper method will be used to measure and layout the `FragmentContainerView` instance, based on the size declared inside JS code (via `style` prop).
+Other helpers are used to simplify getting the custom fragment instance, the [FragmentManager](https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentManager) (used to perform operations with fragments) and the tag associated to custom fragment's instance.
+
+Now let's add two functions responsible for fragment mounting and unmounting:
+
+```kotlin title="android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt"
+package com.nativelistpackage
+
+import android.view.View
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+// highlight-start
+import com.facebook.react.bridge.UiThreadUtil
+// highlight-end
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.uimanager.SimpleViewManager
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerDelegate
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerInterface
+
+@ReactModule(name = AndroidNativeListViewFragment.NAME)
+class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>(), AndroidNativeListViewManagerInterface<FragmentContainerView> {
+    private val mDelegate: ViewManagerDelegate<FragmentContainerView> = AndroidNativeListViewManagerDelegate(this)
+
+    private var mHeight: Int = 0
+    private var mWidth: Int = 0
+
+    override fun getName() = AndroidNativeListViewFragment.NAME
+
+    override fun getDelegate() = mDelegate
+
+    override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+        mDelegate.receiveCommand(root, commandId, args)
+    }
+
+    override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+        return FragmentContainerView(reactContext)
+    }
+
+    @ReactProp(name = "data")
+    override fun setData(view: FragmentContainerView, data: ReadableArray?) {
+        //
+    }
+
+    @ReactProp(name = "options")
+    override fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+        //
+    }
+
+    override fun scrollToItem(view: FragmentContainerView, index: Int) {
+        //
+    }
+
+// highlight-start
+    private fun mountFragment(view: FragmentContainerView) {
+        UiThreadUtil.assertOnUiThread()
+        val fragmentManager = getFragmentManager(view)
+
+        if (fragmentManager != null) {
+            val fragment = findFragment(fragmentManager, view)
+
+            if (fragment != null) {
+                view.post {
+                    layoutChildren(view)
+                }
+                return
+            }
+
+            val newFragment = AndroidNativeListViewFragment()
+            view.removeAllViews()
+            val transaction = fragmentManager.beginTransaction()
+            transaction.add(newFragment, getFragmentTag(view))
+            transaction.runOnCommit {
+                view.addView(newFragment.requireView())
+                layoutChildren(view)
+            }
+            transaction.commitNowAllowingStateLoss()
+        }
+    }
+
+    private fun unmountFragment(view: FragmentContainerView) {
+        UiThreadUtil.assertOnUiThread()
+        val fragmentManager = getFragmentManager(view)
+
+        if (fragmentManager != null) {
+            val fragment = findFragment(fragmentManager, view)
+
+            if (fragment != null) {
+                val transaction = fragmentManager.beginTransaction()
+                transaction.remove(fragment)
+                transaction.commitNowAllowingStateLoss()
+            }
+        }
+    }
+// highlight-end
+
+    // ...
+}
+```
+
+`mountFragment` & `unmountFragment` functions will be run on the UI thread and will be responsible for adding/removing the fragment via fragment manager's transaction.
+
+:::info
+
+To learn more, visit official guides about [`FragmentManager`](https://developer.android.com/guide/fragments/fragmentmanager) and [fragment transactions](https://developer.android.com/guide/fragments/transactions)
+
+:::
+
+Next let's synchronize those 2 functions with the lifecycle of our view manager class:
+
+```kotlin title="android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt"
+package com.nativelistpackage
+
+import android.view.View
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.module.annotations.ReactModule
+import com.facebook.react.uimanager.SimpleViewManager
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerDelegate
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerInterface
+
+@ReactModule(name = AndroidNativeListViewFragment.NAME)
+class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>(), AndroidNativeListViewManagerInterface<FragmentContainerView> {
+    private val mDelegate: ViewManagerDelegate<FragmentContainerView> = AndroidNativeListViewManagerDelegate(this)
+
+    private var mHeight: Int = 0
+    private var mWidth: Int = 0
+
+    override fun getName() = AndroidNativeListViewFragment.NAME
+
+    override fun getDelegate() = mDelegate
+
+    override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+        mDelegate.receiveCommand(root, commandId, args)
+    }
+
+    override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+        return FragmentContainerView(reactContext)
+    }
+
+// highlight-start
+    override fun onDropViewInstance(view: FragmentContainerView) {
+        unmountFragment(view)
+
+        super.onDropViewInstance(view)
+    }
+
+    override fun addEventEmitters(reactContext: ThemedReactContext, view: FragmentContainerView) {
+        super.addEventEmitters(reactContext, view)
+        // Mount fragment here, because here the view already has reactTag set as a view.id
+        mountFragment(view)
+    }
+// highlight-end
+
+    @ReactProp(name = "data")
+    override fun setData(view: FragmentContainerView, data: ReadableArray?) {
+        //
+    }
+
+    @ReactProp(name = "options")
+    override fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+        //
+    }
+
+    override fun scrollToItem(view: FragmentContainerView, index: Int) {
+        //
+    }
+
+    // ...
+}
+```
+
+The `addEventEmitters` method is called after `createViewInstance` with view already having its id set up.
+This is the time when bridged view is created and the fragment layout should be injected.
+
+On the other hand, when the view is about to be destroyed, we should use `onDropViewInstance` method, to remove our fragment layout from the view hierarchy.
+
+The last thing to do in the view manager class is to connect the prop & command handlers to the fragment instance:
+
+```kotlin title="android/src/newarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt"
+package com.nativelistpackage
+
+import android.view.View
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+// highlight-start
+import com.facebook.react.bridge.Dynamic
+// highlight-end
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.module.annotations.ReactModule
+// highlight-start
+import com.facebook.react.uimanager.PixelUtil
+// highlight-end
+import com.facebook.react.uimanager.SimpleViewManager
+import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
+// highlight-start
+import com.facebook.react.uimanager.annotations.ReactPropGroup
+// highlight-end
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerDelegate
+import com.facebook.react.viewmanagers.AndroidNativeListViewManagerInterface
+
+@ReactModule(name = AndroidNativeListViewFragment.NAME)
+class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>(), AndroidNativeListViewManagerInterface<FragmentContainerView> {
+    private val mDelegate: ViewManagerDelegate<FragmentContainerView> = AndroidNativeListViewManagerDelegate(this)
+
+    private var mHeight: Int = 0
+    private var mWidth: Int = 0
+
+    override fun getName() = AndroidNativeListViewFragment.NAME
+
+    override fun getDelegate() = mDelegate
+
+    override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+        mDelegate.receiveCommand(root, commandId, args)
+    }
+
+    override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+        return FragmentContainerView(reactContext)
+    }
+
+    override fun onDropViewInstance(view: FragmentContainerView) {
+        unmountFragment(view)
+
+        super.onDropViewInstance(view)
+    }
+
+    override fun addEventEmitters(reactContext: ThemedReactContext, view: FragmentContainerView) {
+        super.addEventEmitters(reactContext, view)
+        // Mount fragment here, because here the view already has reactTag set as a view.id
+        mountFragment(view)
+    }
+
+    @ReactProp(name = "data")
+    override fun setData(view: FragmentContainerView, data: ReadableArray?) {
+// highlight-start
+        if (data == null) {
+            return
+        }
+        val fragmentManager = getFragmentManager(view)
+
+        if (fragmentManager != null) {
+            findFragment(fragmentManager, view)?.setData(data)
+        }
+// highlight-end
+    }
+
+    @ReactProp(name = "options")
+    override fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+// highlight-start
+        if (options == null) {
+            return
+        }
+        val fragmentManager = getFragmentManager(view)
+
+        if (fragmentManager != null) {
+            findFragment(fragmentManager, view)?.setOptions(options)
+        }
+// highlight-end
+    }
+
+    override fun scrollToItem(view: FragmentContainerView, index: Int) {
+// highlight-start
+        val fragmentManager = getFragmentManager(view)
+
+        if (fragmentManager != null) {
+            findFragment(fragmentManager, view)?.scrollToItem(index)
+        }
+// highlight-end
+    }
+
+// highlight-start
+    @ReactProp(name = "backgroundColor", customType = "Color")
+    fun setBackgroundColor(view: FragmentContainerView, backgroundColor: Int?) {
+        val fragmentManager = getFragmentManager(view)
+
+        if (fragmentManager != null) {
+            findFragment(fragmentManager, view)?.setBackgroundColor(backgroundColor)
+        }
+    }
+
+    @ReactPropGroup(names = ["width", "height"], customType = "Style")
+    fun setStyle(view: FragmentContainerView, index: Int, value: Dynamic?) {
+        if (value == null) {
+            return
+        }
+
+        if (index == 0) {
+            mWidth = PixelUtil.toPixelFromDIP(value.asDouble()).toInt()
+        }
+
+        if (index == 1) {
+            mHeight = PixelUtil.toPixelFromDIP(value.asDouble()).toInt()
+        }
+
+        view.post {
+            layoutChildren(view)
+        }
+    }
+// highlight-end
+
+    // ...
+}
+```
+
+For the `data` &  `options` props as well as `scrollToItem` command we just need to forward the input arguments to fragment instance's methods.
+
+Additionally, we need to explicitly handle styles from `style` prop.
+In case of `backgroundColor`, we need to set it on the fragment instance (and not the FragmentContainerView).
+And for `width` & `height` values we need to trigger measuring & layout of the view (with our `layoutChildren` helper).
+
+<CompleteFile
+  filename="AndroidNativeListViewManager.kt"
+  language="kotlin"
+>
+
+    package com.nativelistpackage
+
+    import android.view.View
+    import androidx.fragment.app.FragmentActivity
+    import androidx.fragment.app.FragmentContainerView
+    import androidx.fragment.app.FragmentManager
+    import com.facebook.react.bridge.Dynamic
+    import com.facebook.react.bridge.ReadableArray
+    import com.facebook.react.bridge.ReadableMap
+    import com.facebook.react.bridge.UiThreadUtil
+    import com.facebook.react.module.annotations.ReactModule
+    import com.facebook.react.uimanager.PixelUtil
+    import com.facebook.react.uimanager.SimpleViewManager
+    import com.facebook.react.uimanager.ThemedReactContext
+    import com.facebook.react.uimanager.ViewManagerDelegate
+    import com.facebook.react.uimanager.annotations.ReactProp
+    import com.facebook.react.uimanager.annotations.ReactPropGroup
+    import com.facebook.react.viewmanagers.AndroidNativeListViewManagerDelegate
+    import com.facebook.react.viewmanagers.AndroidNativeListViewManagerInterface
+
+    @ReactModule(name = AndroidNativeListViewFragment.NAME)
+    class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>(), AndroidNativeListViewManagerInterface<FragmentContainerView> {
+        private val mDelegate: ViewManagerDelegate<FragmentContainerView> = AndroidNativeListViewManagerDelegate(this)
+
+        private var mHeight: Int = 0
+        private var mWidth: Int = 0
+      
+        override fun getName() = AndroidNativeListViewFragment.NAME
+
+        override fun getDelegate() = mDelegate
+
+        override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+            mDelegate.receiveCommand(root, commandId, args)
+        }
+
+        override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+            return FragmentContainerView(reactContext)
+        }
+
+        override fun onDropViewInstance(view: FragmentContainerView) {
+            unmountFragment(view)
+
+            super.onDropViewInstance(view)
+        }
+
+        override fun addEventEmitters(reactContext: ThemedReactContext, view: FragmentContainerView) {
+            super.addEventEmitters(reactContext, view)
+            // Mount fragment here, because here the view already has reactTag set as a view.id
+            mountFragment(view)
+        }
+
+        @ReactProp(name = "data")
+        override fun setData(view: FragmentContainerView, data: ReadableArray?) {
+            if (data == null) {
+                return
+            }
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.setData(data)
+            }
+        }
+
+        @ReactProp(name = "options")
+        override fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+            if (options == null) {
+                return
+            }
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.setOptions(options)
+            }
+        }
+
+        override fun scrollToItem(view: FragmentContainerView, index: Int) {
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.scrollToItem(index)
+            }
+        }
+
+        @ReactProp(name = "backgroundColor", customType = "Color")
+        fun setBackgroundColor(view: FragmentContainerView, backgroundColor: Int?) {
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.setBackgroundColor(backgroundColor)
+            }
+        }
+
+        @ReactPropGroup(names = ["width", "height"], customType = "Style")
+        fun setStyle(view: FragmentContainerView, index: Int, value: Dynamic?) {
+            if (value == null) {
+                return
+            }
+
+            if (index == 0) {
+                mWidth = PixelUtil.toPixelFromDIP(value.asDouble()).toInt()
+            }
+
+            if (index == 1) {
+                mHeight = PixelUtil.toPixelFromDIP(value.asDouble()).toInt()
+            }
+
+            view.post {
+                layoutChildren(view)
+            }
+        }
+
+        private fun mountFragment(view: FragmentContainerView) {
+            UiThreadUtil.assertOnUiThread()
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                val fragment = findFragment(fragmentManager, view)
+
+                if (fragment != null) {
+                    view.post {
+                        layoutChildren(view)
+                    }
+                    return
+                }
+
+                val newFragment = AndroidNativeListViewFragment()
+                view.removeAllViews()
+                val transaction = fragmentManager.beginTransaction()
+                transaction.add(newFragment, getFragmentTag(view))
+                transaction.runOnCommit {
+                    view.addView(newFragment.requireView())
+                    layoutChildren(view)
+                }
+                transaction.commitNowAllowingStateLoss()
+            }
+        }
+
+        private fun unmountFragment(view: FragmentContainerView) {
+            UiThreadUtil.assertOnUiThread()
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                val fragment = findFragment(fragmentManager, view)
+
+                if (fragment != null) {
+                    val transaction = fragmentManager.beginTransaction()
+                    transaction.remove(fragment)
+                    transaction.commitNowAllowingStateLoss()
+                }
+            }
+        }
+
+        private fun layoutChildren(view: View) {
+            val width = mWidth
+            val height = mHeight
+
+            view.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+            )
+            view.layout(0, 0, width, height)
+        }
+
+        private fun findFragment(fragmentManager: FragmentManager, view: View): AndroidNativeListViewFragment? {
+            return fragmentManager.findFragmentByTag(getFragmentTag(view)) as? AndroidNativeListViewFragment
+        }
+
+        private fun getFragmentManager(view: View): FragmentManager? {
+            val reactContext = view.context as? ThemedReactContext ?: return null
+            val activity = reactContext.currentActivity as? FragmentActivity ?: return null
+
+            return activity.supportFragmentManager
+        }
+
+        private fun getFragmentTag(view: View) = "AndroidNativeListViewFragment-" + view.id
+    }
+</CompleteFile>
+
+<OldArchAndroidViewManagerFile
+  filename="android/src/oldarch/java/com/nativelistpackage/AndroidNativeListViewManager.kt"
+  language="kotlin"
+>
+
+    package com.nativelistpackage
+
+    import android.view.View
+    import androidx.fragment.app.FragmentActivity
+    import androidx.fragment.app.FragmentContainerView
+    import androidx.fragment.app.FragmentManager
+    import com.facebook.react.bridge.Dynamic
+    import com.facebook.react.bridge.ReadableArray
+    import com.facebook.react.bridge.ReadableMap
+    import com.facebook.react.bridge.UiThreadUtil
+    import com.facebook.react.module.annotations.ReactModule
+    import com.facebook.react.uimanager.PixelUtil
+    import com.facebook.react.uimanager.SimpleViewManager
+    import com.facebook.react.uimanager.ThemedReactContext
+    import com.facebook.react.uimanager.annotations.ReactProp
+    import com.facebook.react.uimanager.annotations.ReactPropGroup
+
+    @ReactModule(name = AndroidNativeListViewFragment.NAME)
+    class AndroidNativeListViewManager : SimpleViewManager<FragmentContainerView>() {
+        private var mHeight: Int = 0
+        private var mWidth: Int = 0
+      
+        override fun getName() = AndroidNativeListViewFragment.NAME
+
+        override fun receiveCommand(root: FragmentContainerView, commandId: String?, args: ReadableArray?) {
+            super.receiveCommand(root, commandId, args)
+
+            when (commandId) {
+                "scrollToItem" -> {
+                    val index = args!!.getInt(0)
+                    scrollToItem(root, index)
+                }
+            }
+        }
+
+        override fun createViewInstance(reactContext: ThemedReactContext): FragmentContainerView {
+            return FragmentContainerView(reactContext)
+        }
+
+        override fun onDropViewInstance(view: FragmentContainerView) {
+            unmountFragment(view)
+
+            super.onDropViewInstance(view)
+        }
+
+        override fun addEventEmitters(reactContext: ThemedReactContext, view: FragmentContainerView) {
+            super.addEventEmitters(reactContext, view)
+            // Mount fragment here, because here the view already has reactTag set as a view.id
+            mountFragment(view)
+        }
+
+        @ReactProp(name = "data")
+        fun setData(view: FragmentContainerView, data: ReadableArray?) {
+            if (data == null) {
+                return
+            }
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.setData(data)
+            }
+        }
+
+        @ReactProp(name = "options")
+        fun setOptions(view: FragmentContainerView, options: ReadableMap?) {
+            if (options == null) {
+                return
+            }
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.setOptions(options)
+            }
+        }
+
+        private fun scrollToItem(view: FragmentContainerView, index: Int) {
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.scrollToItem(index)
+            }
+        }
+
+        @ReactProp(name = "backgroundColor", customType = "Color")
+        fun setBackgroundColor(view: FragmentContainerView, backgroundColor: Int?) {
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                findFragment(fragmentManager, view)?.setBackgroundColor(backgroundColor)
+            }
+        }
+
+        @ReactPropGroup(names = ["width", "height"], customType = "Style")
+        fun setStyle(view: FragmentContainerView, index: Int, value: Dynamic?) {
+            if (value == null) {
+                return
+            }
+
+            if (index == 0) {
+                mWidth = PixelUtil.toPixelFromDIP(value.asDouble()).toInt()
+            }
+
+            if (index == 1) {
+                mHeight = PixelUtil.toPixelFromDIP(value.asDouble()).toInt()
+            }
+
+            view.post {
+                layoutChildren(view)
+            }
+        }
+
+        private fun mountFragment(view: FragmentContainerView) {
+            UiThreadUtil.assertOnUiThread()
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                val fragment = findFragment(fragmentManager, view)
+
+                if (fragment != null) {
+                    view.post {
+                        layoutChildren(view)
+                    }
+                    return
+                }
+
+                val newFragment = AndroidNativeListViewFragment()
+                view.removeAllViews()
+                val transaction = fragmentManager.beginTransaction()
+                transaction.add(newFragment, getFragmentTag(view))
+                transaction.runOnCommit {
+                    view.addView(newFragment.requireView())
+                    layoutChildren(view)
+                }
+                transaction.commitNowAllowingStateLoss()
+            }
+        }
+
+        private fun unmountFragment(view: FragmentContainerView) {
+            UiThreadUtil.assertOnUiThread()
+            val fragmentManager = getFragmentManager(view)
+
+            if (fragmentManager != null) {
+                val fragment = findFragment(fragmentManager, view)
+
+                if (fragment != null) {
+                    val transaction = fragmentManager.beginTransaction()
+                    transaction.remove(fragment)
+                    transaction.commitNowAllowingStateLoss()
+                }
+            }
+        }
+
+        private fun layoutChildren(view: View) {
+            val width = mWidth
+            val height = mHeight
+
+            view.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+            )
+            view.layout(0, 0, width, height)
+        }
+
+        private fun findFragment(fragmentManager: FragmentManager, view: View): AndroidNativeListViewFragment? {
+            return fragmentManager.findFragmentByTag(getFragmentTag(view)) as? AndroidNativeListViewFragment
+        }
+
+        private fun getFragmentManager(view: View): FragmentManager? {
+            val reactContext = view.context as? ThemedReactContext ?: return null
+            val activity = reactContext.currentActivity as? FragmentActivity ?: return null
+
+            return activity.supportFragmentManager
+        }
+
+        private fun getFragmentTag(view: View) = "AndroidNativeListViewFragment-" + view.id
+    }
+</OldArchAndroidViewManagerFile>

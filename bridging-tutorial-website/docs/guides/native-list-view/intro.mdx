@@ -1,0 +1,49 @@
+---
+sidebar_label: Intro
+sidebar_position: 1
+title: Intro
+---
+
+import Result from './_result.mdx'
+
+:::info
+
+**TLDR**: This guide illustrates very rare case (probably less than 1% chance) so treat as a fun fact and skip it, if you want :smile:
+
+:::
+
+You might encounter a situation where your RN app needs to display some native component or layout that is hard to be embedded inside a simple view container.
+This can happen when the component/layout is complex or has some lifecycle logic, that is hard to be handled in a native view.
+Native Android & iOS developers use [Fragments](https://developer.android.com/guide/fragments) and [View Controllers](https://developer.apple.com/documentation/uikit/view_controllers) respectively, to encapsulate those complex parts of UI and share them in the codebase if needed.
+
+Instead of going with very simple layout (e.g. single label and button), we will focus on real use case, which actually is hard to be embedded in a view - native list layouts ([RecyclerView](https://developer.android.com/develop/ui/views/layout/recyclerview) & [UICollectionView](https://developer.apple.com/documentation/uikit/uicollectionview/)).
+Thus, the steps in this guide will mostly focus on the native side of things. **If you feel that you have to little knowledge about native development, it's fine, you can treat this guide as a fun fact and skip it**.
+The integration of such layouts in a RN app is a very rare case, which you'll probably never experience (unless you do some brownfield development).
+
+### Difficulty
+
+Probably the most complex here 🤯
+
+### Task
+
+As a user, I want to see a list of elements.
+
+#### Developer notes
+
+_Let's make an assumption, that the RN app you develop is a successor to old native apps.
+However the complex list layouts from old apps were quite well encapsulated and you need to make them pixel perfect the same in the new app as in the old apps.
+So instead of reimplementing everything, you have an idea to reuse the code from the old native apps._
+
+### What's the plan?
+
+- create view's boilerplate
+- creating JS spec
+- iOS implementation 
+- Android implementation
+- using the view in action
+
+### Result?
+
+<Result />
+
+Can't wait? Let's set up [view boilerplate](./setup).

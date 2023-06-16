@@ -1,0 +1,12 @@
+#### `DataItem.kt`
+
+After defining the layouts, let's jump to code and start by defining Kotlin data class `DataItem` which will be used to hold items passed from JS code:
+
+```kotlin title="android/src/main/java/com/nativelistpackage/DataItem.kt"
+package com.nativelistpackage
+
+data class DataItem(
+    val imageUrl: String,
+    val description: String,
+)
+```

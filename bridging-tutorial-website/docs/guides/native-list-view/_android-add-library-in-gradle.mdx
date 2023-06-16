@@ -1,7 +1,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### Add native library as dependency for the package
+#### Add native libraries as dependencies for the package
 
 When developing some Android native code, you often need to use some external package, whether it's from Jetpack, MaterialComponents or some 3rd party.
 Usually those libraries are integrated with [Gradle](https://docs.gradle.org/current/userguide/userguide.html).
@@ -12,7 +12,12 @@ For more information on how to add dependencies to Android project visit [Androi
 
 :::
 
-Each RN library that includes some Android native code is, in fact, integrated with Gradle and our range slider will also need to depend on [MaterialComponents](https://github.com/material-components/material-components-android) dependency.
+Each RN library that includes some Android native code is, in fact, integrated with Gradle and our native list will also need to depend on Jetpack libraries:
+
+- [`CardView`](https://developer.android.com/develop/ui/views/layout/cardview)
+- [`ConstraintLayout`](https://developer.android.com/develop/ui/views/layout/constraint-layout)
+- [`RecyclerView`](https://developer.android.com/develop/ui/views/layout/recyclerview)
+
 So let's not waste time and navigate to the `build.gradle` in our package.
 
 <Tabs groupId="gradle">
@@ -37,8 +42,10 @@ dependencies {
     // ...
 
 // highlight-start
-    // Add the dependency to the MaterialComponents library
-    implementation "com.google.android.material:material:1.8.0"
+    // Add the dependency to the Jetpack libraries
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
 // highlight-end
 }
 ```
@@ -73,8 +80,10 @@ dependencies {
     // ...
 
 // highlight-start
-    // Add the dependency to the MaterialComponents library
-    implementation("com.google.android.material:material:1.8.0")
+    // Add the dependency to the Jetpack libraries
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
 // highlight-end
 }
 ```
@@ -87,6 +96,6 @@ After that you can invoke Gradle Sync in the Android Studio.
 
 :::info
 
-In this guide, version 1.8.0 of MaterialComponents library is used. In your case this version may be different, you can visit [Maven Repository](https://mvnrepository.com/artifact/com.google.android.material/material) and check available versions.
+In this guide, version 1.0.0 of CardView, 2.1.4 of ConstraintLayout and 1.2.1 of RecyclerView are used. In your case these versions may be different, you can visit [Jetpack's releases page](https://developer.android.com/jetpack/androidx/versions) and check available versions.
 
 :::

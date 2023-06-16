@@ -1,5 +1,4 @@
 #import <UIKit/UIKit.h>
-#import <RNNativeListClassicViewViewController.h>
 
 @interface NativeListClassicCell : UICollectionViewCell
 

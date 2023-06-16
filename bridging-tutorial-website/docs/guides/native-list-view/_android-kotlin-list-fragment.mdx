@@ -1,3 +1,8 @@
+#### `AndroidNativeListViewFragment.kt`
+
+Let's make all `RecyclerView` setup in the custom [`Fragment`](https://developer.android.com/reference/kotlin/androidx/fragment/app/Fragment) class:
+
+```kotlin title="android/src/main/java/com/nativelistpackage/AndroidNativeListViewFragment.kt"
 package com.nativelistpackage
 
 import android.graphics.Color
@@ -64,3 +69,15 @@ class AndroidNativeListViewFragment: Fragment() {
         private const val NUM_OF_COLUMNS = 3
     }
 }
+```
+
+To connect the XML layout we created before, we need to override `onCreateView` method.
+That method returns the root view of the fragment, which in our case is inflated XML layout with the `RecyclerView`.
+
+In order to set the properties of the `RecyclerView`, we need to override `onViewCreated` method.
+It provides the instance of fragment's root view, that we can use to find the `RecyclerView` and attach the adapter class created before.
+Additionally we need to specify the type of [`RecyclerView.LayoutManager`](https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView.LayoutManager) used by the list - in our case we want to have vertical list with multiple columns and we can achieve it with [`GridLayoutManager`](https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/GridLayoutManager) (**to simplify the example**, we will set 3 columns - after finishing the guide if you want, you can think how to make it dynamic and controlled from JS code).
+
+To handle props and scroll command, we also need to declare additional methods that interact with the `RecyclerView`.
+
+With the fragment ready, let's finish by connecting it to the RN's views hierarchy.

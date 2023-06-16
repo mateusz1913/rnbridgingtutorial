@@ -1,0 +1,17 @@
+#### `DataItem.java`
+
+After defining the layouts, let's jump to code and start by defining Java class `DataItem` which will be used to hold items passed from JS code:
+
+```java title="android/src/main/java/com/nativelistpackage/DataItem.java"
+package com.nativelistpackage;
+
+public class DataItem {
+    public String imageUrl;
+    public String description;
+
+    public DataItem(String imageUrl, String description) {
+        this.imageUrl = imageUrl;
+        this.description = description;
+    }
+}
+```

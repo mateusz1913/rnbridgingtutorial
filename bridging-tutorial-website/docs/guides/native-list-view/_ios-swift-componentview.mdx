@@ -1,0 +1,337 @@
+import CompleteFile from '../_complete-file.mdx';
+
+#### `RNNativeListViewComponentView.h`
+
+```objc title="ios/RNNativeListViewComponentView.h"
+#if RCT_NEW_ARCH_ENABLED
+#import <React/RCTViewComponentView.h>
+
+@class RNNativeListViewContainerView;
+@class RNNativeListViewViewController;
+
+@interface RNNativeListViewComponentView : RCTViewComponentView
+
+@end
+
+#endif
+```
+
+Inside the header file for Fabric component, we declare the `RNNativeListViewComponentView` class that extends `RCTViewComponentView`.
+Additionally, we make "forward-declaration" for `RNNativeListViewViewController` and `RNNativeListViewContainerView` classes (check out Apple's Swift-ObjC interop [dedicated docs section](https://developer.apple.com/documentation/swift/importing-swift-into-objective-c#Include-Swift-Classes-in-Objective-C-Headers-Using-Forward-Declarations)).
+
+#### `RNNativeListViewComponentView.mm`
+
+The boilerplate for Fabric component's implementation part will look like following:
+
+```objc title="ios/RNNativeListViewComponentView.mm"
+#if RCT_NEW_ARCH_ENABLED
+#import "RNNativeListViewComponentView.h"
+
+#import <React/RCTConversions.h>
+#import <RCTTypeSafety/RCTConvertHelpers.h>
+
+#import <react/renderer/components/NativeListPackage/ComponentDescriptors.h>
+#import <react/renderer/components/NativeListPackage/EventEmitters.h>
+#import <react/renderer/components/NativeListPackage/Props.h>
+#import <react/renderer/components/NativeListPackage/RCTComponentViewHelpers.h>
+
+#import "RCTFabricComponentsPlugins.h"
+
+using namespace facebook::react;
+
+@interface RNNativeListViewComponentView () <RCTRNNativeListViewViewProtocol>
+@end
+
+@implementation RNNativeListViewComponentView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        static const auto defaultProps = std::make_shared<const RNNativeListViewProps>();
+        _props = defaultProps;
+    }
+
+    return self;
+}
+
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const RNNativeListViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const RNNativeListViewProps>(props);
+
+    [super updateProps:props oldProps:oldProps];
+}
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+    RCTRNNativeListViewHandleCommand(self, commandName, args);
+}
+
+- (void)scrollToItem:(NSInteger)index
+{
+    //
+}
+
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+    return concreteComponentDescriptorProvider<RNNativeListViewComponentDescriptor>();
+}
+
+@end
+
+Class<RCTComponentViewProtocol> RNNativeListViewCls(void)
+{
+    return RNNativeListViewComponentView.class;
+}
+#endif
+```
+
+At the top there are new arch imports and conversion helpers.
+The component extends code-generated protocol that declare the native commands methods from the JS spec.
+Next we implement all required methods and create `RNNativeListViewCls` function.
+
+As a next part, let's initialize the container view with our view controller:
+
+```objc title="ios/RNNativeListViewComponentView.mm"
+//...
+
+// highlight-start
+#import "NativeListPackage-Swift.h"
+// highlight-end
+
+using namespace facebook::react;
+
+@interface RNNativeListViewComponentView () <RCTRNNativeListViewViewProtocol>
+@end
+
+@implementation RNNativeListViewComponentView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        static const auto defaultProps = std::make_shared<const RNNativeListViewProps>();
+        _props = defaultProps;
+
+// highlight-start
+        RNNativeListViewContainerView *view = [RNNativeListViewContainerView new];
+        view.viewController = [RNNativeListViewViewController new];
+
+        self.contentView = view;
+// highlight-end
+    }
+
+    return self;
+}
+
+// ...
+
+@end
+
+// ...
+```
+
+Next step is props handling:
+
+```objc title="ios/RNNativeListViewComponentView.mm"
+//...
+
+@implementation RNNativeListViewComponentView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        static const auto defaultProps = std::make_shared<const RNNativeListViewProps>();
+        _props = defaultProps;
+
+        RNNativeListViewContainerView *view = [RNNativeListViewContainerView new];
+        view.viewController = [RNNativeListViewViewController new];
+
+        self.contentView = view;
+    }
+
+    return self;
+}
+
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+    const auto &oldViewProps = *std::static_pointer_cast<const RNNativeListViewProps>(_props);
+    const auto &newViewProps = *std::static_pointer_cast<const RNNativeListViewProps>(props);
+
+// highlight-start
+    RNNativeListViewContainerView *view = (RNNativeListViewContainerView *)self.contentView;
+
+    auto dataComparator = [](const RNNativeListViewDataStruct &left, const RNNativeListViewDataStruct &right) {
+        return left.imageUrl == right.imageUrl && left.description == right.description;
+    };
+    
+    if (!std::equal(oldViewProps.data.begin(), oldViewProps.data.end(), newViewProps.data.begin(), newViewProps.data.end(), dataComparator)) {
+        NSArray *data = RCTConvertVecToArray(newViewProps.data, ^(RNNativeListViewDataStruct item){
+            DataItem *dataItem = [[DataItem alloc] initWithImageUrl:RCTNSStringFromString(item.imageUrl) itemDescription:RCTNSStringFromString(item.description)];
+            return dataItem;
+        });
+        [view.viewController setData:data];
+    }
+    
+    if (oldViewProps.options.placeholderImage != newViewProps.options.placeholderImage) {
+        [view.viewController setPlaceholderImage:RCTNSStringFromString(newViewProps.options.placeholderImage)];
+    }
+
+    if (oldViewProps.backgroundColor != newViewProps.backgroundColor) {
+        UIColor *backgroundColor = RCTUIColorFromSharedColor(newViewProps.backgroundColor);
+        [view.viewController setBackgroundColor:backgroundColor];
+    }
+// highlight-end
+
+    [super updateProps:props oldProps:oldProps];
+}
+
+// ...
+
+@end
+
+// ...
+```
+
+Here we are handling 3 props - `data`, `options.placeholderImage` & `backgroundColor` (from `style` prop).
+
+The `data` prop is quite interesting, it's array, so we need to compare the old and new value of that array.
+To do that in Objective-C++, we will use C++ [`std::equal`](https://en.cppreference.com/w/cpp/algorithm/equal) function.
+It takes the ranges of arrays and comparator function that we declare under `dataComparator` variable.
+
+:::info
+
+To learn more about anonymous function in C++ check [Lambda expressions](https://en.cppreference.com/w/cpp/language/lambda) section in C++ reference
+
+:::
+
+The last thing left is to implement `scrollToItem:` method:
+
+```objc title="ios/RNNativeListViewComponentView.mm"
+//...
+
+@implementation RNNativeListViewComponentView
+
+//...
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+    RCTRNNativeListViewHandleCommand(self, commandName, args);
+}
+
+- (void)scrollToItem:(NSInteger)index
+{
+// highlight-start
+    RNNativeListViewContainerView *view = (RNNativeListViewContainerView *)self.contentView;
+    [view.viewController scrollToItem:index];
+// highlight-end
+}
+
++ (ComponentDescriptorProvider)componentDescriptorProvider
+{
+    return concreteComponentDescriptorProvider<RNNativeListViewComponentDescriptor>();
+}
+
+@end
+
+// ...
+```
+
+<CompleteFile
+  filename="RNNativeListViewComponentView.mm"
+  language="objc"
+>
+
+
+    #if RCT_NEW_ARCH_ENABLED
+    #import "RNNativeListViewComponentView.h"
+
+    #import <React/RCTConversions.h>
+    #import <RCTTypeSafety/RCTConvertHelpers.h>
+
+    #import <react/renderer/components/NativeListPackage/ComponentDescriptors.h>
+    #import <react/renderer/components/NativeListPackage/EventEmitters.h>
+    #import <react/renderer/components/NativeListPackage/Props.h>
+    #import <react/renderer/components/NativeListPackage/RCTComponentViewHelpers.h>
+
+    #import "RCTFabricComponentsPlugins.h"
+
+    #import "NativeListPackage-Swift.h"
+
+    using namespace facebook::react;
+
+    @interface RNNativeListViewComponentView () <RCTRNNativeListViewViewProtocol>
+    @end
+
+    @implementation RNNativeListViewComponentView
+
+    - (instancetype)initWithFrame:(CGRect)frame
+    {
+        if (self = [super initWithFrame:frame]) {
+            static const auto defaultProps = std::make_shared<const RNNativeListViewProps>();
+            _props = defaultProps;
+
+            RNNativeListViewContainerView *view = [RNNativeListViewContainerView new];
+            view.viewController = [RNNativeListViewViewController new];
+
+            self.contentView = view;
+        }
+
+        return self;
+    }
+
+    - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+    {
+        const auto &oldViewProps = *std::static_pointer_cast<const RNNativeListViewProps>(_props);
+        const auto &newViewProps = *std::static_pointer_cast<const RNNativeListViewProps>(props);
+
+        RNNativeListViewContainerView *view = (RNNativeListViewContainerView *)self.contentView;
+
+        auto dataComparator = [](const RNNativeListViewDataStruct &left, const RNNativeListViewDataStruct &right) {
+            return left.imageUrl == right.imageUrl && left.description == right.description;
+        };
+        
+        if (!std::equal(oldViewProps.data.begin(), oldViewProps.data.end(), newViewProps.data.begin(), newViewProps.data.end(), dataComparator)) {
+            NSArray *data = RCTConvertVecToArray(newViewProps.data, ^(RNNativeListViewDataStruct item){
+                DataItem *dataItem = [[DataItem alloc] initWithImageUrl:RCTNSStringFromString(item.imageUrl) itemDescription:RCTNSStringFromString(item.description)];
+                return dataItem;
+            });
+            [view.viewController setData:data];
+        }
+        
+        if (oldViewProps.options.placeholderImage != newViewProps.options.placeholderImage) {
+            [view.viewController setPlaceholderImage:RCTNSStringFromString(newViewProps.options.placeholderImage)];
+        }
+
+        if (oldViewProps.backgroundColor != newViewProps.backgroundColor) {
+            UIColor *backgroundColor = RCTUIColorFromSharedColor(newViewProps.backgroundColor);
+            [view.viewController setBackgroundColor:backgroundColor];
+        }
+
+        [super updateProps:props oldProps:oldProps];
+    }
+
+    - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+    {
+        RCTRNNativeListViewHandleCommand(self, commandName, args);
+    }
+
+    - (void)scrollToItem:(NSInteger)index
+    {
+        RNNativeListViewContainerView *view = (RNNativeListViewContainerView *)self.contentView;
+        [view.viewController scrollToItem:index];
+    }
+
+    + (ComponentDescriptorProvider)componentDescriptorProvider
+    {
+        return concreteComponentDescriptorProvider<RNNativeListViewComponentDescriptor>();
+    }
+
+    @end
+
+    Class<RCTComponentViewProtocol> RNNativeListViewCls(void)
+    {
+        return RNNativeListViewComponentView.class;
+    }
+    #endif
+
+</CompleteFile>

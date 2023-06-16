@@ -1,0 +1,121 @@
+#### `RNNativeListViewContainerView.h`
+
+Next step is to embed the view controller inside bridged view.
+In order to handle such case, we will use container view, that will hold the underlying view of our view controller.
+
+Let's start by defining header interface for container view:
+
+```objc title="ios/RNNativeListViewContainerView.h"
+#import <UIKit/UIKit.h>
+#import "RNNativeListViewViewController.h"
+
+@interface RNNativeListViewContainerView : UIView
+
+@property (nonatomic, strong) RNNativeListViewViewController *viewController;
+
+@end
+```
+
+It will extend base [`UIView`](https://developer.apple.com/documentation/uikit/uiview?language=objc) class and will hold a reference to our custom view controller class.
+
+Next let's declare the implementation.
+
+#### `RNNativeListViewContainerView.mm`
+
+```objc title="ios/RNNativeListViewContainerView.mm"
+#import "RNNativeListViewContainerView.h"
+
+#import <React/UIView+React.h>
+
+@implementation RNNativeListViewContainerView {
+    RNNativeListViewViewController * _Nullable internalViewController;
+}
+
+- (RNNativeListViewViewController *)viewController
+{
+    return internalViewController;
+}
+
+- (void)setViewController:(RNNativeListViewViewController *)newViewController
+{
+    [self unmountViewController];
+    internalViewController = newViewController;
+    if (newViewController != nil) {
+        [self mountViewController];
+    }
+}
+
+- (void)removeFromSuperview
+{
+    [self unmountViewController];
+    [super removeFromSuperview];
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    if (newWindow == nil) {
+        [self unmountViewController];
+    } else {
+        [self mountViewController];
+    }
+}
+
+- (void)mountViewController
+{
+    if (self.viewController == nil) {
+        return;
+    }
+
+    if (self.viewController.parentViewController != nil) {
+        return;
+    }
+
+    UIViewController *reactViewController = self.reactViewController;
+    if (reactViewController == nil) {
+        return;
+    }
+
+    [reactViewController addChildViewController:self.viewController];
+    [self addSubview:self.viewController.view];
+    
+    self.viewController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [self.viewController.view.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [self.viewController.view.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [self.viewController.view.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [self.viewController.view.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+    ]];
+    
+    [self.viewController didMoveToParentViewController:reactViewController];
+}
+
+- (void)unmountViewController
+{
+    if (self.viewController == nil) {
+        return;
+    }
+
+    if (self.viewController.parentViewController == nil) {
+        return;
+    }
+
+    [self.viewController willMoveToParentViewController:nil];
+    [self.viewController.view removeFromSuperview];
+    [self.viewController removeFromParentViewController];
+}
+
+@end
+```
+
+You can take a look at `mountViewController` & `unmountViewController` methods.
+These are the places where our custom view controller has its lifecycle synchronized with the container view (`[self.viewController didMoveToParentViewController:reactViewController]` & `[self.viewController willMoveToParentViewController:nil]`).
+The `self.reactViewController` returns a parent view controller that holds the container view and will hold our custom view controller.
+The view of the `RNNativeListViewViewController` is also positioned with layout constraints.
+
+:::info
+
+If you plan to bridge multiple custom view controllers, the container view part can be refactored to be more generic and shared for all possible view controllers.
+
+:::
+
+Now let's connect everything inside view manager and Fabric component view.

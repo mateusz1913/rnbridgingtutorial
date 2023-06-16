@@ -24,9 +24,9 @@ public class AndroidNativeListClassicViewFragment extends Fragment {
 
     @Override
     public View onCreateView(
-      LayoutInflater inflater,
-      ViewGroup container,
-      Bundle savedInstanceState
+        LayoutInflater inflater,
+        ViewGroup container,
+        Bundle savedInstanceState
     ) {
         return inflater.inflate(R.layout.fragment_list_classic, container, false);
     }

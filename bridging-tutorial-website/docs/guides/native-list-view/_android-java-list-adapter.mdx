@@ -1,0 +1,85 @@
+#### `NativeListAdapter.java`
+
+With view holder ready, let's use it inside [`RecyclerView.Adapter`](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter) custom class:
+
+```java title="android/src/main/java/com/nativelistpackage/NativeListAdapter.java"
+package com.nativelistpackage;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
+
+public class NativeListAdapter extends RecyclerView.Adapter<NativeListViewHolder> {
+    public List<DataItem> data = Collections.emptyList();
+    public String placeholderImage = "";
+    private final Context context;
+
+    public NativeListAdapter(Context context) {
+        super();
+        this.context = context;
+    }
+
+    @Override
+    public NativeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new NativeListViewHolder(itemView); 
+    }
+
+    @Override
+    public void onBindViewHolder(NativeListViewHolder holder, int position) {
+        Drawable drawable = ResourcesCompat.getDrawable(
+            context.getResources(),
+            getDrawableIdWithName(placeholderImage),
+            null
+        );
+        holder.imageView.setImageDrawable(drawable);
+        holder.label.setText(data.get(position).description);
+    }
+
+    @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+    private int getDrawableIdWithName(String name) {
+        Resources appResources = context.getResources();
+        int resourceId = appResources.getIdentifier(name, "drawable", context.getPackageName());
+        if (resourceId == 0) {
+            // If drawable is not present in app's resources, check system's resources
+            resourceId = getResId(name, android.R.drawable.class);
+        }
+        return resourceId;
+    }
+
+    private int getResId(String resName, Class c) {
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+}
+```
+
+Inside the custom adapter class we have to override 3 methods:
+
+- `onCreateViewHolder` - it creates the view for the item and wraps it in the instance of `RecyclerView.ViewHolder` class (in this case `NativeListViewHolder`)
+- `onBindViewHolder` - it binds the data for specific item to dedicated view holder instance (in this case the description text and the name of the system image to the drawable displayed in the image view)
+- `getItemCount` - it returns the size of the list (in this case size of `data` property, which represents the JS prop value)
+
+:::info
+
+**For learning purposes**, we only use system images/icons for the image view.
+After completing this guide, you can work on enhancing the experience by using remote images with e.g. [Glide library](https://github.com/bumptech/glide).
+
+:::
