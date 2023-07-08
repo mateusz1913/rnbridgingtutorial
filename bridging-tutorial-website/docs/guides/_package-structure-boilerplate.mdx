@@ -258,7 +258,7 @@ This will link Java & Kotlin files under `android/src/{main|newarch|oldarch}/jav
 You may have noticed, that the configuration loads sth from `$projectDir/react-native-helpers.gradle`. In fact that file includes implementation for `shouldConsumeReactNativeFromMavenCentral` helper. Let's create it:
 
 <Tabs groupId="gradle">
-<TabItem value="groovy" label="Groovy script (build.gradle)">
+<TabItem value="groovy" label="Groovy script (react-native-helpers.gradle)">
 
 <CodeBlock language="groovy" title="android/react-native-helpers.gradle">
   {`def safeAppExtGet(prop, fallback) {
@@ -300,7 +300,7 @@ project.ext.shouldConsumeReactNativeFromMavenCentral = { ->
 </CodeBlock>
 
 </TabItem>
-<TabItem value="kotlin" label="Kotlin script (build.gradle.kts)">
+<TabItem value="kotlin" label="Kotlin script (react-native-helpers.gradle.kts)">
 
 <CodeBlock language="kotlin" title="android/react-native-helpers.gradle.kts">
   {`fun safeAppExtGet(prop: String, fallback: Any?): Any? {
