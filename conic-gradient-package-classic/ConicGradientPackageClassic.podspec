@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
       # #if CONIC_GRADIENT_PACKAGE_CLASSIC_NEW_ARCH_ENABLED
       # // do sth when new arch is enabled
       # #else
-      # // do sth when old arch is disabled
+      # // do sth when old arch is enabled
       # #endif
       "OTHER_SWIFT_FLAGS" => "-DCONIC_GRADIENT_PACKAGE_CLASSIC_NEW_ARCH_ENABLED"
     }

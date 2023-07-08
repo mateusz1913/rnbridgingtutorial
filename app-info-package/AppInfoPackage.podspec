@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
       # #if APP_INFO_PACKAGE_NEW_ARCH_ENABLED
       # // do sth when new arch is enabled
       # #else
-      # // do sth when old arch is disabled
+      # // do sth when old arch is enabled
       # #endif
       "OTHER_SWIFT_FLAGS" => "-DAPP_INFO_PACKAGE_NEW_ARCH_ENABLED"
     }
