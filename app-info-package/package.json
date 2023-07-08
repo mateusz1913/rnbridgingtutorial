@@ -5,8 +5,7 @@
   "description": "App Info package",
   "react-native": "src",
   "source": "src",
-  "main": "src",
-  "module": "src",
+  "exports": "./src/index",
   "files": [
     "src",
     "android",

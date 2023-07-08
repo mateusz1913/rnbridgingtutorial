@@ -5,8 +5,7 @@
   "description": "Awesome module",
   "react-native": "src",
   "source": "src",
-  "main": "src",
-  "module": "src",
+  "exports": "./src/index",
   "files": [
     "src",
     "android",
