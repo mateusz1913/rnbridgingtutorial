@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
       # #if SCREEN_ORIENTATION_PACKAGE_NEW_ARCH_ENABLED
       # // do sth when new arch is enabled
       # #else
-      # // do sth when old arch is enabled
+      # // do sth when old arch is disabled
       # #endif
       "OTHER_SWIFT_FLAGS" => "-DSCREEN_ORIENTATION_PACKAGE_NEW_ARCH_ENABLED"
     }
