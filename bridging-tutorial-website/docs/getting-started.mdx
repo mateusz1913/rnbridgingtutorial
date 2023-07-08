@@ -164,7 +164,7 @@ module.exports = {
 
 First change to `"android"` command is decreasing build times on Android - it will only build for CPU architecture of the connected device/emulator that you will use for development.
 
-Those other commands - `"codegen:android"` & `"codegen:ios"` - are commands that invoke React Native Codegen and generate specification for your native code.
+Those other commands - `"codegen:android"` & `"codegen:ios"` - are commands that invoke React Native Codegen and generate specification for your native code. Notice that Codegen requires the New Architecture enabled. We will enable it in the next steps.
 
 ### 6. If you are going to use Kotlin for Android development, add Kotlin to your test project, otherwise skip this step
 
@@ -214,15 +214,7 @@ yarn android
 
 "New Architecture" is the future and that's why it will be used throughout this tutorial. Guides will showcase how to write code that supports both old and new arch. However, because new arch setups are more complex, you'll benefit from testing the native code you wrote with TurboModules and Fabric and the backward compatibility layer will make it work on the old architecture.
 
-To enable "New Architecture" on Android:
-- go to `android/gradle.properties` in your IDE
-- locate `newArchEnabled` variable and set it to `true`
-- run `./android/gradlew -p android clean` from your app's root directory - this will invoke clean Gradle task on your Android project
-
-To enable "New Architecture" on iOS:
-- go to `ios/Podfile` in your IDE
-- add `ENV['RCT_NEW_ARCH_ENABLED'] = "1"` after `require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'` - this will set the `RCT_NEW_ARCH_ENABLED` to `1` on each `pod install` run, so you'll not need to set that env before running installing the Pods
-- run `npx pod-install` to install "New Architecture" Pods
+Since the new architecture is developing dynamically and the instructions for this step are changing often, follow the official React Native [New-architecture-app-intro](https://reactnative.dev/docs/new-architecture-app-intro).
 
 After that, verify if everything works by building your project
 
@@ -232,6 +224,12 @@ yarn ios
 
 ```sh
 yarn android
+```
+
+After you build and run the app when Metro serves the JavaScript bundle, you should see "fabric": true in the Metro logs:
+```sh
+BUNDLE ./App.tsx
+LOG Running "App" with {"fabric":true,"initialProps":{"concurrentRoot": "true"},"rootTag":1}
 ```
 
 ### 8. [OPTIONAL] Navigation setup
