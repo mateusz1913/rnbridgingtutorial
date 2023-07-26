@@ -12,7 +12,8 @@ Prepare some screen where you can try AppInfo module
 
 ```tsx title="AppInfoScreen.tsx"
 import { AppInfoModule } from 'app-info-package';
-import { FC, useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
 export const AppInfoScreen: FC = () => {
