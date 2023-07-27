@@ -31,7 +31,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
-            'https://github.com/mateusz1913/rnbridgingtutorial/tree/main/docs',
+            'https://github.com/mateusz1913/rnbridgingtutorial/tree/main/bridging-tutorial-website',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
