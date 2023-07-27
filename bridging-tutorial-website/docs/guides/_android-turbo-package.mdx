@@ -94,7 +94,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
-import com.facebook.react.turbomodule.core.interfaces.TurboModule\n
+import com.facebook.react.turbomodule.core.interfaces.TurboModule${props.viewManagerClass ? `\n// highlight-start
+import com.facebook.react.uimanager.ViewManager
+// highlight-end` : ``}\n
 class ${props.packageClass} : TurboReactPackage() {
     /**
      * Initialize and export modules based on the name of the required module
