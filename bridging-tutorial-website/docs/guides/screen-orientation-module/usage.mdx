@@ -14,7 +14,6 @@ Prepare some screen where you can try screen orientation module
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { NativeEventEmitter, Platform, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScreenOrientationModule } from 'screen-orientation-package';
 
 const moduleEventEmitter = new NativeEventEmitter(Platform.OS === 'ios' ? ScreenOrientationModule : undefined);
@@ -34,7 +33,7 @@ export const ScreenOrientationScreen: FC = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.header}>Simple event module</Text>
         <View style={styles.body}>
@@ -42,7 +41,7 @@ export const ScreenOrientationScreen: FC = () => {
           <Text style={styles.content}>Screen orientation: {screenOrientation}</Text>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
