@@ -157,7 +157,7 @@ module.exports = {
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
 +   "codegen:android": "./android/gradlew -p android generateCodegenArtifactsFromSchema",
-+   "codegen:ios": "node node_modules/react-native/scripts/generate-codegen-artifacts.js --path . --outputPath ./ios"
++   "codegen:ios": "node node_modules/react-native/scripts/generate-codegen-artifacts.js --path . --targetPlatform ios --outputPath ./ios"
   },
 }
 ```
